@@ -1,0 +1,5 @@
+-	Talk about our 5-10 engineering/marketing requirements and compare notes as we work towards our proposal
+-	Proposal work, starting our decisions and figuring out our content
+-	If we can, start writing proposal
+-	Look into drone kits and discuss the ones we’ve already found
+-	Talk to the Microcontrollers drone team?

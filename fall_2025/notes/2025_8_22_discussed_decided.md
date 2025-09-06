@@ -1,0 +1,34 @@
+-	Are we deciding the lab's content or is Dr. Fredette?
+-	“Both is good”
+-	Are we producing enough drones for the lab or just prototyping?
+-	Just prototyping
+-	Do the students build their own drones or is the university going to have just a few on hand?
+-	Try to make a kit they can build
+-	How many students take the class at once?
+-	18
+-	Is there anything in particular that she wants us to build?
+-	Nothing in particular, but she wants to be involved. 
+-	Is this a semester-long lab or just one lab in particular?
+-	Try for at least 5 labs - 10 would be nearly the full class
+-	~$1000 budget currently
+-	GUI or text based is okay for student interface - need to be able to monkey wit various variables in the code and flash to the drone
+-	Remote with go/stop or at least kill switch?
+-	Have a “step response” that involves changing the height instantly. 
+-	Proposal has to be done. Basically a list of things of what we think we can do. 
+-	Can be a lot of bulleted lists
+-	Can have stretch goals along with achievable goals
+-	Can be soft definitions - i.e. “have some sort of interface for the students to be able to program the drone with”
+-	Should hopefully be something we can look back on and say “yeah, we mostly did that”
+-	Each requirement should have a test. 
+-	We do the old controls lab so that we can learn it. 
+-	Do controls mini-project.
+-	Some good early-on ideas in the design for engineers book - take notes
+-	~$100 per student max if they get to keep the drones
+-	~$1000 per drone max if they belong to the school and are hardy
+-	Topic Ideas:
+-	Lab 1 build drone?
+-	Lab 2 PID inputs only? 
+-	Lab 3 Just P and others at 0?
+-	Step input (demand altitude) and evaluate drone response with various controller configurations
+-	Sine input and map Bode plot
+-	Play with repeatable disturbances
