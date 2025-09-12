@@ -121,7 +121,7 @@ This project is very software heavy, but hardware is going to inform software de
 \item Microcontroller
 \begin{itemize}
 \item Very important component because other hardware and software selections depend on what microcontroller is chosen
-\item Needs to support a good ammount of I/O for sensors and motors
+\item Needs to support a good amount of I/O for sensors and motors
 \item Needs to be fast to support multiple PID loops
 \item Could have onboard networking to support wireless telemetry
 \end{itemize}
@@ -137,16 +137,22 @@ This project is very software heavy, but hardware is going to inform software de
 \item Needs to accurately sense rotation in 3 axes for calculating error
 \end{itemize}
 
+\item Sensors
+\begin{itemize}
+\item Needs to accurately sense distance in 3 axes
+\item Needs to be simple to get data from. IR and ultrasonic sensors are often good for this
+\end{itemize}
+
 \item Motors and Motor Controllers
 \begin{itemize}
-\item Need to be powerful but with few componenets
+\item Need to be powerful but with few components
 \item If the drone kits are small enough, brushed motors would be a good choice
 \end{itemize}
 
 \item Battery
 \begin{itemize}
 \item Needs to be big enough for at least 5 minutes of flight
-\item Needs to be easily swapable
+\item Needs to be easily swappable
 \end{itemize}
 
 \item Frame
@@ -199,7 +205,23 @@ On December 12th, a design report will be submitted to document the progress tha
 At the end of April, a final report will be submitted to document the entirety of the project.
 
 \section{Testing Plan}
-What things do we want to be able to test
+Since the end goal of this project to create lab environment for students, the tests can be broken down into two sections: construction tests and lab tests.
+
+\subsection{Construction Tests}
+These are system tests with the purpose of checking if the various parts of the drone are working together properly.
+
+\begin{enumerate}
+	\item \textit{Wireless Data Logging} - Demonstrate the transmission of 
+\end{enumerate}
+
+\subsection{Lab Tests}
+These tests are to verify that the drone and surrounding systems are able to fulfill the marketing requirements and be useful in the lab setting.
+
+\begin{enumerate}
+	\item Step Response
+	\item Sinusoidal Response
+	\item Constant Disturbance Response
+\end{enumerate}
 
 \section{Budget}
 The budget below describes how we intend to use funds in constructing a prototype. Under this paradigm, we will be far under our proposed budget of \$600. However, this budget does not account for mistakes in prototyping and drastic changes to the program. Instead, it serves as a theoretical cost for the test and evaluation of a single prototype drone, while more funds may be directed towards redundancy, error correction, and modifications to our initial plans.
