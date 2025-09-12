@@ -34,7 +34,6 @@ This project proposal outlines our intent to reimaginine the Feedback Controls L
 
 This project seeks to redefine the Cedarville Feedback Controls Laboratory experience by designing a quadcopter drone to use as an entertaining platform to teach classroom concepts.
 
-
 \section{Background}
 The current lab used for EGME-4660 uses the Feedback Analogue Unit 33-110 and the Feedback Mechanical Unit 33-100. Although the labs using the equipment teach the material necessary, they are often tedious. The user interface to conduct the experiments is a circuit board with several banana plug chords, which may seem boring and irrelevant to the mechanical engineering students. In addition, adjusting the power supply or wiring the power incorrectly can result in damage to the equipment, often requiring parts to be replaced. We plan to improve the lab experience by replacing the current equipment with drones that can be reprogrammed for the purposes of the lab with a friendly user interface.
 \section{Objectives}
@@ -122,7 +121,7 @@ This project is very software heavy, but hardware is going to inform software de
 
 \item Custom PCB
 \begin{itemize}
-\item Needs to combine all important components into a simple, pre assembled package
+\item Needs to combine all important components into a simple, pre-assembled package
 \item Could be designed to also be drone frame
 \end{itemize}
 
@@ -137,7 +136,17 @@ This project is very software heavy, but hardware is going to inform software de
 \item If the drone kits are small enough, brushed motors would be a good choice
 \end{itemize}
 
+\item Battery
+\begin{itemize}
+\item Needs to be big enough for at least 5 minutes of flight
+\item Needs to be easily swapable
+\end{itemize}
 
+\item Frame
+\begin{itemize}
+\item Needs to hold the battery, motors, and PCB in a way to prevent them from damage
+\item Needs to be cheap to 3D print
+\end{itemize}
  
 
 \end{enumerate}
@@ -145,7 +154,23 @@ This project is very software heavy, but hardware is going to inform software de
 
 \subsection{Software}
 \begin{enumerate}
-\item computer :)
+\item FreeRTOS
+\begin{itemize}
+\item FreeRTOS is a real time operating system that is build and optimized for microcontrollers. An RTOS is a framework for switching between many processes.
+\item This will allow the system to constantly check sensors, log data, and run the flight logic all at the same time
+\end{itemize}
+
+\item Desktop Application
+\begin{itemize}
+\item Needs to have interface for writing new configurations for the drones
+\item Needs to be user friendly
+\item Might include real time data visualization
+\end{itemize}
+
+\item Flight Telemtry 
+\begin{itemize}
+\item Whether the flight data is being logged onboard the drone or being streamed to a laptop, it needs to be saved in an easy to use format like CSV
+\end{itemize}
 \end{enumerate}
 
 \section{Project Schedule}
