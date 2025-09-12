@@ -38,7 +38,7 @@ This project seeks to redefine the Cedarville Feedback Controls Laboratory exper
 
 \section{Background}
 
-The current lab experience for EGME-4660 uses the Feedback Analogue Unit 33-110 and the Feedback Mechanical Unit 33-100. Although the labs using the equipment do cover the desired content, they are often tedious and perhaps confusing to new users, especially users unfamiliar with Feedback Controls concepts. The user interface to conduct the experiments is a circuit board with nodes and banana plug cords. The user can connect these nodes to create feedback circuits whose effect is then shown using the mechanical unit. As mentioned, understanding what is happening between the units (and even in the electrical circuits) can be challenging for students. This causes the applications of the class material to  seem boring and irrelevant, especially for mechanical engineering students who may not have extensive electronics background. In addition, the equipment is old and fragile - adjusting the power supply or wiring the power incorrectly can result in damage to the equipment, often requiring parts to be replaced. Since the equipment is quite expensive, the current repair method has been de-soldering and soldering components by hand. We plan to improve the lab experience by replacing the current equipment with cheap and robust drones that can be reprogrammed for the purposes of the lab with a user-friendly interface. In this way, the instructor can choose the complexity of the tasks given to students for the lab, instead of making them start from ground zero.
+The current lab experience for EGME-4660 uses the Feedback Analogue Unit 33-110 and the Feedback Mechanical Unit 33-100. Although the labs using the equipment do cover the desired content, they are often tedious and perhaps confusing to new users, especially users unfamiliar with Feedback Controls concepts. The user interface to conduct the experiments is a circuit board with nodes and banana plug cords. The user can connect these nodes to create feedback circuits whose effect is then shown using the mechanical unit. As mentioned, understanding what is happening between the units (and even in the electrical circuits) can be challenging for students. This causes the applications of the class material to  seem boring and irrelevant, especially for mechanical engineering students who may not have extensive electronics background. In addition, the equipment is old and fragile - adjusting the power supply or wiring the power incorrectly can result in damage to the equipment, often requiring parts to be replaced. Since the equipment is quite expensive, the current repair method has been de-soldering and soldering components by hand. We plan to improve the lab experience by replacing the current equipment with cheap and robust drones that can be reprogrammed for the purposes of the lab with a user-friendly interface. In this way, the instructor can choose the complexity of the tasks given to students for the lab.
 
 \section{Objectives}
 \subsection{Marketing Requirements}
@@ -52,10 +52,10 @@ The following requirements define the end user experience as desired by the cust
     \item The laboratory experience must include the ability to see and correct the effects of physical and observable disturbances and noise.
     \item The final product should showcase the results of controllers physically in real life and not just with numbers and data.
     \item The final product must have the ability to log data to a neutral format independent of real time visualizations.
-    \item The software solution must include widget to generate understandable plots of the data.
+    \item The software solution must include a widget to generate understandable plots of the data.
     \item The final laboratory experience must include the capability to perform a tracking experiment.
     \item The laboratory experience must take relevant safety precautions.
-    \item The final platform must be able to take basic commands and log the response. 
+    \item The final platform must be able to implement open loop control and log this response. 
   \end{itemize}
 \subsection{Engineering Requirements}
 \subsubsection{Hardware Requirements}
@@ -65,9 +65,9 @@ The following requirements define the end user experience as desired by the cust
     \item Microcontroller
     \item 4 motors
     \item Battery power supply
-    \item PCB
+    \item PCB to interconnect components
     \item Bladeguards for safety
-    \item positional and tracking sensors
+    \item Positional and tracking sensors
   \end{itemize}
   \item[$\Rightarrow$] Soft Requirements:
   \begin{itemize}
@@ -83,13 +83,13 @@ The following requirements define the end user experience as desired by the cust
     \item Controller logic for open loop capabilities
     \item Memory for data collection
     \item User-friendly interface for programming
-    \item Software to plot collected data
     \item Method to input step functions and sinusoidal functions
   \end{itemize}
   \item[$\Rightarrow$] Soft Requirements:
   \begin{itemize}
     \item Wireless communication
     \item Intuitive GUI
+    \item Software to plot collected data
   \end{itemize}
 \end{itemize}
 \subsection{Constraints}
@@ -106,9 +106,9 @@ To aid in the organization of this project, we have outlined four officer design
 
 \subsection[Chief Financial Officer]{CFO - Aydan Vissing} The Chief Financial Officer (CFO) role is in charge of managing finances for the project, heading up budgets, and making sure the project stays within the budget. This role will be deeply involved in the use of time and resources throughout the project. \\
 
-\subsection[Chief Technical Officer]{CTO - Brady Schick} The Chief Technical Officer (CTO) role will be responsible for managing the hardware side of the project, with an emphasis on keeping the big picture in hardware in perspective. This role will likely shift to a focus in software as the project matures. \\
+\subsection[Chief Technical Officer]{CTO - Brady Schick} The Chief Technical Officer (CTO) role will be responsible for managing the hardware side of the project, with an emphasis on keeping hardware planning and execution in perspective. This role will likely shift to a focus in software as the project matures. \\
 
-\subsection[Chief Software Officer]{CSO - Gabriel Southwell} The Chief Software Officer (CSO) will make sure that software development proceeds according to plan, ensuring that proper hardware is acquired for the software needs, software is organized and able to be applied to the microcontroller, and UI developments are user-friendly and intuitive. This role will likely increase in difficulty throughout the course of the project. \\
+\subsection[Chief Software Officer]{CSO - Gabriel Southwell} The Chief Software Officer (CSO) will make sure that software development proceeds according to plan, ensuring that proper hardware is acquired for the software needs, software is organized and able to be flashed to the microcontroller, and UI developments are user-friendly and intuitive. \\
 
 \subsection[Chief Executive Officer]{CEO - Simon Ross} The Chief Executive Officer (CEO) is responsible for paperwork, organization, and keeping the big picture of the project in perspective. This role will make sure that the members act as a unified group and that timely progress is made towards the project milestones. \\
 
@@ -171,8 +171,7 @@ This project is very software heavy, but hardware is going to inform software de
 \begin{enumerate}
 \item FreeRTOS
 \begin{itemize}
-\item FreeRTOS is a real time operating system that is build and optimized for microcontrollers. An RTOS is a framework for switching between many processes.
-\item This will allow the system to constantly check sensors, log data, and run the flight logic all at the same time
+\item FreeRTOS is a real time operating system that is built and optimized for microcontrollers. An RTOS is a framework for switching between many processes. This will allow the system to constantly check sensors, log data, and run the flight logic all at the same time
 \end{itemize}
 
 \item Desktop Application
@@ -184,12 +183,12 @@ This project is very software heavy, but hardware is going to inform software de
 
 \item Flight Telemetry 
 \begin{itemize}
-\item Whether the flight data is being logged onboard the drone or being streamed to a laptop, it needs to be saved in an easy to use format like CSV
+\item Whether the flight data is being logged onboard the drone or being streamed to a laptop, it needs to be saved in a neutral format like CSV
 \end{itemize}
 \end{enumerate}
 
 \section{Project Schedule}
-The Gantt chart below proposes a notional schedule for the important project checkpoints, including the milestones discussed in the section below. Though likely not perfect, this schedule will keep the project focused, providing tasks and elements to consider weekly as the project progresses.
+Figure 1 below proposes a notional schedule for the important project checkpoints, including the milestones discussed in the section below. Though likely not perfect, this schedule will keep the project focused, providing tasks and elements to consider weekly as the project progresses.
 \begin{figure}[h!]
   \centering
   \includegraphics[width=\textwidth]{../gantt/gantt.png}
@@ -200,36 +199,38 @@ The Gantt chart below proposes a notional schedule for the important project che
 
 \section{Milestones}
 
-\subsection[October 3, 2025]{Milestone 1: October 3, 2025} Since this date is rapidly approaching, we aim to have selected and ordered all of the components needed to construct a prototype drone (using protoboard instead of a PCB) by this date. Additionally, we plan to spend this time researching open source software options for working with the selected components. \\
+\subsection[October 3, 2025]{Milestone 1: October 3, 2025} Since this date is rapidly approaching, we aim to have selected and ordered all of the components needed to construct a prototype drone (using perfboard instead of a PCB) by this date. Additionally, we plan to spend this time researching open source software options for working with the selected components. \\
 
 \subsection[November 14, 2025]{Milestone 2: November 14, 2025} By this date, we plan to have all of the final hardware components selected for the drone design. This means we will have a hardware solution we believe will work for the final product including motors, batteries, a frame, a microcontroller, and a data storage solution interconnected in what we hope is the the final configuration. We will have a PCB draft ready for review. On the software side, this means we will have the ability to control the system in a way that displays that our requirements can be satisfied using the platform we have created.
 
 \section{Reporting Plan}
-Every Monday, weekly reports will be submitted with statements from each member of the team. This will keep a record of what has been accomplished each week and what will plan to be accomplished in the future. Reports will include both group and individual accomplishments.
+Every Monday, weekly reports will be submitted with statements from each member of the team. This will keep a record of what has been accomplished each week and what we plan to accomplish in the future. Reports will include both group and individual accomplishments.
   
-Every Friday at 11:00 AM, weekly team meeting will be held with the project advisor/customer, Dr. Fredette. These meeting ensure that the project is continuing to progress in the desired direction.
+Every Friday at 11:00 AM, a weekly team meeting will be held with the project advisor/customer, Dr. Fredette. These meetings ensure that the project is continuing to progress in the desired direction.
   
 On December 12th, a design report will be submitted to document the progress that has been made up to that point.
   
 At the end of April, a final report will be submitted to document the entirety of the project.
 
 \section{Testing Plan}
-Since the end goal of this project to create lab environment for students, the tests can be broken down into two sections: construction tests and lab tests.
+Since the end goal of this project is to create a lab environment for students, tests can be broken down into two sections: construction tests and lab tests. They will be executed approximately in listed order when the specified component is completed.
 
 \subsection{Construction Tests}
-These are system tests with the purpose of checking if the various parts of the drone are working together properly.
+These are system tests to check if the various drone subsystems are working together properly.
 
 \begin{enumerate}
+	\item \textit{Microcontroller PWM Verification} - Demonstrate the microcontroller generating proper PWM signals to drive the motors
 	\item \textit{Motor System} - Demonstrate the microcontroller driving multiple motors using a MOSFET circuit
-	\item \textit{Onboard Data Logging} - Demonstrate the logging of relevant data in non-volatile memory 
+	\item \textit{Onboard Data Logging} - Demonstrate the logging of relevant data in a non-volatile memory format
 	\item \textit{Wireless Data Logging} - Demonstrate the transmission of relevant data to a nearby laptop
-	\item \textit{Distance Sensor Calibration} - Demonstrate the sensors accurately logging distance information
+	\item \textit{Distance Sensor Functionality} - Demonstrate the sensors accurately logging distance information
+	\item \textit{Distance Sensor Calibration} - Demonstrate the ability to calibrate the distance sensor readings with respect to real-world measurements
 	\item \textit{IMU} - Demonstrate the IMU logging rotation information for calculating error
-	\item \textit{PID Loop} - Demonstrate the PID loop functioning correctly by flying the drone
+	\item \textit{PID Loop} - Demonstrate the PID loop functioning correctly by stable flight
 \end{enumerate}
 
 \subsection{Lab Tests}
-These tests are to verify that the drone and surrounding systems are able to fulfill the marketing requirements and be useful in the lab setting.
+These tests are to verify that the drone and interconnected systems are able to fulfill the marketing requirements and function in the lab setting.
 
 \begin{enumerate}
 	\item \textit{Hold Altitude} - Demonstrate the drone holding at an arbitrary target altitude
@@ -251,17 +252,17 @@ The budget below describes how we intend to use funds in constructing a prototyp
 \hline 
 Prototype Microcontroller & \$0 & N/A & Dr. Kohl gave us one to borrow \\
 \hline 
-Perfboard & \$10 & 15-Sep & Large Perfboard for redundancy \\ 
+Perfboard & \$10 & 19-Sep & Large Perfboard for redundancy \\ 
 \hline 
-Motor Control Circuit & \$5 & 15-Sep & 2 H-bridges \\ 
+Motor Control Circuit & \$5 & 19-Sep & TBD \\ 
 \hline 
-Motors & \$40 & 15-Sep & 4 motors \\ 
+Motors & \$40 & 19-Sep & 4 motors \\ 
 \hline 
 Body & \$0 & N/A & 3D printed \\ 
 \hline 
-Props & \$10 & 15-Sep & As many props as we can get \\ 
+Props & \$10 & 19-Sep & As many props as we can get \\ 
 \hline 
-Battery & \$10 & 15-Sep & \textasciitilde 500mah Lithium \\ 
+Battery & \$10 & 19-Sep & $\sim$500mAh Lithium \\ 
 \hline 
 PCB(s) & \$75 & 15-Nov & 3 boards for redundancy \\ 
 \hline 
