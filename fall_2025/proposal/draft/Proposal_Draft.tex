@@ -211,17 +211,22 @@ Since the end goal of this project to create lab environment for students, the t
 These are system tests with the purpose of checking if the various parts of the drone are working together properly.
 
 \begin{enumerate}
+	\item \textit{Motor System} - Demonstrate the microcontroller driving multiple motors using a MOSFET circuit
+	\item \textit{Onboard Data Logging} - Demonstrate the logging of relevant data in non-volatile memory 
 	\item \textit{Wireless Data Logging} - Demonstrate the transmission of relevant data to a nearby laptop
-	\item \textit{} 
+	\item \textit{Distance Sensor Calibration} - Demonstrate the sensors accurately logging distance information
+	\item \textit{IMU} - Demonstrate the IMU logging rotation information for calculating error
+	\item \textit{PID Loop} - Demonstrate the PID loop functioning correctly by flying the drone
 \end{enumerate}
 
 \subsection{Lab Tests}
 These tests are to verify that the drone and surrounding systems are able to fulfill the marketing requirements and be useful in the lab setting.
 
 \begin{enumerate}
-	\item Step Response
-	\item Sinusoidal Response
-	\item Constant Disturbance Response
+	\item \textit{Hold Altitude} - Demonstrate the drone holding at an arbitrary target altitude
+	\item \textit{Step Response} - Demonstrate the drone changing its target altitude and settling at the new one
+	\item \textit{Sinusoidal Response} - Demonstrate the drone changing its height corresponding to an input function
+	\item \textit{Constant Disturbance Response} - Demonstrate the drone maintaining a position while a constant disturbance like a fan is applied to it
 \end{enumerate}
 
 \section{Budget}
