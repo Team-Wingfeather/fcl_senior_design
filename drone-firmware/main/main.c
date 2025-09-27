@@ -36,7 +36,7 @@
 #define BLINK_GPIO 2
 
 //littleFS defs
-#define BUFFER_SIZE 512
+#define BUFFER_SIZE 1024
 #define FILE_PATH "/littlefs/log.csv"
 
 static char ram_buffer[BUFFER_SIZE];
@@ -63,7 +63,7 @@ void buffer_write(const char *csv_line)
     size_t len = strlen(csv_line);
 
     // If line doesn't end with newline, add one
-    bool needs_newline = (len == 0 || csv_line[len - 1] != '\n');
+    //bool needs_newline = (len == 0 || csv_line[len - 1] != '\n');
 
     size_t total_len = len + (needs_newline ? 1 : 0);
 
@@ -75,9 +75,9 @@ void buffer_write(const char *csv_line)
     memcpy(&ram_buffer[buffer_index], csv_line, len);
     buffer_index += len;
 
-    if (needs_newline) {
-        ram_buffer[buffer_index++] = '\n';
-    }
+    // if (needs_newline) {
+    //     ram_buffer[buffer_index++] = '\n';
+    // }
 }
 
 //start button init
@@ -153,7 +153,7 @@ void mpu_logging(void *pvPerameter)
 
         //Update time
         int64_t now_time = esp_timer_get_time();
-        float dt = (now_time - prev_time) / 1000000.0f;
+        float dt = (now_time - prev_time) / 1000000.0f; //convert to seconds
         prev_time = now_time;
 
         // Accelerometer angles converted to degrees from radians
