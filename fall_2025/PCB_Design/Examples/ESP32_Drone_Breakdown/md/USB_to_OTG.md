@@ -2,5 +2,7 @@
 - USBLC6-2SC6 ESD protection array
 - TYPE-C16PIN USB-C Port
 ## Connections
+- ChatGPT thinks we need series resistors on D+/D-, a diode/fuse on VBUS (make sure VBUS has no path to board power), and "bulk decoupling" capacitors on VBUS
+	-  VBUS --> fuse --> cap --> regulator (not to battery)
 ## Notes
 - Will likely need most of this
