@@ -19,7 +19,7 @@
 		{"id":"30bf3b30bcd3b473","type":"file","file":"fall_2025/PCB_Design/Examples/ESP32_Drone_Breakdown/md/Buzzer_and_Charge_Check.md","x":-1560,"y":-210,"width":400,"height":400},
 		{"id":"71facbef1ca15706","type":"file","file":"fall_2025/PCB_Design/Examples/ESP32_Drone_Breakdown/md/Battery_Input_and_Switch.md","x":640,"y":-605,"width":400,"height":400,"color":"1"},
 		{"id":"382aa7366b378b91","type":"file","file":"fall_2025/PCB_Design/Examples/ESP32_Drone_Breakdown/md/Power_Regulator_SOC.md","x":-160,"y":-659,"width":400,"height":400},
-		{"id":"9ebf91d555f1a851","type":"file","file":"fall_2025/PCB_Design/Examples/ESP32_Drone_Breakdown/md/Gyro.md","x":499,"y":240,"width":400,"height":400}
+		{"id":"9ebf91d555f1a851","type":"file","file":"fall_2025/PCB_Design/Examples/ESP32_Drone_Breakdown/md/Gyro.md","x":499,"y":260,"width":400,"height":400}
 	],
 	"edges":[
 		{"id":"d7c3e0df4c0b3f91","fromNode":"6f44ecded7f0369e","fromSide":"bottom","toNode":"603181f6ada80285","toSide":"top"},
