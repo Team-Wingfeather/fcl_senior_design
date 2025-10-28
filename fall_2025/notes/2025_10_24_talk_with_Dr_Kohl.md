@@ -1,0 +1,4 @@
+- How many noise reducing capacitors?
+- Do we need the 2 weird floating chips (ESD Protection Array, Power Management - dual N-channel mosfet)?
+- Do resistors and little things matter, or just go with a nearby basic part? How do I know what package size to use?
+- ESP Breakout board
