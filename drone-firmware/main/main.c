@@ -160,7 +160,6 @@ static void littleFS_init()
 
 void tof_logging(void *pvPerameter)
 {
-    // --- VL53L1X configuration (make sure pins are not swapped) ---
     static VL53L1_Dev_t dev;
     static const I2cDef I2CConfig = {
         .i2cPort       = I2C_MASTER_NUM,
@@ -178,11 +177,9 @@ void tof_logging(void *pvPerameter)
         ESP_LOGI(TAG, "VL53L1X init OK");
     } else {
         ESP_LOGE(TAG, "VL53L1X init FAILED");
-        // If it fails, check wiring and that the library didn't attempt to re-install the driver with swapped pins.
         return;
     }
 
-    // Now you can keep using VL53L1X and your MPU driver (which uses the same I2C pins/port).
     while (1) {
         // Example: get range / log
         VL53L1_RangingMeasurementData_t data;
