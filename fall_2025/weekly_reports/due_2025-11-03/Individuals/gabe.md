@@ -1,0 +1,3 @@
+# This week I worked for 12 hours
+Early in this week, I spent a lot of time preparing for our team progress presentation. I think it went well overall and everyone else does too. 
+As for the software, I have not made much tangible progress. The big thing I have run into is both the MPU library and the VL53L library include their own i2c drivers. Unfortunately they conflict. They normally would be okay with different libraries since they are both abstractions of the Espressif i2c library, but both libraries automatically run some initialization code. This code can only run once otherwise it makes the whole rtos crash. I have been exploring options for different libraries that either use the same driver or can be modified more easily. 
