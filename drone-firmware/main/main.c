@@ -411,7 +411,7 @@ void app_main()
 
     // rest of initialization
     // littleFS_init();
-    i2c_bus->def = &I2cConfig;
+    i2c_bus.def = I2cConfig;
     i2cdevInit(i2c_bus);
 
     //create message queue for telemtery

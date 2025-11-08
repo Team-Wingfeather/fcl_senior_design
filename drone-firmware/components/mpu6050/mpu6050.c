@@ -34,6 +34,7 @@
 
 #include "i2cdev.h"
 #include "mpu6050.h"
+#include "esp_log.h"
 // #include "eprintf.h"
 // #include "stm32_legacy.h"
 #define DEBUG_MODULE "MPU6050"
@@ -169,7 +170,7 @@ bool mpu6050SelfTest()
             mpu6050EvaluateSelfTest(MPU6050_ST_ACCEL_LOW, MPU6050_ST_ACCEL_HIGH, axfDiff, "acc X") &&
             mpu6050EvaluateSelfTest(MPU6050_ST_ACCEL_LOW, MPU6050_ST_ACCEL_HIGH, ayfDiff, "acc Y") &&
             mpu6050EvaluateSelfTest(MPU6050_ST_ACCEL_LOW, MPU6050_ST_ACCEL_HIGH, azfDiff, "acc Z")) {
-        // DEBUG_PRINTD("mpu6050 Self test [OK].\n");
+        ESP_LOGI("mpu6050", "Self test [OK].\n");
     } else {
         testStatus = false;
     }
@@ -187,8 +188,8 @@ bool mpu6050SelfTest()
 bool mpu6050EvaluateSelfTest(float low, float high, float value, char *string)
 {
     if (value < low || value > high) {
-        // DEBUG_PRINTD("Self test %s [FAIL]. low: %0.2f, high: %0.2f, measured: %0.2f\n",
-                     // string, (double)low, (double)high, (double)value);
+        ESP_LOGI("mpu6050","Self test %s [FAIL]. low: %0.2f, high: %0.2f, measured: %0.2f\n",
+                     string, (double)low, (double)high, (double)value);
         return false;
     }
 
