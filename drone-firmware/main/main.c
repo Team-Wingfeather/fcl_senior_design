@@ -4,14 +4,15 @@
 #include <string.h>
 #include <unistd.h>
 #include "freertos/FreeRTOS.h"
+#include "freertos/projdefs.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
 #include "esp_system.h"
 #include "esp_timer.h"
 #include "hal/gpio_types.h"
 #include "mpu6050.h"
-#include "i2c_drv.h"
-// #include "i2cdev.h"
+// #include "i2c_drv.h"
+#include "i2cdev.h"
 #include "vl53l1x.h"
 #include "driver/i2c.h"
 
@@ -38,7 +39,8 @@
 #define I2C_MASTER_FREQ_HZ          100000
 // #define I2C_MASTER_TX_BUF_DISABLE   0
 // #define I2C_MASTER_RX_BUF_DISABLE   0
-static I2cDrv *i2c_bus;
+static I2cDrv i2c_bus_instance;
+static I2cDrv *i2c_bus = &i2c_bus_instance;
 static const I2cDef I2cConfig= {
     .i2cPort = I2C_MASTER_NUM,
     .i2cClockSpeed = I2C_MASTER_FREQ_HZ,
@@ -46,6 +48,11 @@ static const I2cDef I2cConfig= {
     .gpioSDAPin = I2C_MASTER_SDA_IO,
     .gpioPullup = GPIO_PULLUP_ENABLE
 };
+
+// time of flight decs
+#define TOF_COUNT 2
+#define TOF_DEFAULT_ADDR 0x29
+static const uint8_t tof_xshut_pins[TOF_COUNT] = {18, 19};
 
 #define BLINK_GPIO 2
 
@@ -73,8 +80,6 @@ typedef struct
 } telemetry_msg_t;
 
 static QueueHandle_t telemetry_queue = NULL;
-
-static i2c_rw_t i2c_bus_handle;
 
 static const char *TAG = "Drone";
 
@@ -160,75 +165,112 @@ static void littleFS_init()
     buffer_write("Time,Pitch,Roll\n"); //header for csv
 }
 
-// void tof_logging(void *pvPerameter)
-// {
-//     static VL53L1_Dev_t dev;
+void tof_logging(void *pvPerameter)
+{
+    //TODO Add readdressing scheme
+    // VL53L1_Error status = VL53L1_ERROR_NONE;
+    VL53L1_RangingMeasurementData_t rangingData;
+    uint8_t dataReady = 0;
+    uint16_t ranges[TOF_COUNT];
+    VL53L1_Dev_t dev[TOF_COUNT];
 
-//     vTaskDelay(pdMS_TO_TICKS(500));
+    //readdress sensors
+    for(uint8_t sensor = 0; sensor < TOF_COUNT; sensor++){
+        gpio_set_level(tof_xshut_pins[sensor], 1);
+        if (vl53l1xInit(&dev[sensor], i2c_bus))
+        {
+            ESP_LOGI(TAG,"Lidar Sensor %d VL53L1X [OK]", sensor);
+        }
+        else
+        {
+            ESP_LOGI(TAG,"Lidar Sensor %d VL53L1X [FAIL]", sensor);
+            vTaskDelete(NULL);
+        }
+        vl53l1xSetI2CAddress(&dev[sensor], TOF_DEFAULT_ADDR + sensor);
+        VL53L1_StopMeasurement(&dev[sensor]);
+        VL53L1_SetDistanceMode(&dev[sensor], VL53L1_DISTANCEMODE_MEDIUM);
+        VL53L1_SetMeasurementTimingBudgetMicroSeconds(&dev[sensor], 25000);
+        gpio_set_level(tof_xshut_pins[sensor], 0);
+    }
 
-//     if (vl53l1xInit(&dev, NULL)) {
-//         ESP_LOGI(TAG, "VL53L1X init OK");
-//     } else {
-//         ESP_LOGE(TAG, "VL53L1X init FAILED");
-//         vTaskDelete(NULL);
-//     }
+    //activate sensors
 
-//     while (1) {
-//         // Example: get range / log
-//         VL53L1_RangingMeasurementData_t data;
-//         uint8_t dataReady = 0;
-//         VL53L1_StartMeasurement(&dev);
-//         while (!dataReady) {
-//             VL53L1_GetMeasurementDataReady(&dev, &dataReady);
-//             vTaskDelay(pdMS_TO_TICKS(1));
-//         }
-//         VL53L1_GetRangingMeasurementData(&dev, &data);
-//         ESP_LOGI(TAG, "Distance: %d mm", data.RangeMilliMeter);
-//         VL53L1_clear_interrupt(&dev);
-//         VL53L1_StopMeasurement(&dev);
+    while(1){
 
-//         vTaskDelay(pdMS_TO_TICKS(1000));
-//     }
-// }
+        for(uint8_t sensor = 0; sensor < TOF_COUNT; sensor++){
+            ESP_LOGI(TAG, "In for loop");
+            gpio_set_level(tof_xshut_pins[sensor], 1);
+
+            VL53L1_StartMeasurement(&dev);
+            while (dataReady == 0){
+                ESP_LOGI(TAG, "In while loop");
+                VL53L1_GetMeasurementDataReady(&dev, &dataReady);
+                vTaskDelete(pdMS_TO_TICKS(1));
+            }
+            ESP_LOGI(TAG, "out of while loop");
+            VL53L1_GetRangingMeasurementData(&dev, &rangingData);
+            ranges[sensor] = rangingData.RangeMilliMeter;
+            VL53L1_StopMeasurement(&dev);
+            gpio_set_level(tof_xshut_pins[sensor], 0);
+        }
+        ESP_LOGI(TAG, "ready to print dists loop");
+
+        ESP_LOGI(TAG, "Distance Left %d mm | Distance Right %d mm", ranges[1], ranges[0]);
+        vTaskDelay(pdMS_TO_TICKS(50));
+
+        // VL53L1_StartMeasurement(&dev);
+        // while (dataReady == 0)
+        // {
+        //     // status = VL53L1_GetMeasurementDataReady(&dev, &dataReady);
+        //     vTaskDelay(pdMS_TO_TICKS(1));
+        // }
+        // // status = VL53L1_GetRangingMeasurementData(&dev, &rangingData);
+        // range = rangingData.RangeMilliMeter;
+        // VL53L1_StopMeasurement(&dev);
+        // VL53L1_StartMeasurement(&dev);
+        // ESP_LOGI(TAG,"Distance %d mm",range);
+        // vTaskDelay(pdMS_TO_TICKS(50));
+    }
+}
 
 void mpu_logging(void *pvPerameter)
 {
-    //create mpu device
-    mpu6050Init(i2c_bus);
-    if (!mpu6050Test()) {
-            ESP_LOGE(TAG, "MPU6050 connection failed!");
-            vTaskDelete(NULL);
-        }
-    ESP_LOGE(TAG, "MPU6050 connected successfully");
+    // //create mpu device
+    // mpu6050Init(i2c_bus);
+    // if (!mpu6050Test()) {
+    //         ESP_LOGE(TAG, "MPU6050 connection failed!");
+    //         vTaskDelete(NULL);
+    //     }
+    // ESP_LOGE(TAG, "MPU6050 connected successfully");
 
-    //config
-    mpu6050SetSleepEnabled(false);
-    mpu6050SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
-    mpu6050SetFullScaleGyroRange(MPU6050_GYRO_FS_250);
-    mpu6050SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
-    mpu6050SetDLPFMode(MPU6050_DLPF_BW_42);
+    // //config
+    // mpu6050SetSleepEnabled(false);
+    // mpu6050SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
+    // mpu6050SetFullScaleGyroRange(MPU6050_GYRO_FS_250);
+    // mpu6050SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
+    // mpu6050SetDLPFMode(MPU6050_DLPF_BW_42);
 
-    //get conversion factors
-    float accel_scale = mpu6050GetFullScaleAccelGPL();
-    float gyro_scale = mpu6050GetFullScaleGyroDPL();
+    // //get conversion factors
+    // float accel_scale = mpu6050GetFullScaleAccelGPL();
+    // float gyro_scale = mpu6050GetFullScaleGyroDPL();
 
-    int16_t ax, ay, az, gx, gy, gz;
-    while (1){
-        mpu6050GetMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    // int16_t ax, ay, az, gx, gy, gz;
+    // while (1){
+    //     mpu6050GetMotion6(&ax, &ay, &az, &gx, &gy, &gz);
 
-        // Convert to physical units
-        float accel_x = ax * accel_scale;
-        float accel_y = ay * accel_scale;
-        float accel_z = az * accel_scale;
-        float gyro_x = gx * gyro_scale;
-        float gyro_y = gy * gyro_scale;
-        float gyro_z = gz * gyro_scale;
+    //     // Convert to physical units
+    //     float accel_x = ax * accel_scale;
+    //     float accel_y = ay * accel_scale;
+    //     float accel_z = az * accel_scale;
+    //     float gyro_x = gx * gyro_scale;
+    //     float gyro_y = gy * gyro_scale;
+    //     float gyro_z = gz * gyro_scale;
 
-        ESP_LOGE(TAG, "A: %.2f,%.2f,%.2f G | G: %.2f,%.2f,%.2f °/s\n",
-                accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z);
+    //     ESP_LOGE(TAG, "A: %.2f,%.2f,%.2f G | G: %.2f,%.2f,%.2f °/s\n",
+    //             accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z);
 
-        vTaskDelay(pdMS_TO_TICKS(50));
-    }
+    //     vTaskDelay(pdMS_TO_TICKS(50));
+    // }
 
     // mpu6050_dev_t dev;
     // memset(&dev, 0, sizeof(mpu6050_dev_t));
@@ -401,6 +443,14 @@ void app_main()
     // esp_netif_create_default_wifi_ap();
     // wifi_init();
 
+    //init tof xshut pins
+    // gpio_set_direction(tof_xshut_pins[0], GPIO_MODE_OUTPUT);
+    // gpio_set_level(tof_xshut_pins[0], 1);
+    for (uint8_t sensor = 0; sensor < TOF_COUNT; sensor++){
+        gpio_set_direction(tof_xshut_pins[sensor], GPIO_MODE_OUTPUT);
+        gpio_set_level(tof_xshut_pins[sensor], 0);
+    }
+
     // vTaskDelay(pdMS_TO_TICKS(200));
 
     //wait for button
@@ -411,8 +461,12 @@ void app_main()
 
     // rest of initialization
     // littleFS_init();
-    i2c_bus.def = I2cConfig;
-    i2cdevInit(i2c_bus);
+    // make sure the static instance is initialized
+    memset(&i2c_bus_instance, 0, sizeof(i2c_bus_instance));
+    i2c_bus_instance.def = &I2cConfig;
+
+    // initialize i2c driver BEFORE starting tasks that use it
+    i2cdrvInit(i2c_bus);   // this calls i2cdrvInitBus(i2c)
 
     //create message queue for telemtery
     // telemetry_queue = xQueueCreate(TELEMETRY_QUEUE_LEN, sizeof(telemetry_msg_t));
@@ -422,8 +476,8 @@ void app_main()
 
     // create tasks
     xTaskCreate(&blinky, "blinky", 2048, NULL, 5, NULL);
-    xTaskCreate(&mpu_logging, "mpu", 4096, NULL, 5, NULL);
-    // xTaskCreate(&tof_logging, "tof", 4096, NULL, 5, NULL);
+    // xTaskCreate(&mpu_logging, "mpu", 4096, NULL, 5, NULL);
+    xTaskCreate(&tof_logging, "tof", 4096, NULL, 5, NULL);
     // if (telemetry_queue != NULL) {
         // xTaskCreate(&telemetry_broadcast, "udp_bcast", 4096, NULL, 5, NULL);
     // }
