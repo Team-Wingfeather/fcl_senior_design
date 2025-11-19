@@ -10,7 +10,7 @@
 #include "esp_system.h"
 #include "esp_timer.h"
 #include "hal/gpio_types.h"
-// #include "mpu6050.h"
+#include "mpu6050.h"
 // #include "i2c_drv.h"
 #include "i2cdev.h"
 #include "vl53l1_api.h"
@@ -39,8 +39,6 @@
 #define I2C_MASTER_SDA_IO           21
 #define I2C_MASTER_NUM              I2C_NUM_0
 #define I2C_MASTER_FREQ_HZ          100000
-// #define I2C_MASTER_TX_BUF_DISABLE   0
-// #define I2C_MASTER_RX_BUF_DISABLE   0
 static I2cDrv i2c_bus_instance;
 static I2cDrv *i2c_bus = &i2c_bus_instance;
 static const I2cDef I2cConfig= {
@@ -53,7 +51,6 @@ static const I2cDef I2cConfig= {
 
 // time of flight decs
 #define TOF_COUNT 2
-// #define TOF_DEFAULT_ADDR 0x29
 static const uint8_t tof_xshut_pins[TOF_COUNT] = {18, 19};
 
 #define BLINK_GPIO 2
@@ -139,14 +136,6 @@ void wifi_init(void) {
     esp_wifi_set_config(WIFI_IF_AP, &ap_config);
     esp_wifi_start();
 }
-
-// used to init i2c for all devices
-// static void i2c_master_init()
-// {
-//     static const I2cDef i2c_bus = {
-//         .i2cPort =
-//     }
-// }
 
 static void littleFS_init()
 {
@@ -250,63 +239,47 @@ void tof_logging(void *pvPerameter)
 
 void mpu_logging(void *pvPerameter)
 {
-    // //create mpu device
-    // mpu6050Init(i2c_bus);
-    // if (!mpu6050Test()) {
-    //         ESP_LOGE(TAG, "MPU6050 connection failed!");
-    //         vTaskDelete(NULL);
-    //     }
-    // ESP_LOGE(TAG, "MPU6050 connected successfully");
+    //create mpu device
+    mpu6050Init(i2c_bus);
+    if (!mpu6050Test()) {
+            ESP_LOGE(TAG, "MPU6050 connection failed!");
+            vTaskDelete(NULL);
+        }
+    ESP_LOGE(TAG, "MPU6050 connected successfully");
 
-    // //config
-    // mpu6050SetSleepEnabled(false);
-    // mpu6050SetClockSource(MPU6050_CLOCK_PLL_XGYRO);
-    // mpu6050SetFullScaleGyroRange(MPU6050_GYRO_FS_250);
-    // mpu6050SetFullScaleAccelRange(MPU6050_ACCEL_FS_2);
-    // mpu6050SetDLPFMode(MPU6050_DLPF_BW_42);
+    mpu6050SetDLPFMode(3);
+    mpu6050SetFullScaleGyroRange(0);
+    mpu6050SetFullScaleAccelRange(0);
 
-    // //get conversion factors
-    // float accel_scale = mpu6050GetFullScaleAccelGPL();
-    // float gyro_scale = mpu6050GetFullScaleGyroDPL();
+    int64_t prev_time = esp_timer_get_time();
 
-    // int16_t ax, ay, az, gx, gy, gz;
-    // while (1){
-    //     mpu6050GetMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+    //get conversion factors
+    float accel_scale = mpu6050GetFullScaleAccelGPL();
+    float gyro_scale = mpu6050GetFullScaleGyroDPL();
+    int16_t ax, ay, az, gx, gy, gz;
 
-    //     // Convert to physical units
-    //     float accel_x = ax * accel_scale;
-    //     float accel_y = ay * accel_scale;
-    //     float accel_z = az * accel_scale;
-    //     float gyro_x = gx * gyro_scale;
-    //     float gyro_y = gy * gyro_scale;
-    //     float gyro_z = gz * gyro_scale;
+    while (1) {
+        // Update time
+        int64_t now_time = esp_timer_get_time();
+        float dt = (now_time - prev_time) / 1000000.0f;
+        prev_time = now_time;
 
-    //     ESP_LOGE(TAG, "A: %.2f,%.2f,%.2f G | G: %.2f,%.2f,%.2f °/s\n",
-    //             accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z);
+        mpu6050GetMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+        vTaskDelay(pdMS_TO_TICKS(10));
 
-    //     vTaskDelay(pdMS_TO_TICKS(50));
-    // }
+        // Convert to physical units
+        float accel_x = ax * accel_scale;
+        float accel_y = ay * accel_scale;
+        float accel_z = az * accel_scale;
+        float gyro_x = gx * gyro_scale;
+        float gyro_y = gy * gyro_scale;
+        float gyro_z = gz * gyro_scale;
 
-    // mpu6050_dev_t dev;
-    // memset(&dev, 0, sizeof(mpu6050_dev_t));
-    // // Initialize MPU6050 device on I2C bus
-    // ESP_ERROR_CHECK(mpu6050_init_desc(&dev, MPU6050_I2C_ADDRESS_LOW,
-    //                                     I2C_MASTER_NUM,
-    //                                     I2C_MASTER_SDA_IO,
-    //                                     I2C_MASTER_SCL_IO));
+        ESP_LOGE(TAG, "A: %.2f,%.2f,%.2f G | G: %.2f,%.2f,%.2f °/s\n",
+                accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z);
 
-    // // Initialize the sensor
-    // ESP_ERROR_CHECK(mpu6050_init(&dev));
-
-    // // Wake up the sensor
-    // ESP_ERROR_CHECK(mpu6050_set_sleep_enabled(&dev, false));
-
-    // // Configure accelerometer and gyroscope ranges
-    // ESP_ERROR_CHECK(mpu6050_set_accel_offset(&dev, MPU6050_ACCEL_RANGE_4, 0));
-    // ESP_ERROR_CHECK(mpu6050_set_gyro_offset(&dev, MPU6050_GYRO_RANGE_500, 0));
-
-    // ESP_LOGI(TAG, "MPU6050 initialized successfully");
-
+        vTaskDelay(pdMS_TO_TICKS(50));
+    }
     // float pitch = 0, roll = 0;
     // int64_t prev_time = esp_timer_get_time();
 
@@ -444,21 +417,19 @@ void telemetry_broadcast(void *pvParameter)
 void app_main()
 {
     // init non volitile storage for wifi
-    // esp_err_t ret = nvs_flash_init();
-    // if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        // nvs_flash_erase();
-        // ret = nvs_flash_init();
-    // }
-    // if (ret != ESP_OK) {
-        // ESP_LOGE(TAG, "nvs_flash_init failed: %d", ret);
-    // }
+    esp_err_t ret = nvs_flash_init();
+    if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
+        nvs_flash_erase();
+        ret = nvs_flash_init();
+    }
+    if (ret != ESP_OK) {
+        ESP_LOGE(TAG, "nvs_flash_init failed: %d", ret);
+    }
 
-    // ESP_ERROR_CHECK(esp_netif_init());
-    // ESP_ERROR_CHECK(esp_event_loop_create_default());
-    // esp_netif_create_default_wifi_ap();
-    // wifi_init();
-
-
+    ESP_ERROR_CHECK(esp_netif_init());
+    ESP_ERROR_CHECK(esp_event_loop_create_default());
+    esp_netif_create_default_wifi_ap();
+    wifi_init();
 
     // vTaskDelay(pdMS_TO_TICKS(200));
 
@@ -469,7 +440,7 @@ void app_main()
     }
 
     // rest of initialization
-    // littleFS_init();
+    littleFS_init();
     // make sure the static instance is initialized
     memset(&i2c_bus_instance, 0, sizeof(i2c_bus_instance));
     i2c_bus_instance.def = &I2cConfig;
@@ -478,16 +449,16 @@ void app_main()
     i2cdrvInit(i2c_bus);   // this calls i2cdrvInitBus(i2c)
 
     //create message queue for telemtery
-    // telemetry_queue = xQueueCreate(TELEMETRY_QUEUE_LEN, sizeof(telemetry_msg_t));
-    // if (telemetry_queue == NULL) {
-        // ESP_LOGE(TAG, "Failed to create telemetry queue");
-    // }
+    telemetry_queue = xQueueCreate(TELEMETRY_QUEUE_LEN, sizeof(telemetry_msg_t));
+    if (telemetry_queue == NULL) {
+        ESP_LOGE(TAG, "Failed to create telemetry queue");
+    }
 
     // create tasks
     xTaskCreate(&blinky, "blinky", 2048, NULL, 5, NULL);
     // xTaskCreate(&mpu_logging, "mpu", 4096, NULL, 5, NULL);
     xTaskCreate(&tof_logging, "tof", 4096, NULL, 5, NULL);
-    // if (telemetry_queue != NULL) {
-        // xTaskCreate(&telemetry_broadcast, "udp_bcast", 4096, NULL, 5, NULL);
-    // }
+    if (telemetry_queue != NULL) {
+        xTaskCreate(&telemetry_broadcast, "udp_bcast", 4096, NULL, 5, NULL);
+    }
 }
