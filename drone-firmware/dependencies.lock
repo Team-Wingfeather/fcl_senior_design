@@ -1,14 +1,4 @@
 dependencies:
-  espressif/mpu6050:
-    component_hash: d69219ccb141372b863c511749ffbeab28417ac71c205d7ed7030c308e1b6832
-    dependencies:
-    - name: idf
-      require: private
-      version: '>=4.0'
-    source:
-      registry_url: https://components.espressif.com/
-      type: service
-    version: 1.2.0
   idf:
     source:
       type: idf
@@ -24,9 +14,8 @@ dependencies:
       type: service
     version: 1.20.1
 direct_dependencies:
-- espressif/mpu6050
 - idf
 - joltwallet/littlefs
-manifest_hash: 8a27b2e553771a98dd2d22522f56109e89e9907f1317585971bad112fa55dc4a
+manifest_hash: d6cd4218bba9a2cf12b9982fe394eb0e2535b13852ac2af4a1341d22f58fb618
 target: esp32
 version: 2.0.0
