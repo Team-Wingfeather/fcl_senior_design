@@ -12,14 +12,13 @@
 #include "hal/gpio_types.h"
 #include "mpu6050.h"
 // #include "i2c_drv.h"
-#include "i2cdev.h"
+// #include "i2cdev.h"
 #include "vl53l1_api.h"
 #include "vl53l1_core.h"
 #include "vl53l1x.h"
-#include "driver/i2c.h"
 
 #include "esp_littlefs.h"
-#include "spi_flash_mmap.h"
+// #include "spi_flash_mmap.h"
 #include "esp_err.h"
 #include "esp_log.h"
 
@@ -30,7 +29,7 @@
 #include "esp_netif.h"
 
 #include <arpa/inet.h>
-#include <errno.h>
+// #include <errno.h>
 
 #define START_BUTTON_GPIO 0
 
@@ -245,18 +244,26 @@ void mpu_logging(void *pvPerameter)
             ESP_LOGE(TAG, "MPU6050 connection failed!");
             vTaskDelete(NULL);
         }
-    ESP_LOGE(TAG, "MPU6050 connected successfully");
+    ESP_LOGI(TAG, "MPU6050 connected successfully");
 
     mpu6050SetDLPFMode(3);
     mpu6050SetFullScaleGyroRange(0);
     mpu6050SetFullScaleAccelRange(0);
 
-    int64_t prev_time = esp_timer_get_time();
+    // wake up and select PLL X as clock source
+    mpu6050SetSleepEnabled(false);               // clear sleep bit
+    mpu6050SetClockSource(MPU6050_CLOCK_PLL_XGYRO); // choose a stable PLL source (if your header defines this)
+    vTaskDelay(pdMS_TO_TICKS(10)); // give it a moment
 
     //get conversion factors
     float accel_scale = mpu6050GetFullScaleAccelGPL();
     float gyro_scale = mpu6050GetFullScaleGyroDPL();
+    // ESP_LOGE("MPU", "%f %f", accel_scale, gyro_scale);
     int16_t ax, ay, az, gx, gy, gz;
+    float pitch = 0.0f;
+    float roll = 0.0f;
+
+    int64_t prev_time = esp_timer_get_time();
 
     while (1) {
         // Update time
@@ -265,74 +272,45 @@ void mpu_logging(void *pvPerameter)
         prev_time = now_time;
 
         mpu6050GetMotion6(&ax, &ay, &az, &gx, &gy, &gz);
+        // ESP_LOGE("MPU", "%d %d %d %d %d %d ", ax, ay, az, gx, gy, gz);
         vTaskDelay(pdMS_TO_TICKS(10));
 
         // Convert to physical units
-        float accel_x = ax * accel_scale;
-        float accel_y = ay * accel_scale;
-        float accel_z = az * accel_scale;
-        float gyro_x = gx * gyro_scale;
-        float gyro_y = gy * gyro_scale;
-        float gyro_z = gz * gyro_scale;
+        float accel_x = (float)(ax * accel_scale);
+        float accel_y = (float)(ay * accel_scale);
+        float accel_z = (float)(az * accel_scale);
+        float gyro_x = (float)(gx * gyro_scale);
+        float gyro_y = (float)(gy * gyro_scale);
+        // float gyro_z = (float)(gz * gyro_scale); //Dont need this to fly probaly
 
-        ESP_LOGE(TAG, "A: %.2f,%.2f,%.2f G | G: %.2f,%.2f,%.2f °/s\n",
-                accel_x, accel_y, accel_z, gyro_x, gyro_y, gyro_z);
+        // compute angles off of accelerometer
+        float pitch_acc = atan2f(-accel_x, sqrtf(accel_y*accel_y + accel_z*accel_z)) * (180.0f/M_PI);
+        float roll_acc  = atan2f(accel_y, accel_z) * (180.0f/M_PI);
+
+        //complementary filter
+        pitch = 0.95f * (pitch + gyro_y * dt) + 0.05f * pitch_acc;
+        roll = 0.95f * (roll + gyro_x * dt) + 0.05f * roll_acc;
+
+        // Log data
+        float now_s = now_time / 1e6;
+        char line[128];
+        snprintf(line, sizeof(line), "%.3f,%.2f,%.2f\n", now_s, pitch, roll);
+        buffer_write(line);
+
+        ESP_LOGW(TAG, "%.3f,%2f,%2f\n", now_s, pitch, roll);
+
+        // Send telemetry
+        if (telemetry_queue != NULL) {
+            telemetry_msg_t tm = {0};
+            tm.len = (uint16_t)snprintf(tm.buf, TELEMETRY_MAX_LEN,
+                                        "%.3f,%.2f,%.2f\n", now_s, pitch, roll);
+            if (xQueueSend(telemetry_queue, &tm, 0) != pdTRUE) {
+                // Queue full, skip this message
+            }
+        }
 
         vTaskDelay(pdMS_TO_TICKS(50));
     }
-    // float pitch = 0, roll = 0;
-    // int64_t prev_time = esp_timer_get_time();
-
-    // while (1) {
-    //     // Get accelerometer and gyroscope data
-    //     mpu6050_acceleration_t accel;
-    //     mpu6050_rotation_t gyro;
-
-    //     esp_err_t res = mpu6050_get_accel(&dev, &accel);
-    //     if (res != ESP_OK) {
-    //         ESP_LOGE(TAG, "Failed to read accelerometer: %d", res);
-    //         vTaskDelay(pdMS_TO_TICKS(50));
-    //         continue;
-    //     }
-
-    //     res = mpu6050_get_gyro(&dev, &gyro);
-    //     if (res != ESP_OK) {
-    //         ESP_LOGE(TAG, "Failed to read gyroscope: %d", res);
-    //         vTaskDelay(pdMS_TO_TICKS(50));
-    //         continue;
-    //     }
-
-    //     // Update time
-    //     int64_t now_time = esp_timer_get_time();
-    //     float dt = (now_time - prev_time) / 1000000.0f;
-    //     prev_time = now_time;
-
-    //     // Accelerometer angles (converted to degrees)
-    //     float pitch_acc = atan2f(-accel.x, sqrtf(accel.y * accel.y + accel.z * accel.z)) * 180.0f / M_PI;
-    //     float roll_acc = atan2f(accel.y, accel.z) * 180.0f / M_PI;
-
-    //     // Complementary filter
-    //     pitch = 0.95f * (pitch + gyro.y * dt) + 0.05f * pitch_acc;
-    //     roll = 0.95f * (roll + gyro.x * dt) + 0.05f * roll_acc;
-
-    //     // Log data
-    //     float now_s = now_time / 1e6;
-    //     char line[128];
-    //     snprintf(line, sizeof(line), "%.3f,%.2f,%.2f\n", now_s, pitch, roll);
-    //     buffer_write(line);
-
-    //     // Send telemetry
-    //     if (telemetry_queue != NULL) {
-    //         telemetry_msg_t tm = {0};
-    //         tm.len = (uint16_t)snprintf(tm.buf, TELEMETRY_MAX_LEN,
-    //                                     "%.3f,%.2f,%.2f\n", now_s, pitch, roll);
-    //         if (xQueueSend(telemetry_queue, &tm, 0) != pdTRUE) {
-    //             // Queue full, skip this message
-    //         }
-    //     }
-
-    //     vTaskDelay(pdMS_TO_TICKS(50));
-    // }
 }
 
 void blinky(void *pvParameter)
@@ -352,7 +330,7 @@ void blinky(void *pvParameter)
 
 // Currently uses unicast to my computer's ip addres
 // Apparently broadacst has problem on the esp32
-// I tried multicast and i couldnt get it to work
+// I tried multicast and I couldnt get it to work
 // Works for now
 // TODO: Make this use multicast so multiple computers can connect
 void telemetry_broadcast(void *pvParameter)
@@ -444,8 +422,6 @@ void app_main()
     // make sure the static instance is initialized
     memset(&i2c_bus_instance, 0, sizeof(i2c_bus_instance));
     i2c_bus_instance.def = &I2cConfig;
-
-    // initialize i2c driver BEFORE starting tasks that use it
     i2cdrvInit(i2c_bus);   // this calls i2cdrvInitBus(i2c)
 
     //create message queue for telemtery
@@ -456,7 +432,7 @@ void app_main()
 
     // create tasks
     xTaskCreate(&blinky, "blinky", 2048, NULL, 5, NULL);
-    // xTaskCreate(&mpu_logging, "mpu", 4096, NULL, 5, NULL);
+    xTaskCreate(&mpu_logging, "mpu", 4096, NULL, 5, NULL);
     xTaskCreate(&tof_logging, "tof", 4096, NULL, 5, NULL);
     if (telemetry_queue != NULL) {
         xTaskCreate(&telemetry_broadcast, "udp_bcast", 4096, NULL, 5, NULL);
