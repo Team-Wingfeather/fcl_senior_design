@@ -3,8 +3,8 @@
 \usepackage{graphicx}
 %\usepackage{hyperref}
 
-\title{Feedback Controls Fall Final Design Report \\ \normalsize{EGEE 4810 - Senior Design}}
-\author{Aydan Vissing, Brady Schick, Gabriel Southwell, Simon Ross}
+\title{\Huge Feedback Controls Fall Final Design Report \\ \normalsize{EGEE 4810 - Senior Design}}
+\author{by \\ \Large TEAM WINGFEATHER \\ Aydan Vissing \\ Brady Schick \\ Gabriel Southwell \\ Simon Ross}
 \date{\footnotesize{Due} \\ \normalsize{December 12, 2025}}
 
 
@@ -23,7 +23,9 @@
 
 %FIXME improve abstract
 \begin{abstract}
-This project proposal outlines our intent to reimaginine the Feedback Controls Laboratory experience at Cedarville University. The main goals of this project are to make the lab experience more engaging and relevant for students, simpler to work with, more reliable than previous solutions, and more cost-effective. To achieve these ends, we plan to design a cheap drone platform that is capable of communicating fundamental feedback controls concepts with a simple software user interface. We will start by selecting hardware components that meet our end goals, creating a hardware prototype. Once this prototype is complete, we will program, test, and modify it until we are satisfied with the platform. Finally, we will refine a final design and software solution including simple choices for the user that aid learning. If this is completed with time to spare, we will refine the experience, adding features and focusing the lab experience. Ultimately, we hope to transform the way students view Feedback Controls lab, relating classwork to concepts they are familiar with and making lab time enjoyable.
+This project report summarizes the progress to date on project Wingfeather, intended to reimagine the Feedback Controls Laboratory experience at Cedarville University. The main goals of this project are to make the lab experience more engaging and relevant for students, simpler to work with, more reliable than previous solutions, and more cost-effective. To achieve these ends, progress has been made towards a cheap drone platform that is capable of communicating fundamental feedback controls concepts along with a simple software user interface. Up to this point, hardware has been developed for the fabrication of a printed circuit board with the necessary components. This board has been acquired, and sensor communication code is in the integration phase. A mathematical model has been created to describe the drone dynamics, and will also be integrated soon. As the project continues to mature, the rest of the selected components will be integrated onto a custom 3D-printed frame and the testing phase will begin. Ultimately, this project is on track to be completed by the end of next semester. The current status shows promise to transform the way students view Feedback Controls lab, relating classwork to concepts they are familiar with and making lab time more enjoyable.
+
+
 \end{abstract}
 
 \newpage
@@ -60,7 +62,7 @@ The following requirements define the end user experience as desired by the cust
 \subsection{Engineering Requirements}
 \subsubsection{Hardware Requirements}
 \begin{itemize}
-  \item[$\Rightarrow$] Hard Requirements:
+  \item Hard Requirements:
   \begin{itemize}
     \item Microcontroller
     \item 4 motors
@@ -69,7 +71,7 @@ The following requirements define the end user experience as desired by the cust
     \item Bladeguards for safety
     \item Positional and tracking sensors
   \end{itemize}
-  \item[$\Rightarrow$] Soft Requirements:
+  \item Soft Requirements:
   \begin{itemize}
     \item Sturdy frame
     \item Conviently swappable and rechargable batteries
@@ -77,7 +79,7 @@ The following requirements define the end user experience as desired by the cust
 \end{itemize}
 \subsubsection{Software Requirements}
 \begin{itemize}
-  \item[$\Rightarrow$] Hard Requirements:
+  \item Hard Requirements:
   \begin{itemize}
     \item PID controller logic so drone can fly
     \item Controller logic for open loop capabilities
@@ -85,7 +87,7 @@ The following requirements define the end user experience as desired by the cust
     \item User-friendly interface for programming
     \item Method to input step functions and sinusoidal functions
   \end{itemize}
-  \item[$\Rightarrow$] Soft Requirements:
+  \item Soft Requirements:
   \begin{itemize}
     \item Wireless communication
     \item Intuitive GUI
