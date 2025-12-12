@@ -199,6 +199,32 @@ address each subsystem as a textual subsection. Include schematic and/or flow di
 	\end{itemize}
 \end{enumerate}
 
+\subsection{Controls}
+\begin{enumerate}
+		\item Non-Linear Model
+		\begin{figure}[htbp]
+    			\centering
+    			\includegraphics[width=0.9\textwidth]{ControlsFlowchart}
+    			\caption{Control Loop for Quad-copter Flight}
+    			\label{fig:myimage}
+		\end{figure}
+		\begin{itemize}
+			\item Fully defines how the drone will be controlled in software using PID controllers.
+			\item PID controllers were used for their simplicity and their widespread use in controls fields
+		\end{itemize}
+		\item Linear Model
+		\begin{itemize}
+			\item Allows for mapping of poles of the control system
+			\item This helps the tuning process to avoid producing an unstable system
+		\end{itemize}
+		\item Simulation
+		\begin{itemize}
+			\item Quad-copter dynamics and controls simulated using MATLAB
+			\item Allows for verification of quad-copter dynamics and controls
+			\item Provides functionality for an initial start to the tuning process 
+		\end{itemize}
+\end{enumerate}
+
 \section{Project Schedule}
 Figure 1 below proposes a notional schedule for the important project checkpoints, including the milestones discussed in the section below. Though likely not perfect, this schedule will keep the project focused, providing tasks and elements to consider weekly as the project progresses.
 \begin{figure}[h!]
