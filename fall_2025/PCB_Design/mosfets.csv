@@ -1,4 +1,0 @@
-JLC Part,Mfr Part,Manufacturer,Package,VDS (V),Max ID (typ),RDS(on) (typ / test V),VGS(th),Power / Pd,Notes,Sources
-C20917,AO3400A,AOS,SOT-23,30V,"— (see datasheet)","48 mΩ @ 2.5V","1.45 V @ 250 µA","See datasheet","Low-voltage N-channel MOSFET — general switching, power path","JLC; LCSC; AOS datasheet. :contentReference[oaicite:3]{index=3}"
-C668996,SI2302A-TP,MCC,SOT-23,20V,3A,"55 mΩ @ 4.5V","1.2 V @ 50 µA","~1.25 W","Low-voltage switching MOSFET; used in small-cam/drone BOMs","JLC; LCSC. :contentReference[oaicite:4]{index=4}"
-C6285738,IRLML6344TRPBF-HXY,HXY,SOT-23,30V,5.8A,"28 mΩ @ 10V","0.7 V","~1.4 W","Logic-level, low Rds(on) MOSFET for switching","JLC; LCSC. :contentReference[oaicite:5]{index=5}"
