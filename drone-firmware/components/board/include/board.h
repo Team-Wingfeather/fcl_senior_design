@@ -1,3 +1,11 @@
+// Board component for Wingfeather boards
+// Created for the 2025-2026 Flight Controls senior design team
+
+/* ===============================
+Contains definitions for the drone hardware along with getters for those defines
+Current Hardware Version: Breadboard
+=============================== */
+
 #ifndef BOARD_CONFIG_H
 #define BOARD_CONFIG_H
 
@@ -8,7 +16,7 @@
 #define BOARD_NAME "Breadboard Rig"
 #define BOARD_REV 0
 
-// Important hardware defines
+// Hardware Counts
 #define TOF_COUNT 2
 #define MOTOR_COUNT 4
 
