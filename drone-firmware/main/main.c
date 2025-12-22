@@ -92,9 +92,9 @@ static const I2cDef I2cConfig= {
 //     int16_t ranges[TOF_COUNT];
 // } telemetry_snapshot_t;
 
-static telemetry_snapshot_t latest_snapshot;
-static SemaphoreHandle_t snapshot_mutex = NULL;
-static TaskHandle_t telemetry_aggregator_handle = NULL;
+// static telemetry_snapshot_t latest_snapshot;
+// static SemaphoreHandle_t snapshot_mutex = NULL;
+// static TaskHandle_t telemetry_aggregator_handle = NULL;
 
 static const char *TAG = "Drone";
 
@@ -260,11 +260,7 @@ void tof_logging(void *pvPerameter)
             VL53L1_StartMeasurement(&dev[sensor]);
 
             // Put range into snapshot
-            if(xSemaphoreTake(snapshot_mutex, pdMS_TO_TICKS(10)) == pdTRUE){
-                latest_snapshot.tof_timestamp_us[sensor] = esp_timer_get_time();
-                latest_snapshot.ranges[sensor] = ranges[sensor];
-                xSemaphoreGive(snapshot_mutex);
-            }
+            telemetry_publish_tof(sensor, esp_timer_get_time(), ranges[sensor]);
         }
         ESP_LOGI(TAG, "Distance Left %d mm | Distance Right %d mm", ranges[1], ranges[0]);
         vTaskDelay(pdMS_TO_TICKS(50));
@@ -328,12 +324,13 @@ void mpu_logging(void *pvPerameter)
 
         ESP_LOGW(TAG, "%.3f,%2f,%2f\n", now_time / 1e6, pitch, roll);
 
-        if (xSemaphoreTake(snapshot_mutex, pdMS_TO_TICKS(10)) == pdTRUE) {
-            latest_snapshot.pitch = pitch;
-            latest_snapshot.roll  = roll;
-            latest_snapshot.mpu_timestamp_us = now_time;
-            xSemaphoreGive(snapshot_mutex);
-        }
+        telemetry_publish_mpu(now_time, pitch, roll);
+        // if (xSemaphoreTake(snapshot_mutex, pdMS_TO_TICKS(10)) == pdTRUE) {
+        //     latest_snapshot.pitch = pitch;
+        //     latest_snapshot.roll  = roll;
+        //     latest_snapshot.mpu_timestamp_us = now_time;
+        //     xSemaphoreGive(snapshot_mutex);
+        // }
 
         vTaskDelay(pdMS_TO_TICKS(50));
     }
