@@ -1,3 +1,10 @@
+// Telemetry component for Wingfeather drone boards
+// Created for the 2025-2026 Flight Controls senior design team
+
+/* ===============================
+Defines structs and functions that are used for collecting flight data
+=============================== */
+
 #ifndef TELEMETRY_H
 #define TELEMETRY_H
 
@@ -5,10 +12,10 @@
 #include <freertos/semphr.h>
 #include <freertos/queue.h>
 #include <stdint.h>
+#include "board.h"
 
 #define TELEMETRY_MAX_LEN 128
 #define TELEMETRY_QUEUE_LEN 16
-#define TOF_COUNT 2
 
 typedef struct
 {
@@ -35,6 +42,7 @@ SemaphoreHandle_t telemetry_snapshot_get_mutex(void);
 telemetry_snapshot_t telemetry_snapshot_get(void);
 
 // Publish helpers used by sensor tasks
+// Should these be moved to mpu and tof components?
 void telemetry_publish_mpu(int64_t timestamp_us, float pitch, float roll);
 void telemetry_publish_tof(uint8_t sensor, int64_t timestamp_us, int16_t mm);
 

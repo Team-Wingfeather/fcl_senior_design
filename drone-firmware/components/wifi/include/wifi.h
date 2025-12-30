@@ -1,10 +1,16 @@
+// WiFi component for Wingfeather drone boards
+// Created for the 2025-2026 Flight Controls senior design team
+
+/* ===============================
+Contains abstractions for initializing the WiFi Access Point and
+broadcasting telemetry data.
+=============================== */
+
 #ifndef WIFI_H
 #define WIFI_H
 
 #include <stdint.h>
 #include <stdbool.h>
-// #include "telemetry.h"
-#include "esp_err.h"
 
 #define WIFI_SSID "DRONE_WIFI"
 #define WIFI_PASS "password"
@@ -19,7 +25,7 @@ void wifi_init(void);
 
 void wifi_stop(void);
 
-esp_err_t wifi_start_udp_broadcast(void);
+void wifi_start_udp_broadcast(void);
 
 bool wifi_is_connected(void);
 
