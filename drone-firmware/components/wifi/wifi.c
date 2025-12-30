@@ -121,10 +121,9 @@ void udp_broadcast(void *pvParameter)
     }
 }
 
-esp_err_t wifi_start_udp_broadcast(void)
+void wifi_start_udp_broadcast(void)
 {
     telemetry_queue = telemetry_get_queue();
     xTaskCreate(&udp_broadcast, "udp_broadcast", 4096, NULL, 5, &udp_broadcast_task);
     udp_task_running = true;
-    return ESP_OK;
 }

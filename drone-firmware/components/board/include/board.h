@@ -1,4 +1,4 @@
-// Board component for Wingfeather boards
+// Board component for Wingfeather drone boards
 // Created for the 2025-2026 Flight Controls senior design team
 
 /* ===============================
