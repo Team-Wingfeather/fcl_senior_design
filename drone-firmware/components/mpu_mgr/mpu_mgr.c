@@ -6,7 +6,7 @@
 #include "esp_timer.h"
 #include "esp_log.h"
 
-const char *TAG = "mpu";
+static const char *TAG = "mpu";
 
 void mpu_logging(void *pvPerameter)
 {
