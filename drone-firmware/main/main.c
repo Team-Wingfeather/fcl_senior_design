@@ -22,6 +22,8 @@
 #include "system.h"
 #include "nvs_flash.h"
 
+#include "motors.h"
+
 // static const char *TAG = "Drone";
 
 // void blinky(void *pvParameter)
