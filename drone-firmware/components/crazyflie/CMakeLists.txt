@@ -1,5 +1,6 @@
 idf_component_register(SRCS "./hal/src/buzzer.c"
                 "./hal/src/sensors.c"
+                "./hal/src/usec_time.c"
                 "./modules/src/stabilizer.c"
                 "./modules/src/controller.c"
                 "./modules/src/controller_pid.c"
@@ -19,7 +20,7 @@ idf_component_register(SRCS "./hal/src/buzzer.c"
                 "./utils/src/num.c"
                 "./utils/src/rateSupervisor.c"
                 INCLUDE_DIRS "./hal/interface" "./modules/interface" "./utils/interface"
-                REQUIRES i2c_bus mpu6050 vl53l1 dsp_lib motors wifi esp_timer)
+                REQUIRES i2c_bus mpu6050 vl53l1 dsp_lib motors wifi esp_timer board)
 
 idf_component_get_property( FREERTOS_ORIG_INCLUDE_PATH freertos ORIG_INCLUDE_PATH)
 target_include_directories(${COMPONENT_TARGET} PUBLIC
