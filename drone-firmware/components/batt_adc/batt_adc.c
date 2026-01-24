@@ -85,6 +85,6 @@ void batt_adc_start(void)
 {
    batt_adc_init();
    adc_cal_init();
-   xTaskCreate(&batt_logging, "batt", 0, NULL, 1, NULL); //FIXME needs memory - start with 2048 and then try 4096 if that fails -GS
+   xTaskCreate(&batt_logging, "batt", 2048, NULL, 1, NULL); //FIXME needs memory - start with 2048 and then try 4096 if that fails -GS
    return;
 }
