@@ -39,7 +39,7 @@ void batt_logging(void *pvParameters)
       else if (err != ESP_OK)
       {
          ESP_LOGE(TAG, "Battery check ADC error");
-         // If there is an error, do we want this task to delete and send a fault? -GS
+         vTaskDelete(NULL); //FIXME send a fault
       }
 
       if (raw_voltage != -1){
@@ -85,7 +85,6 @@ void batt_adc_start(void)
 {
    batt_adc_init();
    adc_cal_init();
-   xTaskCreate(&batt_logging, "batt", 0, NULL, 1, NULL); //FIXME needs memory
-   // Probably start with 2048 and then try 4096 if that fails -GS
+   xTaskCreate(&batt_logging, "batt", 0, NULL, 1, NULL); //FIXME needs memory - start with 2048 and then try 4096 if that fails -GS
    return;
 }
