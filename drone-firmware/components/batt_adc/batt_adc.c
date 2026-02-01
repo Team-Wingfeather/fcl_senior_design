@@ -7,6 +7,7 @@
 #include "esp_timer.h"
 #include "esp_log.h"
 
+#include "telemetry.h"
 #include "batt_adc.h"
 #include "board.h"
 
@@ -47,6 +48,8 @@ void batt_logging(void *pvParameters)
          convert_raw(raw_voltage, &voltage_mv);
          voltage_mv = V_DIVIDER_SCALE*voltage_mv;
          ESP_LOGW(TAG, "%.3f,%d mV\n", now_time / 1e6, voltage_mv);
+
+         telemetry_publish_batt(now_time, (int32_t)voltage_mv);
       }
 
       vTaskDelay(pdMS_TO_TICKS(5000));
