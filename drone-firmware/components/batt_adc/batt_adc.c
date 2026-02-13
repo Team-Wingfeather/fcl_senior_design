@@ -15,7 +15,7 @@ static bool isInit = false;
 static const char *TAG = "batt_adc";
 static adc_oneshot_unit_handle_t batt_adc_handle = NULL;
 static adc_cali_handle_t adc_cal_handle = NULL;
-static const int8_t V_DIVIDER_SCALE = 2; //multiply measurements by factor accounting for V divider //TODO this will be 3
+static const int8_t V_DIVIDER_SCALE = 3; //multiply measurements by factor accounting for V divider //TODO this will be 3
 
 void convert_raw(int raw_value, int* voltage)
 {
