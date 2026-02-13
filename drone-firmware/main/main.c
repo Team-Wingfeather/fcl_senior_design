@@ -14,6 +14,7 @@
 // #include "mpu_mgr.h"
 // #include "tof_mgr.h"
 #include "buzzer.h"
+#include "platform.h"
 
 // #include "motors.h"
 
@@ -80,6 +81,11 @@ void app_main()
     }
 
     ESP_ERROR_CHECK(ret);
+
+    /*Initialize the platform.*/
+    if (platformInit() == false) {
+        while (1);//if  firmware is running on the wrong hardware, Halt
+    }
 
     /*launch the system task */
     systemLaunch();
