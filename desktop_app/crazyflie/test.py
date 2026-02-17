@@ -178,6 +178,27 @@ def flight_test(cf):
     #         time.sleep(0.1)
 
 
+def run_spin_test(cf):
+    print("Motors spinning. Press Ctrl+C to stop.")
+
+    dt = 1.0 / COMMAND_RATE_HZ
+
+    for _ in range(20):
+        cf.commander.send_setpoint(0, 0, 0, 0)
+        time.sleep(0.02)
+
+    try:
+        while True:
+            # zero roll, pitch, yaw-rate, constant thrust
+            cf.commander.send_setpoint(0, 0, 0, HOVER_THRUST)
+            time.sleep(dt)
+
+    except KeyboardInterrupt:
+        print("\nStopping motors...")
+        cf.commander.send_setpoint(0, 0, 0, 0)
+        time.sleep(0.1)
+
+
 if __name__ == "__main__":
     cflib.crtp.init_drivers()
 
