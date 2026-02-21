@@ -1,5 +1,6 @@
 import sys
 import time
+from calendar import JULY
 
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
@@ -178,8 +179,8 @@ def flight_test(cf):
     #         time.sleep(0.1)
 
 
-def run_spin_test(cf):
-    print("Motors spinning. Press Ctrl+C to stop.")
+def flight_test(cf):
+    print("Starting. Press Ctrl+C to stop.")
 
     dt = 1.0 / COMMAND_RATE_HZ
 
@@ -187,19 +188,50 @@ def run_spin_test(cf):
         cf.commander.send_setpoint(0, 0, 0, 0)
         time.sleep(0.02)
 
-    try:
-        while True:
-            # zero roll, pitch, yaw-rate, constant thrust
-            if JUST_LOG:
-                cf.commander.send_setpoint(0, 0, 0, 0)
-            else:
-                cf.commander.send_setpoint(0, 0, 0, HOVER_THRUST)
-            time.sleep(dt)
+    if FLIGHT_TYPE == 0:
+        try:
+            while True:
+                # zero roll, pitch, yaw-rate, constant thrust
+                if JUST_LOG:
+                    cf.commander.send_setpoint(0, 0, 0, 0)
+                else:
+                    cf.commander.send_setpoint(0, 0, 0, HOVER_THRUST)
+                time.sleep(dt)
 
-    except KeyboardInterrupt:
-        print("\nStopping motors...")
-        cf.commander.send_setpoint(0, 0, 0, 0)
-        time.sleep(0.1)
+        except KeyboardInterrupt:
+            print("\nStopping...")
+            cf.commander.send_setpoint(0, 0, 0, 0)
+            time.sleep(0.1)
+
+    elif FLIGHT_TYPE == 1:
+        try:
+            while True:
+                if JUST_LOG:
+                    cf.commander.send_setpoint(0, 0, 0, 0)
+                else:
+                    cf.commander.send_position_setpoint(0.0, 0.0, 0.3, 0.0)
+                time.sleep(dt)
+
+        except KeyboardInterrupt:
+            print("\nStopping...")
+            cf.commander.send_setpoint(0, 0, 0, 0)
+            time.sleep(0.1)
+
+        # elif FLIGHT_TYPE == 1:
+    #     try:
+    #         hlc = cf.high_level_commander
+    #         time.sleep(1)
+    #         hlc.takeoff(0.3, 2.0)
+    #         time.sleep(5)
+    #         hlc.land(0.0, 2.0)
+    #         time.sleep(2)
+    #         hlc.stop()
+    #         print("Done")
+
+    #     except KeyboardInterrupt:
+    #         print("\nStopping...")
+    #         cf.commander.send_setpoint(0, 0, 0, 0)
+    #         time.sleep(0.1)
 
 
 if __name__ == "__main__":
