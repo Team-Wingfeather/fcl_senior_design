@@ -2,7 +2,7 @@
 // Created for the 2025-2026 Flight Controls senior design team
 
 /* ===============================
-Manages the non-volatile storage for logging flight data and reading fluight scripts
+Manages the non-volatile storage for logging flight data and reading flight scripts
 TODO: Add script reading features
 =============================== */
 
@@ -10,12 +10,15 @@ TODO: Add script reading features
 #define STORAGE_H
 
 #include <stddef.h>
+#include <stdint.h>
+#include <sys/_types.h>
 
 #define BUFFER_SIZE 1024
 #define FILE_PATH "/littlefs/log.csv"
 
 void storage_init(void);
 void storage_buffer_write(const char *line);
+void write_file(const char *filename, const uint8_t *buffer, size_t len);
 // void storage_buffer_flush(void);
 
 #endif

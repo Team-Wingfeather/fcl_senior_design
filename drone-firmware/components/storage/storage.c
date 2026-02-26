@@ -74,3 +74,22 @@ void storage_buffer_write(const char *line)
     memcpy(&ram_buffer[buffer_index], line, len);
     buffer_index += len;
 }
+
+//TODO need to stream [fwrite() chunks] into file without reopening...
+void write_file(const char *filename,
+                const uint8_t *buffer,
+                size_t len)
+{
+    char path[128];
+
+    snprintf(path, sizeof(path), "/littlefs/%s", filename);
+
+    FILE *f = fopen(path, "ab");   // append mode //TODO this is an issue for sending the config again.
+    if (!f) {
+        printf("Failed to open %s\n", path);
+        return;
+    }
+
+    fwrite(buffer, 1, len, f);
+    fclose(f);
+}
