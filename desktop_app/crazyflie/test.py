@@ -14,8 +14,8 @@ HOVER_THRUST = 25000  # Adjust as needed
 COMMAND_RATE_HZ = 50  # Setpoint update rate
 LOG_RATE_MS = 50  # 20 ms = 50 Hz logging
 LOG_TYPE = 1  # 0=motors; 1=attitude rates; 2=stateEstimator
-JUST_LOG = 0
-FLIGHT_TYPE = 1  # 0=gimbal; 1=altitude
+JUST_LOG = 1
+FLIGHT_TYPE = 0  # 0=gimbal; 1=altitude
 
 
 def log_callback(timestamp, data, logconf):
@@ -35,14 +35,14 @@ def log_callback(timestamp, data, logconf):
                 f"{data['pwm.m4_pwm']:5d}"
             )
             log.write(
-                f"{data['motor.m1']:5d}, "
-                f"{data['motor.m2']:5d}, "
-                f"{data['motor.m3']:5d}, "
-                f"{data['motor.m4']:5d},  "
-                f"{data['pwm.m1_pwm']:5d}, "
-                f"{data['pwm.m2_pwm']:5d}, "
-                f"{data['pwm.m3_pwm']:5d}, "
-                f"{data['pwm.m4_pwm']:5d}, \n"
+                f"{data['motor.m1']:5d},"
+                f"{data['motor.m2']:5d},"
+                f"{data['motor.m3']:5d},"
+                f"{data['motor.m4']:5d},"
+                f"{data['pwm.m1_pwm']:5d},"
+                f"{data['pwm.m2_pwm']:5d},"
+                f"{data['pwm.m3_pwm']:5d},"
+                f"{data['pwm.m4_pwm']:5d},\n"
             )
 
         elif LOG_TYPE == 1:
@@ -64,12 +64,12 @@ def log_callback(timestamp, data, logconf):
                 # f"roll: {data['stabilizer.roll']:.2f}, "
                 # f"pitch: {data['stabilizer.pitch']:.2f}, "
                 # f"yaw: {data['stabilizer.yaw']:.2f}, "
-                f"PRoll: {data['pid_rate.roll_outP']:.2f}, "
-                f"IRoll: {data['pid_rate.roll_outI']:.2f}, "
-                f"DRoll: {data['pid_rate.roll_outD']:.2f}, "
-                f"PPitch: {data['pid_rate.pitch_outP']:.2f}, "
-                f"IPitch: {data['pid_rate.pitch_outI']:.2f}, "
-                f"DPitch: {data['pid_rate.pitch_outD']:.2f},\n "
+                f"{data['pid_rate.roll_outP']:.2f},"
+                f"{data['pid_rate.roll_outI']:.2f},"
+                f"{data['pid_rate.roll_outD']:.2f},"
+                f"{data['pid_rate.pitch_outP']:.2f},"
+                f"{data['pid_rate.pitch_outI']:.2f},"
+                f"{data['pid_rate.pitch_outD']:.2f},\n"
                 # f"thrust: {data['stabilizer.thrust']:.2f}"
             )
 
@@ -82,9 +82,9 @@ def log_callback(timestamp, data, logconf):
                 f"Z: {data['stateEstimate.z']:.2f}"
             )
             log.write(
-                f"X: {data['stateEstimate.x']:.2f}, "
-                f"Y: {data['stateEstimate.y']:.2f}, "
-                f"Z: {data['stateEstimate.z']:.2f},\n"
+                f"{data['stateEstimate.x']:.2f},"
+                f"{data['stateEstimate.y']:.2f},"
+                f"{data['stateEstimate.z']:.2f},\n"
             )
 
 
