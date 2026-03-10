@@ -1,6 +1,5 @@
 import sys
 import time
-from calendar import JULY
 
 import cflib.crtp
 from cflib.crazyflie import Crazyflie
