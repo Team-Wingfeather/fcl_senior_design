@@ -8,6 +8,7 @@
 #include <sys/_types.h>
 #include <unistd.h>
 #include "string.h"
+#include "esp_log.h"
 
 #include "storage.h"
 #include "uart_listener.h"
@@ -15,19 +16,25 @@
 
 static const unsigned int BUF_SIZE = 32; //TODO increase until you start getting errors?? FIXME FIXME
 static const unsigned int MAX_FILENAME_SIZE = 64;
-//static const char *TAG = "uart_listener"; //I should probably use or lose this
+static const unsigned int MAX_UART_RETRIES = 1000;
+static const char *TAG = "uart_listener"; //I should probably use or lose this
 static TaskHandle_t listener_handle = NULL;
 
 // you need to make sure your buf can fit nbytes
 int read_bytes(uint8_t* buf, int nbyte) {
    int total = 0;
+   int retries = 0;
    while(total < nbyte) {
       int len = read(0, buf+total, nbyte-total); //returns -1 on timeout
-      if (len <= 0) { // TODO handle ERR - this handles timeout (minus infinite loop). also need retries counter
-         continue; //FIXME FIXME causes infinite loop and starvation if no data
-         //return -2; //FIXME FIXME we want to keep going but not forever
-      } else {
+      if (len > 0) {
          total+=len;
+         retries = 0;
+      } else {
+         ++retries;
+         if (retries > MAX_UART_RETRIES) {
+            return -1;
+         }
+         vTaskDelay(pdMS_TO_TICKS(1));
       }
    }
    return total;
@@ -38,7 +45,7 @@ void drain_rxbuf(void) {
    while (read(0, buf, sizeof(buf)) > 0);
 }
 
-void listener_task(void *pvParameter) //TODO this is a massive blocking task...
+void listener_task(void *pvParameter)
 {
    uint8_t status_buf[6] = {0};
    uint8_t buf[BUF_SIZE];
@@ -66,7 +73,9 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
 
       int len = read_bytes(buf,to_read); //THIS SHOULD USE THE READ_FUNCTION ABOVE?? uart_read_bytes is reading from console TODO make sure we read less than 32 bytes if less than 32 left
       if (len <= 0) {
-         //TODO handle some timeout error yet to be determined - definitely don't let it continue past this loop. Also what if there just is no data??
+         esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
+         ESP_LOGE(TAG, "Error receiving flightpath file");
+         abort();
       } 
       write_flightpath(buf, len); //TODO need a command to first parse the input and see what file is to be written
       write(1, "ACK\n", 4);
