@@ -16,7 +16,7 @@ static const int BUF_SIZE = 32; //TODO increase until you start getting errors??
 //static const char *TAG = "uart_listener"; //I should probably use or lose this
 static TaskHandle_t listener_handle = NULL;
 
-int read_bytes_handle_timeout(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS TO READ THE BYTES PERIOD.
+int read_bytes(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS TO READ THE BYTES PERIOD.
    //you need to make sure your buf can fit nbytes
    int total = 0;
    while(total < nbyte) {
@@ -48,13 +48,15 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
    
    write(1, "READY\n", 6);
    while (memcmp(status_buf, "START\n", 6)!=0) { //TODO this is bad and assumes perfect alignment...read a byte at a time? running buffer??
-      read_bytes_handle_timeout(status_buf,6); //FIXME FIXME failing here when nothing is sent because of infinite loop in read function above.
+      read_bytes(status_buf,6); //FIXME FIXME failing here when nothing is sent because of infinite loop in read function above.
       vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed? probably...
    }
-   read_bytes_handle_timeout((uint8_t*)&filename_len, 2);  //TODO: is this the right endianness??? probably reading in ascii
+   read_bytes((uint8_t*)&filename_len, 2);  //TODO: is this the right endianness??? probably reading in ascii
+   if (filename_len > 64) return; //TODO is this good enough??
    char filename[65]; //make sure the python checks your filename len
-   read_bytes_handle_timeout((uint8_t*)filename, filename_len);
-   read_bytes_handle_timeout((uint8_t*)&file_size, 4);
+   read_bytes((uint8_t*)filename, filename_len);
+   filename[filename_len] = '\0';
+   read_bytes((uint8_t*)&file_size, 4);
 
    open_flightpath("commands.txt"); //TODO use filename
 
@@ -62,9 +64,9 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
    while (total_bytes < file_size) {
       int to_read = BUF_SIZE > (file_size-total_bytes) ? (file_size-total_bytes) : BUF_SIZE;
 
-      int len = read_bytes_handle_timeout(buf,to_read); //THIS SHOULD USE THE READ_FUNCTION ABOVE?? uart_read_bytes is reading from console TODO make sure we read less than 32 bytes if less than 32 left
+      int len = read_bytes(buf,to_read); //THIS SHOULD USE THE READ_FUNCTION ABOVE?? uart_read_bytes is reading from console TODO make sure we read less than 32 bytes if less than 32 left
       if (len <= 0) {
-         //TODO handle some timeout error yet to be determined - definitely don't let it continue past this loop
+         //TODO handle some timeout error yet to be determined - definitely don't let it continue past this loop. Also what if there just is no data??
       } 
       write_flightpath(buf, len); //TODO need a command to first parse the input and see what file is to be written
       write(1, "ACK\n", 4);
