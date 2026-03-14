@@ -16,16 +16,17 @@ static const int BUF_SIZE = 32; //TODO increase until you start getting errors??
 //static const char *TAG = "uart_listener"; //I should probably use or lose this
 static TaskHandle_t listener_handle = NULL;
 
-int read_bytes(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS TO READ THE BYTES PERIOD.
+int read_bytes_handle_timeout(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS TO READ THE BYTES PERIOD.
    //you need to make sure your buf can fit nbytes
    int total = 0;
    while(total < nbyte) {
       int len = read(0, buf+total, nbyte-total); //returns -1 on timeout
-      if (len <= 0) { // TODO if you care, this collapses error and timeout...
-         //continue; //FIXME FIXME causes crashes, but return is mby premature...
-         return -2; //FIXME FIXME we want to keep going but not forever
+      if (len <= 0) { // TODO handle ERR - this handles timeout. also need retries counter
+         continue; //FIXME FIXME causes crashes, but return is mby premature...
+         //return -2; //FIXME FIXME we want to keep going but not forever
+      } else {
+         total+=len;
       }
-      total+=len;
    }
    return total;
 }
@@ -47,14 +48,13 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
    
    write(1, "READY\n", 6);
    while (memcmp(status_buf, "START\n", 6)!=0) { //TODO this is bad and assumes perfect alignment...read a byte at a time? running buffer??
-      read_bytes(status_buf,6);
+      read_bytes_handle_timeout(status_buf,6); //FIXME FIXME failing here when nothing is sent because of infinite loop in read function above.
       vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed? probably...
    }
-   read_bytes((uint8_t*)&filename_len, 2);  //TODO: is this the right endianness??? probably reading in ascii
-   if (filename_len > 64) return;
-   char filename[filename_len];
-   read_bytes((uint8_t*)filename, filename_len);
-   read_bytes((uint8_t*)&file_size, 4);
+   read_bytes_handle_timeout((uint8_t*)&filename_len, 2);  //TODO: is this the right endianness??? probably reading in ascii
+   char filename[65]; //make sure the python checks your filename len
+   read_bytes_handle_timeout((uint8_t*)filename, filename_len);
+   read_bytes_handle_timeout((uint8_t*)&file_size, 4);
 
    //write(1, "yeet\n", 5);
    //write(1, filename, filename_len);
@@ -63,12 +63,12 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
    uint32_t total_bytes = 0;
    int to_read = 0;
    while (total_bytes < file_size) {
-      vTaskDelay(pdMS_TO_TICKS(10)); //This delay is important otherwise it times out permanently on chunk 2 (8 bit)
+      //vTaskDelay(pdMS_TO_TICKS(10)); //This delay is important otherwise it times out permanently on chunk 2 (8 bit)
       if (to_read <= 0) {
          to_read = BUF_SIZE > (file_size-total_bytes) ? (file_size-total_bytes) : BUF_SIZE;
       }
 
-      int len = read_bytes(buf, to_read); //THIS SHOULD USE THE READ_FUNCTION ABOVE?? uart_read_bytes is reading from console TODO make sure we read less than 32 bytes if less than 32 left
+      int len = read_bytes_handle_timeout(buf,to_read); //THIS SHOULD USE THE READ_FUNCTION ABOVE?? uart_read_bytes is reading from console TODO make sure we read less than 32 bytes if less than 32 left
       if (len <= 0) {
          continue;
       } 
@@ -88,7 +88,7 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
       total_bytes+=len;
    }
    close_flightpath();
-   while(1) { //FIXME FIXME
+   while(1) { //FIXME FIXME need to delete this task somewhere
       vTaskDelay(pdMS_TO_TICKS(10));
    }
 }
@@ -101,6 +101,7 @@ void uart_listener_start(void)
 
 void uart_listener_stop(void)
 {
+   //TODO if file transfer is still happening, error and fail.
    // Stop listener task first so it doesn't fight for UART
    if (listener_handle != NULL) {
       vTaskDelete(listener_handle);
