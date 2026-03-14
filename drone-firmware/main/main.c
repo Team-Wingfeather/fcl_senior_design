@@ -45,7 +45,7 @@ void app_main()
     tof_manager_init();
     // Setup storage
     storage_init();
-    uart_listener_init();
+    uart_listener_start();
 
     buzzer_play(BUZZER_STARTUP);
 

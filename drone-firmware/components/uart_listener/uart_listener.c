@@ -21,8 +21,8 @@ int read_bytes_handle_timeout(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS T
    int total = 0;
    while(total < nbyte) {
       int len = read(0, buf+total, nbyte-total); //returns -1 on timeout
-      if (len <= 0) { // TODO handle ERR - this handles timeout. also need retries counter
-         continue; //FIXME FIXME causes crashes, but return is mby premature...
+      if (len <= 0) { // TODO handle ERR - this handles timeout (minus infinite loop). also need retries counter
+         continue; //FIXME FIXME causes infinite loop and starvation if no data
          //return -2; //FIXME FIXME we want to keep going but not forever
       } else {
          total+=len;
@@ -56,30 +56,18 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
    read_bytes_handle_timeout((uint8_t*)filename, filename_len);
    read_bytes_handle_timeout((uint8_t*)&file_size, 4);
 
-   //write(1, "yeet\n", 5);
-   //write(1, filename, filename_len);
-   open_flightpath("commands.txt"); //TODO filename
+   open_flightpath("commands.txt"); //TODO use filename
 
    uint32_t total_bytes = 0;
-   int to_read = 0;
    while (total_bytes < file_size) {
-      //vTaskDelay(pdMS_TO_TICKS(10)); //This delay is important otherwise it times out permanently on chunk 2 (8 bit)
-      if (to_read <= 0) {
-         to_read = BUF_SIZE > (file_size-total_bytes) ? (file_size-total_bytes) : BUF_SIZE;
-      }
+      int to_read = BUF_SIZE > (file_size-total_bytes) ? (file_size-total_bytes) : BUF_SIZE;
 
       int len = read_bytes_handle_timeout(buf,to_read); //THIS SHOULD USE THE READ_FUNCTION ABOVE?? uart_read_bytes is reading from console TODO make sure we read less than 32 bytes if less than 32 left
       if (len <= 0) {
-         continue;
+         //TODO handle some timeout error yet to be determined - definitely don't let it continue past this loop
       } 
       write_flightpath(buf, len); //TODO need a command to first parse the input and see what file is to be written
-      
-      if (len < to_read) {
-         to_read -= len;
-      } else {
-         to_read = 0;
-         write(1, "ACK\n", 4);
-      }
+      write(1, "ACK\n", 4);
 
       char debug[32]; //TODO remove
       int n = snprintf(debug, sizeof(debug), "%lu\n", (unsigned long)len);
@@ -88,13 +76,14 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
       total_bytes+=len;
    }
    close_flightpath();
-   while(1) { //FIXME FIXME need to delete this task somewhere
+   while(1) { //FIXME FIXME need to delete this task somewhere, maybe here??? causes errors
       vTaskDelay(pdMS_TO_TICKS(10));
    }
 }
 
 void uart_listener_start(void)
 {
+   esp_log_level_set("*", ESP_LOG_NONE);
    unlink("/littlefs/commands.txt");
    xTaskCreate(&listener_task, "uart_listener", 12288, NULL, 5, &listener_handle); //TODO make sure to kill task, fix stack size
 }
@@ -127,10 +116,4 @@ void uart_listener_stop(void)
    }
 
    esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
-}
-
-void uart_listener_init(void)
-{
-   esp_log_level_set("*", ESP_LOG_NONE);
-   uart_listener_start();
 }
