@@ -5,6 +5,7 @@
 //#include "driver/uart.h"
 #include <stdint.h>
 #include <sys/_intsup.h>
+#include <sys/_types.h>
 #include <unistd.h>
 #include "string.h"
 
@@ -12,12 +13,13 @@
 #include "uart_listener.h"
 #include "esp_log_level.h"
 
-static const int BUF_SIZE = 32; //TODO increase until you start getting errors?? FIXME FIXME
+static const unsigned int BUF_SIZE = 32; //TODO increase until you start getting errors?? FIXME FIXME
+static const unsigned int MAX_FILENAME_SIZE = 64;
 //static const char *TAG = "uart_listener"; //I should probably use or lose this
 static TaskHandle_t listener_handle = NULL;
 
-int read_bytes(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS TO READ THE BYTES PERIOD.
-   //you need to make sure your buf can fit nbytes
+// you need to make sure your buf can fit nbytes
+int read_bytes(uint8_t* buf, int nbyte) {
    int total = 0;
    while(total < nbyte) {
       int len = read(0, buf+total, nbyte-total); //returns -1 on timeout
@@ -34,7 +36,7 @@ int read_bytes(uint8_t* buf, int nbyte) { //THIS FUNCTION NEEDS TO READ THE BYTE
 void drain_input(void) {
    uint8_t buf[1024];
    while (read(0, buf, sizeof(buf)) > 0) {
-     vTaskDelay(pdMS_TO_TICKS(1)); //TODO vTaskDelays too extra??
+     //vTaskDelay(pdMS_TO_TICKS(1)); //TODO vTaskDelays too extra??
    }
 }
 
@@ -52,8 +54,8 @@ void listener_task(void *pvParameter) //TODO this is a massive blocking task...
       vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed? probably...
    }
    read_bytes((uint8_t*)&filename_len, 2);  //TODO: is this the right endianness??? probably reading in ascii
-   if (filename_len > 64) return; //TODO is this good enough??
-   char filename[65]; //make sure the python checks your filename len
+   if (filename_len > MAX_FILENAME_SIZE) return; //TODO use an error statement for the ESP
+   char filename[MAX_FILENAME_SIZE+1]; //make sure the python checks your filename len
    read_bytes((uint8_t*)filename, filename_len);
    filename[filename_len] = '\0';
    read_bytes((uint8_t*)&file_size, 4);
