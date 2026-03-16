@@ -2,7 +2,6 @@
 #include "freertos/idf_additions.h"
 #include "freertos/projdefs.h"
 #include "freertos/task.h"
-//#include "driver/uart.h"
 #include <stddef.h>
 #include <stdint.h>
 #include <sys/_intsup.h>
@@ -18,7 +17,7 @@
 static const unsigned int BUF_SIZE = 32; //starts to have odd uart problems with larger numbers
 static const unsigned int MAX_FILENAME_SIZE = 64; 
 static const unsigned int MAX_UART_RETRIES = 1000;
-static const char *TAG = "uart_listener"; //I should probably use or lose this
+static const char *TAG = "uart_listener";
 static TaskHandle_t listener_handle = NULL;
 
 // you need to make sure your buf can fit nbytes
@@ -64,14 +63,14 @@ void listener_task(void *pvParameter)
    read_until((uint8_t*)"READY\n",6);
    write(1, "READY\n", 6);
    read_until((uint8_t*)"START\n",6);
-   read_bytes((uint8_t*)&filename_len, 2);  //TODO: is this the right endianness??? probably reading in ascii
+   read_bytes((uint8_t*)&filename_len, 2);
    if (filename_len > MAX_FILENAME_SIZE) return; //TODO use an error statement for the ESP
-   char filename[MAX_FILENAME_SIZE+1]; //make sure the python checks your filename len
+   char filename[MAX_FILENAME_SIZE+1]; //make sure the python checks your filename len if you use it
    read_bytes((uint8_t*)filename, filename_len);
    filename[filename_len] = '\0';
    read_bytes((uint8_t*)&file_size, 4);
 
-   open_flightpath("commands.txt"); //TODO use filename
+   open_flightpath("commands.txt"); //TODO use or lose filename
 
    uint32_t total_bytes = 0;
    while (total_bytes < file_size) {
@@ -83,7 +82,7 @@ void listener_task(void *pvParameter)
          ESP_LOGE(TAG, "Error receiving flightpath file");
          abort();
       } 
-      write_flightpath(buf, len); //TODO need a command to first parse the input and see what file is to be written
+      write_flightpath(buf, len);
       write(1, "ACK\n", 4);
 
       total_bytes+=len;
