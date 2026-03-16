@@ -32,6 +32,10 @@ with serial.Serial(PORT, BAUD, timeout=5) as ser:
     print("Opening serial port...")
     time.sleep(2)
 
+    print("Sending READY...")
+    ser.write(b"READY\n")
+    ser.flush()
+
     print("Waiting for READY...")
     ser.read_until(b'READY\n')
 
@@ -54,7 +58,7 @@ with serial.Serial(PORT, BAUD, timeout=5) as ser:
     ser.write(struct.pack("<I", file_size))
     ser.flush()
 
-    print("Sending file in 32-byte chunks with ACK + len...")
+    print("Sending file in 32-byte chunks with ACK...")
 
     for i in range(0, file_size, CHUNK_SIZE):
         chunk = file_data[i:i+CHUNK_SIZE]
