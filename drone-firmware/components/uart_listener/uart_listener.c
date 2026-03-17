@@ -43,10 +43,20 @@ int read_bytes(uint8_t* buf, int nbyte) {
 }
 
 int read_until(uint8_t* search_term, size_t len) {
-   uint8_t status_buf[len]; //FIXME not initialized to 0 (bad bad) and not a sliding window
-   while (memcmp(status_buf, search_term, len)!=0) { //TODO this is bad and assumes perfect alignment...read a byte at a time? running buffer??
-      read_bytes(status_buf,len);
+   if (len == 0) {
+      return -1;
+   }
+   uint8_t buf_window[len]; //FIXME not initialized to 0 (bad bad) and not a sliding window
+   int error_handler = -1;
+   while (error_handler != len) {
+      error_handler = read_bytes(buf_window,len);
       vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed so we don't starve while waiting for input
+   }
+
+   while (memcmp(buf_window, search_term, len)!=0) { //TODO this is bad and assumes perfect alignment...read a byte at a time? running buffer??
+         memmove(buf_window, buf_window+1, len-1);
+         read_bytes(buf_window+(len-1),1);
+         vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed so we don't starve while waiting for input
    }
    return 0; //TODO no timeout whatsoever
 }
@@ -105,6 +115,7 @@ void uart_listener_stop(void)
       listener_handle = NULL;
    }
    
+
    FILE *f = fopen("/littlefs/commands.txt", "rb"); //TODO remove this chunk after making sure file naming works
    if (f != NULL) {
       uint8_t buf[1024] = {0};   // zero-filled buffer
