@@ -5,7 +5,8 @@ import os
 
 PORT = "COM9"
 BAUD = 115200
-FILE_PATH = "commands.txt"
+SCRIPT_FILE_PATH = "commands.txt"
+CONFIG_FILE_PATH = "params.txt"
 CHUNK_SIZE = 32
 RETRY_DELAY = 0.02  # 20 ms
 
@@ -43,13 +44,13 @@ with serial.Serial(PORT, BAUD, timeout=5) as ser:
     ser.write(b"START\n")
     ser.flush()
 
-    filename = os.path.basename(FILE_PATH).encode()
-    filename_len = len(filename)
+    #filename = os.path.basename(SCRIPT_FILE_PATH).encode()
+    #filename_len = len(filename)
 
-    ser.write(struct.pack("<H", filename_len))
-    ser.write(filename)
+    #ser.write(struct.pack("<H", filename_len))
+    #ser.write(filename)
 
-    with open(FILE_PATH, "rb") as f:
+    with open(SCRIPT_FILE_PATH, "rb") as f:
         file_data = f.read()
 
     file_size = len(file_data)
