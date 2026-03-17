@@ -23,6 +23,7 @@ static const unsigned int MAX_UART_RETRIES = 1000;
 static const char *TAG = "uart_listener";
 static TaskHandle_t listener_handle = NULL;
 
+// read until nbyte(s) received or MAX_UART_RETRIES
 // you need to make sure your buf can fit nbytes
 int read_bytes(uint8_t* buf, int nbyte) {
    int total = 0;
@@ -43,6 +44,7 @@ int read_bytes(uint8_t* buf, int nbyte) {
    return total;
 }
 
+// read until search_term with length len found in UART stream
 int read_until(uint8_t* search_term, size_t len) {
    if (len == 0) {
       return -1;
@@ -62,33 +64,19 @@ int read_until(uint8_t* search_term, size_t len) {
    return 0; //TODO no timeout whatsoever
 }
 
-void drain_rxbuf(void) {
-   uint8_t buf[1024];
-   while (read(0, buf, sizeof(buf)) > 0);
-}
-
-void listener_task(void *pvParameter)
-{
+int read_file(char* filename) {
    uint8_t buf[BUF_SIZE];
    uint32_t file_size;
-   drain_rxbuf();
-   read_until((uint8_t*)"READY\n",6);
-   esp_log_level_set("*", ESP_LOG_NONE);
-   write(1, "READY\n", 6);
-   read_until((uint8_t*)"START\n",6);
    read_bytes((uint8_t*)&file_size, 4);
 
-   open_new_file(SCRIPT_FILE_NAME);
-
+   open_new_file(filename);
    uint32_t total_bytes = 0;
    while (total_bytes < file_size) {
       int to_read = BUF_SIZE > (file_size-total_bytes) ? (file_size-total_bytes) : BUF_SIZE;
 
       int len = read_bytes(buf,to_read);
       if (len <= 0) {
-         esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
-         ESP_LOGE(TAG, "Error receiving flightpath file");
-         abort();
+         return -1;
       } 
       write_current_file(buf, len);
       write(1, "ACK\n", 4);
@@ -96,7 +84,29 @@ void listener_task(void *pvParameter)
       total_bytes+=len;
    }
    close_current_file();
+   return 0;
+}
 
+/*
+// drain uart rx buffer
+void drain_rxbuf(void) {
+   uint8_t buf[1024];
+   while (read(0, buf, sizeof(buf)) > 0);
+} */
+
+// receive multiple files - currently script and config files.
+void listener_task(void *pvParameter)
+{
+   read_until((uint8_t*)"READY\n",6);
+   esp_log_level_set("*", ESP_LOG_NONE);
+   write(1, "READY\n", 6);
+   read_until((uint8_t*)"START\n",6);
+
+   if (read_file(SCRIPT_FILE_NAME)!=0) {
+      esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
+         ESP_LOGE(TAG, "Error receiving file"); //TODO more specific?
+         abort();
+   }
 
    while(1) { //TODO should delete task and return, but currently causes crashing
       vTaskDelay(pdMS_TO_TICKS(10));
@@ -105,15 +115,13 @@ void listener_task(void *pvParameter)
 
 void uart_listener_start(void)
 {
-   //unlink("/littlefs/commands.txt"); //TODO DELETE
    unlink("/littlefs/" SCRIPT_FILE_NAME);
    xTaskCreate(&listener_task, "uart_listener", 12288, NULL, 5, &listener_handle); //TODO make sure to kill task, fix stack size
 }
 
 void uart_listener_stop(void)
 {
-   //TODO if file transfer is still happening, error and abort.
-   // Stop listener task first so it doesn't fight for UART
+   //TODO if file transfer is still happening, error and abort. This conflicts with the return from listener_task
    if (listener_handle != NULL) {
       vTaskDelete(listener_handle);
       listener_handle = NULL;
