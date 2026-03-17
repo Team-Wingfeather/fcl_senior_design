@@ -15,7 +15,8 @@
 #include "uart_listener.h"
 #include "esp_log_level.h"
 
-#define COMMANDER_FILE_NAME "commands.txt"
+#define SCRIPT_FILE_NAME "script.txt"
+#define CONFIG_FILE_NAME "config.txt"
 
 static const unsigned int BUF_SIZE = 32; //starts to have odd uart problems with larger numbers
 static const unsigned int MAX_UART_RETRIES = 1000;
@@ -46,17 +47,17 @@ int read_until(uint8_t* search_term, size_t len) {
    if (len == 0) {
       return -1;
    }
-   uint8_t buf_window[len]; //FIXME not initialized to 0 (bad bad) and not a sliding window
+   uint8_t buf_window[len];
    int error_handler = -1;
    while (error_handler != len) {
       error_handler = read_bytes(buf_window,len);
-      vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed so we don't starve while waiting for input
+      vTaskDelay(pdMS_TO_TICKS(10));
    }
 
-   while (memcmp(buf_window, search_term, len)!=0) { //TODO this is bad and assumes perfect alignment...read a byte at a time? running buffer??
+   while (memcmp(buf_window, search_term, len)!=0) {
          memmove(buf_window, buf_window+1, len-1);
          read_bytes(buf_window+(len-1),1);
-         vTaskDelay(pdMS_TO_TICKS(10)); //TODO: needed so we don't starve while waiting for input
+         vTaskDelay(pdMS_TO_TICKS(10)); //needed so we don't starve while waiting for input
    }
    return 0; //TODO no timeout whatsoever
 }
@@ -77,7 +78,7 @@ void listener_task(void *pvParameter)
    read_until((uint8_t*)"START\n",6);
    read_bytes((uint8_t*)&file_size, 4);
 
-   open_flightpath(COMMANDER_FILE_NAME);
+   open_new_file(SCRIPT_FILE_NAME);
 
    uint32_t total_bytes = 0;
    while (total_bytes < file_size) {
@@ -89,12 +90,14 @@ void listener_task(void *pvParameter)
          ESP_LOGE(TAG, "Error receiving flightpath file");
          abort();
       } 
-      write_flightpath(buf, len);
+      write_current_file(buf, len);
       write(1, "ACK\n", 4);
 
       total_bytes+=len;
    }
-   close_flightpath();
+   close_current_file();
+
+
    while(1) { //TODO should delete task and return, but currently causes crashing
       vTaskDelay(pdMS_TO_TICKS(10));
    }
@@ -102,7 +105,8 @@ void listener_task(void *pvParameter)
 
 void uart_listener_start(void)
 {
-   unlink("/littlefs/" COMMANDER_FILE_NAME);
+   //unlink("/littlefs/commands.txt"); //TODO DELETE
+   unlink("/littlefs/" SCRIPT_FILE_NAME);
    xTaskCreate(&listener_task, "uart_listener", 12288, NULL, 5, &listener_handle); //TODO make sure to kill task, fix stack size
 }
 
@@ -116,7 +120,7 @@ void uart_listener_stop(void)
    }
    
 
-   FILE *f = fopen("/littlefs/commands.txt", "rb"); //TODO remove this chunk after making sure file naming works
+   FILE *f = fopen("/littlefs/script.txt", "rb"); //TODO remove this chunk after making sure file naming works
    if (f != NULL) {
       uint8_t buf[1024] = {0};   // zero-filled buffer
       // Read up to 1024 bytes

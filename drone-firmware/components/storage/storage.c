@@ -11,7 +11,7 @@
 
 static char ram_buffer[BUFFER_SIZE];
 static size_t buffer_index = 0;
-static FILE* flightpath = NULL;
+static FILE* current_file = NULL;
 
 void storage_init(void)
 {
@@ -77,36 +77,36 @@ void storage_buffer_write(const char *line)
     buffer_index += len;
 }
 
-void open_flightpath(const char *filename) {
+void open_new_file(const char *filename) {
     char path[128];
 
-    if (flightpath) {
-        fclose(flightpath);
+    if (current_file) {
+        fclose(current_file);
     }
 
     snprintf(path, sizeof(path), "/littlefs/%s", filename);
-    flightpath = fopen(path, "ab");
+    current_file = fopen(path, "ab");
 
-    if (!flightpath) {
+    if (!current_file) {
         //printf("Failed to open %s\n", path); TODO
         return;
     }
 }
 
-void write_flightpath(const uint8_t *buffer,
+void write_current_file(const uint8_t *buffer,
                       size_t nbyte)
 {
-    if (!flightpath) {
+    if (!current_file) {
         //("Failed to open %s\n", path); TODO
         return;
     }
-    fwrite(buffer, 1, nbyte, flightpath);
-    fflush(flightpath);
+    fwrite(buffer, 1, nbyte, current_file);
+    fflush(current_file);
 }
 
-void close_flightpath(void) {
-    if (flightpath) {
-        fclose(flightpath);
-        flightpath = NULL;
+void close_current_file(void) {
+    if (current_file) {
+        fclose(current_file);
+        current_file = NULL;
     }
 }
