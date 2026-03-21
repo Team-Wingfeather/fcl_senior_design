@@ -35,6 +35,7 @@
 #include <stdint.h>
 #include <string.h>     // strncpy(), strnlen()
 
+#include "esp_log_level.h"
 #include "freertos/FreeRTOS.h"
 #include "freertos/task.h"
 #include "freertos/portmacro.h"
@@ -63,13 +64,13 @@ bool vl53l1xInit(VL53L1_Dev_t *pdev, I2C_Dev *I2cHandle)
   i2cdevInit(pdev->I2Cx);
 
   /* Move initialized sensor to a new I2C address */
-  // int newAddress = nextI2CAddress;
+  int newAddress = nextI2CAddress;
 
-  // vl53l1xSetI2CAddress(pdev, newAddress);
+  vl53l1xSetI2CAddress(pdev, newAddress);
 
-  // taskENTER_CRITICAL(&vl53l1_mux);
-  // nextI2CAddress++;
-  // taskEXIT_CRITICAL(&vl53l1_mux);
+  taskENTER_CRITICAL(&vl53l1_mux);
+  nextI2CAddress++;
+  taskEXIT_CRITICAL(&vl53l1_mux);
 
   uint8_t byteData;
   uint16_t wordData;
@@ -128,6 +129,7 @@ VL53L1_Error vl53l1xSetI2CAddress(VL53L1_Dev_t* pdev, uint8_t address)
 {
   VL53L1_Error status = VL53L1_ERROR_NONE;
 
+  // status = VL53L1_SetDeviceAddress(pdev, address);
   status = VL53L1_SetDeviceAddress(pdev, (address << 1));
   pdev->I2cDevAddr = address;
   return  status;

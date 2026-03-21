@@ -58,6 +58,7 @@
 // #include "ak8963.h"
 // #include "zranger.h"
 #include "zranger2.h"
+#include "yranger2.h"
 #include "vl53l1x.h"
 // #include "flowdeck_v1v2.h"
 #define DEBUG_MODULE "SENSORS"
@@ -524,21 +525,35 @@ static void sensorsDeviceInit(void)
 #ifdef SENSORS_ENABLE_RANGE_VL53L1X
     //Setup xshut pins
     // TODO update for more TOFs
-    gpio_set_direction(BOT_XSHUT_PIN, GPIO_MODE_OUTPUT);
-    gpio_set_level(BOT_XSHUT_PIN, 1); //only using bottom for now
-    gpio_set_direction(TOP_XSHUT_PIN, GPIO_MODE_OUTPUT);
-    gpio_set_level(TOP_XSHUT_PIN, 0);
+    // gpio_set_direction(BOT_XSHUT_PIN, GPIO_MODE_OUTPUT);
+    // gpio_set_level(BOT_XSHUT_PIN, 1); //only using bottom for now
+    // gpio_set_direction(TOP_XSHUT_PIN, GPIO_MODE_OUTPUT);
+    // gpio_set_level(TOP_XSHUT_PIN, 0);
 
-    // const uint8_t *xshut_pins = board_get_tof_pins();
+    const uint8_t *xshut_pins = board_get_tof_pins();
 
-    // for (uint8_t pin = 0; pin < TOF_COUNT; pin++) {
-    //     gpio_set_direction(xshut_pins[pin], GPIO_MODE_OUTPUT);
-    //     gpio_set_level(xshut_pins[pin], 0);
-    // }
+    for (uint8_t pin = 0; pin < TOF_COUNT; pin++) {
+        gpio_set_direction(xshut_pins[pin], GPIO_MODE_OUTPUT);
+        gpio_set_level(xshut_pins[pin], 0);
+    }
 
+    gpio_set_level(BOT_XSHUT_PIN, 1);
+    vTaskDelay(pdMS_TO_TICKS(5)); // Just enough for boot
     zRanger2Init();
 
     if (zRanger2Test() == true) {
+        isVl53l1xPresent = true;
+        DEBUG_PRINTI("VL53L1X I2C connection [OK].\n");
+    } else {
+        //TODO: Should sensor test fail hard if no connection
+        DEBUG_PRINTW("VL53L1X I2C connection [FAIL].\n");
+    }
+
+    gpio_set_level(TOP_XSHUT_PIN, 1);
+    vTaskDelay(pdMS_TO_TICKS(5));
+    yRanger2Init();
+
+    if (yRanger2Test() == true) {
         isVl53l1xPresent = true;
         DEBUG_PRINTI("VL53L1X I2C connection [OK].\n");
     } else {

@@ -134,11 +134,11 @@ void yRanger2Task(void* arg)
     // check if range is feasible and push into the estimator
     // the sensor should not be able to measure >5 [m], and outliers typically
     // occur as >8 [m] measurements
-    if (range_last < RANGE_OUTLIER_LIMIT) {
-      float distance = (float)range_last * 0.001f; // Scale from [mm] to [m]
-      float stdDev = expStdA * (1.0f  + expf( expCoeff * (distance - expPointA)));
-      rangeEnqueueDownRangeInEstimator(distance, stdDev, xTaskGetTickCount());
-    }
+    // if (range_last < RANGE_OUTLIER_LIMIT) {
+    //   float distance = (float)range_last * 0.001f; // Scale from [mm] to [m]
+    //   float stdDev = expStdA * (1.0f  + expf( expCoeff * (distance - expPointA)));
+    //   rangeEnqueueDownRangeInEstimator(distance, stdDev, xTaskGetTickCount());
+    // }
   }
 }
 
