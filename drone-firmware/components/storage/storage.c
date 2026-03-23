@@ -5,7 +5,6 @@
 #include "include/storage.h"
 #include <stdio.h>
 #include <string.h>
-#include <sys/syslimits.h> //TODO waz this?
 #include <unistd.h>
 #include <stdbool.h>
 
@@ -77,7 +76,7 @@ void storage_buffer_write(const char *line)
     buffer_index += len;
 }
 
-void open_new_file(const char *filename) {
+void open_new_file(const char *filename) { //TODO this function isn't very modular
     char path[128];
 
     if (current_file) {
@@ -88,13 +87,12 @@ void open_new_file(const char *filename) {
     current_file = fopen(path, "ab");
 
     if (!current_file) {
-        //printf("Failed to open %s\n", path); TODO
+        //printf("Failed to open %s\n", path); TODO fail
         return;
     }
 }
 
-void write_current_file(const uint8_t *buffer,
-                      size_t nbyte)
+void write_current_file(const uint8_t *buffer, size_t nbyte) //TODO this function isn't very modular
 {
     if (!current_file) {
         //("Failed to open %s\n", path); TODO
@@ -104,7 +102,7 @@ void write_current_file(const uint8_t *buffer,
     fflush(current_file);
 }
 
-void close_current_file(void) {
+void close_current_file(void) { //TODO this function isn't very modular
     if (current_file) {
         fclose(current_file);
         current_file = NULL;

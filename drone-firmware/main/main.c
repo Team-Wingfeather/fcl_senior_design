@@ -46,7 +46,7 @@ void app_main()
     tof_manager_init();
     // Setup storage
     storage_init();
-    uart_listener_start();
+    //uart_listener_start();
 
     buzzer_play(BUZZER_STARTUP);
 
@@ -57,7 +57,7 @@ void app_main()
     }
     buzzer_play(BUZZER_START_BUTTON);
 
-    uart_listener_stop();
+    //uart_listener_stop();
 
     // rest of initialization
     vTaskDelay(pdMS_TO_TICKS(100));

@@ -57,9 +57,9 @@ int read_until(uint8_t* search_term, size_t len) {
    }
 
    while (memcmp(buf_window, search_term, len)!=0) { //TODO this might crash idk
-         memmove(buf_window, buf_window+1, len-1);
-         read_bytes(buf_window+(len-1),1);
-         vTaskDelay(pdMS_TO_TICKS(10)); //needed so we don't starve while waiting for input
+      memmove(buf_window, buf_window+1, len-1);
+      read_bytes(buf_window+(len-1),1);
+      vTaskDelay(pdMS_TO_TICKS(10)); //needed so we don't starve while waiting for input
    }
    return 0; //TODO no timeout whatsoever
 }
@@ -103,23 +103,23 @@ void listener_task(void *pvParameter)
    read_until((uint8_t*)"START\n",6);
 
    if (read_file(SCRIPT_FILE_NAME)!=0) {
-      esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
-         ESP_LOGE(TAG, "Error receiving file"); //TODO more specific?
+      esp_log_level_set("*", ESP_LOG_INFO);
+         ESP_LOGE(TAG, "Error receiving file");
          abort();
    }
 
    read_until((uint8_t*)"READY\n",6); 
-   //esp_log_level_set("*", ESP_LOG_NONE); //TODO this?
+   //esp_log_level_set("*", ESP_LOG_NONE); //TODO resume and stop again?
    write(1, "READY\n", 6);
    read_until((uint8_t*)"START\n",6);
 
    if (read_file(CONFIG_FILE_NAME)!=0) {
-      esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
-         ESP_LOGE(TAG, "Error receiving file"); //TODO more specific?
+      esp_log_level_set("*", ESP_LOG_INFO);
+         ESP_LOGE(TAG, "Error receiving file");
          abort();
    }
 
-   while(1) { //TODO should delete task and return, but currently causes crashing
+   while(1) { //TODO should delete task and return, but that currently causes crashing
       vTaskDelay(pdMS_TO_TICKS(10));
    }
 }
@@ -127,6 +127,7 @@ void listener_task(void *pvParameter)
 void uart_listener_start(void)
 {
    unlink("/littlefs/" SCRIPT_FILE_NAME);
+   unlink("/littlefs/" CONFIG_FILE_NAME);
    xTaskCreate(&listener_task, "uart_listener", 12288, NULL, 5, &listener_handle); //TODO make sure to kill task, fix stack size
 }
 
@@ -139,19 +140,19 @@ void uart_listener_stop(void)
    }
    
 
-   FILE *f = fopen("/littlefs/config.txt", "rb"); //TODO remove this chunk after making sure file naming works
-   if (f != NULL) {
-      uint8_t buf[1024] = {0};   // zero-filled buffer
-      // Read up to 1024 bytes
-      fread(buf, 1, sizeof(buf), f);
-      fclose(f);
-      // Always send exactly 1024 bytes
-      write(1, buf, sizeof(buf));
-   } else {
-      const char *msg = "Failed to open file\n"; //TODO what is this garbage
-      write(1, msg, strlen(msg));
-   }
+   // FILE *f = fopen("/littlefs/config.txt", "rb"); //TODO remove this chunk after making sure file naming works
+   // if (f != NULL) {
+   //    uint8_t buf[1024] = {0};   // zero-filled buffer
+   //    // Read up to 1024 bytes
+   //    fread(buf, 1, sizeof(buf), f);
+   //    fclose(f);
+   //    // Always send exactly 1024 bytes
+   //    write(1, buf, sizeof(buf));
+   // } else {
+   //    const char *msg = "Failed to open file\n";
+   //    write(1, msg, strlen(msg));
+   // }
 
 
-   esp_log_level_set("*", ESP_LOG_INFO); //TODO bad place for this
+   esp_log_level_set("*", ESP_LOG_INFO);
 }

@@ -11,7 +11,6 @@ TODO: Add script reading features
 
 #include <stddef.h>
 #include <stdint.h>
-#include <sys/_types.h>
 
 #define BUFFER_SIZE 1024
 #define FILE_PATH "/littlefs/log.csv"
