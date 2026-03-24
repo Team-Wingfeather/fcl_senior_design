@@ -5,6 +5,7 @@
 #include "freertos/projdefs.h"
 #include "freertos/task.h"
 #include "driver/gpio.h"
+#include "uart_listener.h"
 
 #include "board.h"
 // #include "storage.h"
@@ -60,12 +61,14 @@ void app_main()
     systemLaunch();
     // rest of initialization
     // storage_init();
+    uart_listener_start();
     esp_reset_reason_t reason = esp_reset_reason();
     gpio_set_direction(START_BUTTON_GPIO, GPIO_MODE_INPUT);
     while (gpio_get_level(START_BUTTON_GPIO) == 1) {
         vTaskDelay(pdMS_TO_TICKS(50));
     }
     ESP_LOGE("dasfs","Reset reason: %d\n", reason);
+    uart_listener_stop();
 
 
     // create tasks

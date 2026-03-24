@@ -22,7 +22,7 @@ void storage_init(void)
     };
 
     esp_err_t ret = esp_vfs_littlefs_register(&conf);
-    if (ret != ESP_OK) {
+    if (ret != ESP_OK) { //TODO remove printfs
         printf("Failed to mount or format filesystem\n");
         return;
     }

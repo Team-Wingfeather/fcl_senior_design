@@ -68,7 +68,7 @@ idf_component_register(SRCS
                 "./utils/src/version.c"
                 "./utils/src/rateSupervisor.c"
                 INCLUDE_DIRS "./hal/interface" "./modules/interface" "./utils/interface"
-                REQUIRES adc buzzer motors config i2c_bus mpu6050 vl53l1 dsp_lib motors wifi esp_timer platform nvs_flash)
+                REQUIRES adc buzzer motors config i2c_bus mpu6050 vl53l1 dsp_lib motors wifi esp_timer platform nvs_flash storage)
 
 idf_component_get_property( FREERTOS_ORIG_INCLUDE_PATH freertos ORIG_INCLUDE_PATH)
 target_include_directories(${COMPONENT_TARGET} PUBLIC
