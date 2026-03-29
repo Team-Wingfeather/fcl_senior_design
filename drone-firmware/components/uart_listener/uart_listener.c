@@ -15,9 +15,6 @@
 #include "uart_listener.h"
 #include "esp_log_level.h"
 
-#define SCRIPT_FILE_NAME "script.txt"
-#define CONFIG_FILE_NAME "config.txt"
-
 static const unsigned int BUF_SIZE = 32; //starts to have odd uart problems with larger numbers
 static const unsigned int MAX_UART_RETRIES = 1000;
 static const char *TAG = "uart_listener";
@@ -104,7 +101,7 @@ void listener_task(void *pvParameter)
       write(1, "READY\n", 6);
       read_until((uint8_t*)"START\n",6);
 
-      if (read_file_to_location(SCRIPT_FILE_NAME)!=0) {
+      if (read_file_to_location(SCRIPT_FILE_LOC)!=0) {
          esp_log_level_set("*", ESP_LOG_INFO);
          ESP_LOGE(TAG, "Error receiving file");
          abort();
@@ -115,7 +112,7 @@ void listener_task(void *pvParameter)
       write(1, "READY\n", 6);
       read_until((uint8_t*)"START\n",6);
 
-      if (read_file_to_location(CONFIG_FILE_NAME)!=0) {
+      if (read_file_to_location(CONFIG_FILE_LOC)!=0) {
          esp_log_level_set("*", ESP_LOG_INFO);
          ESP_LOGE(TAG, "Error receiving file");
          abort();
@@ -126,8 +123,8 @@ void listener_task(void *pvParameter)
 
 void uart_listener_start(void)
 {
-   unlink("/littlefs/" SCRIPT_FILE_NAME);
-   unlink("/littlefs/" CONFIG_FILE_NAME);
+   //unlink(SCRIPT_FILE_LOC); //we want user to be able to use prev config so NO.
+   //unlink(CONFIG_FILE_LOC);
    xTaskCreate(&listener_task, "uart_listener", 12288, NULL, 5, &listener_handle); //TODO make sure to kill task, fix stack size
 }
 

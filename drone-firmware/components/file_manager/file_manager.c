@@ -6,23 +6,14 @@
 
 static FILE* current_file = NULL;
 
-//paramVarId_t bob = paramGetVarId(char* group, char* name);
-//paramSetInt(paramVarId_t varid, int valuei);
-//paramSetFloat(paramVarId_t varid, float valuef);
-
 //Opens a file (deletes previous contents)
-void open_new_file(const char *filename) { //TODO this function isn't very modular
-    char path[128];
-
+void open_new_file(const char *filepath) { //TODO this function isn't very modular
     if (current_file) {
         fclose(current_file);
     }
-
-    snprintf(path, sizeof(path), "/littlefs/%s", filename);
-    current_file = fopen(path, "wb");
-
+    current_file = fopen(filepath, "wb");
     if (!current_file) {
-        //printf("Failed to open %s\n", path); TODO fail
+        //printf("Failed to open %s\n", filepath); TODO fail out
         return;
     }
 }
