@@ -104,6 +104,7 @@ typedef struct positionMeasurement_s {
     };
     float pos[3];
   };
+  bool valid[3];
   float stdDev;
 } positionMeasurement_t;
 

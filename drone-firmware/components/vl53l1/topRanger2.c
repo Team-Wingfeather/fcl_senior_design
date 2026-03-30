@@ -35,12 +35,11 @@
 #include "param.h"
 #include "range.h"
 #include "i2cdev.h"
-#include "yranger2.h"
+#include "topRanger2.h"
 #include "vl53l1x.h"
 #include "cf_math.h"
 #define DEBUG_MODULE "ZR2"
 #include "debug_cf.h"
-#include "estimator.h"
 
 // Measurement noise model
 static const float expPointA = 2.5f;
@@ -48,8 +47,6 @@ static const float expStdA = 0.0025f; // STD at elevation expPointA [m]
 static const float expPointB = 4.0f;
 static const float expStdB = 0.2f; // STD at elevation expPointB [m]
 static float expCoeff;
-
-static const float yWall = 2.0f;
 
 #define RANGE_OUTLIER_LIMIT 5000 // the measured range is in [mm]
 
@@ -59,7 +56,7 @@ static bool isInit;
 
 static VL53L1_Dev_t dev;
 
-static uint16_t yRanger2GetMeasurementAndRestart(VL53L1_Dev_t *dev)
+static uint16_t topRanger2GetMeasurementAndRestart(VL53L1_Dev_t *dev)
 {
     VL53L1_Error status = VL53L1_ERROR_NONE;
     VL53L1_RangingMeasurementData_t rangingData;
@@ -82,22 +79,22 @@ static uint16_t yRanger2GetMeasurementAndRestart(VL53L1_Dev_t *dev)
     return range;
 }
 
-void yRanger2Init(void)
+void topRanger2Init(void)
 {
   if (isInit)
     return;
 
   if (vl53l1xInit(&dev, I2C1_DEV))
   {
-    DEBUG_PRINTI("Y-down sensor [OK]\n");
+    DEBUG_PRINTI("Top sensor [OK]\n");
   }
   else
   {
-    DEBUG_PRINTW("Y-down sensor [FAIL]\n");
+    DEBUG_PRINTW("Top sensor [FAIL]\n");
     return;
   }
 
-  xTaskCreate(yRanger2Task, YRANGER2_TASK_NAME, YRANGER2_TASK_STACKSIZE, NULL, YRANGER2_TASK_PRI, NULL);
+  xTaskCreate(topRanger2Task, TOPRANGER2_TASK_NAME, TOPRANGER2_TASK_STACKSIZE, NULL, TOPRANGER2_TASK_PRI, NULL);
 
   // pre-compute constant in the measurement noise model for kalman
   expCoeff = logf(expStdB / expStdA) / (expPointB - expPointA);
@@ -105,7 +102,7 @@ void yRanger2Init(void)
   isInit = true;
 }
 
-bool yRanger2Test(void)
+bool topRanger2Test(void)
 {
   if (!isInit)
     return false;
@@ -113,7 +110,7 @@ bool yRanger2Test(void)
   return true;
 }
 
-void yRanger2Task(void* arg)
+void topRanger2Task(void* arg)
 {
   TickType_t lastWakeTime;
 
@@ -131,20 +128,10 @@ void yRanger2Task(void* arg)
   while (1) {
     vTaskDelayUntil(&lastWakeTime, M2T(25));
 
-    range_last = yRanger2GetMeasurementAndRestart(&dev);
-    rangeSet(rangeLeft, range_last / 1000.0f);
+    range_last = topRanger2GetMeasurementAndRestart(&dev);
+    rangeSet(rangeDown, range_last / 1000.0f);
 
-    if (range_last < RANGE_OUTLIER_LIMIT) {
-      float distance = (float)range_last * 0.001f;
-      float stdDev = expStdA * (1.0f + expf(expCoeff * (distance - expPointA)));
-
-      positionMeasurement_t pos = {0};
-      pos.y = yWall - distance;
-      pos.valid[1] = true;
-      pos.stdDev = stdDev;
-
-      estimatorEnqueuePosition(&pos);
-    }
+    DEBUG_PRINTI("topRanger2: range_last=%d\n", range_last);
 
     // check if range is feasible and push into the estimator
     // the sensor should not be able to measure >5 [m], and outliers typically
@@ -164,9 +151,9 @@ static uint8_t disable = 0;
   PARAM_ADD(TYPE | PARAM_CORE, NAME, ADDRESS)
 
 PARAM_GROUP_START(deck)
-PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcYRanger2, &isInit)
+PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcTOPRanger2, &isInit)
 
-PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcYRanger, &disable)
+PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcTOPRanger, &disable)
 PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, bcACS37800, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcActiveMarker, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcAI, &disable)
