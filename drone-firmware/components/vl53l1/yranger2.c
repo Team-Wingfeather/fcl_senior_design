@@ -38,7 +38,7 @@
 #include "yranger2.h"
 #include "vl53l1x.h"
 #include "cf_math.h"
-#define DEBUG_MODULE "ZR2"
+#define DEBUG_MODULE "YR2"
 #include "debug_cf.h"
 #include "estimator.h"
 
@@ -89,11 +89,11 @@ void yRanger2Init(void)
 
   if (vl53l1xInit(&dev, I2C1_DEV))
   {
-    DEBUG_PRINTI("Y-down sensor [OK]\n");
+    DEBUG_PRINTI("Y ranger sensor [OK]\n");
   }
   else
   {
-    DEBUG_PRINTW("Y-down sensor [FAIL]\n");
+    DEBUG_PRINTW("Y ranger sensor [FAIL]\n");
     return;
   }
 
@@ -145,15 +145,6 @@ void yRanger2Task(void* arg)
 
       estimatorEnqueuePosition(&pos);
     }
-
-    // check if range is feasible and push into the estimator
-    // the sensor should not be able to measure >5 [m], and outliers typically
-    // occur as >8 [m] measurements
-    // if (range_last < RANGE_OUTLIER_LIMIT) {
-    //   float distance = (float)range_last * 0.001f; // Scale from [mm] to [m]
-    //   float stdDev = expStdA * (1.0f  + expf( expCoeff * (distance - expPointA)));
-    //   rangeEnqueueDownRangeInEstimator(distance, stdDev, xTaskGetTickCount());
-    // }
   }
 }
 

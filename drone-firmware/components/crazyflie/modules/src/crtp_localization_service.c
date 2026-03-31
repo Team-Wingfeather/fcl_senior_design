@@ -160,6 +160,9 @@ static void extPositionHandler(CRTPPacket* pk) {
   ext_pos.x = data->x;
   ext_pos.y = data->y;
   ext_pos.z = data->z;
+  ext_pos.valid[0] = true;
+  ext_pos.valid[1] = true;
+  ext_pos.valid[2] = true;
   ext_pos.stdDev = extPosStdDev;
 
   estimatorEnqueuePosition(&ext_pos);
@@ -299,6 +302,9 @@ static void extPositionPackedHandler(CRTPPacket* pk)
     ext_pos.x = item->x / 1000.0f;
     ext_pos.y = item->y / 1000.0f;
     ext_pos.z = item->z / 1000.0f;
+    ext_pos.valid[0] = true;
+    ext_pos.valid[1] = true;
+    ext_pos.valid[2] = true;
     ext_pos.stdDev = extPosStdDev;
     if (item->id == my_id) {
       estimatorEnqueuePosition(&ext_pos);
