@@ -524,15 +524,11 @@ static void sensorsDeviceInit(void)
 #endif
 
 #ifdef SENSORS_ENABLE_RANGE_VL53L1X
-    //Setup xshut pins
-    const uint8_t xshut_pins[] = {
-        BOT_XSHUT_PIN,
-        OUTER_XSHUT_PIN,
-        SINGLE_XSHUT_PIN,
-        TOP_XSHUT_PIN,
-    };
 
-    for (uint8_t pin = 0; pin < sizeof(xshut_pins) / sizeof(xshut_pins[0]); pin++) {
+//Setup xshut pins
+    const uint8_t *xshut_pins = board_get_tof_pins();
+
+    for (uint8_t pin = 0; pin < TOF_COUNT; pin++) {
         gpio_set_direction(xshut_pins[pin], GPIO_MODE_OUTPUT);
         gpio_set_level(xshut_pins[pin], 0);
     }
@@ -567,6 +563,15 @@ static void sensorsDeviceInit(void)
     vTaskDelay(pdMS_TO_TICKS(5));
     yRanger2Init();
 
+    // if (topRanger2Test() == true) {
+    //     isVl53l1xPresent = true;
+    //     DEBUG_PRINTI("VL53L1X I2C connection [OK].\n");
+    // } else {
+    //     //TODO: Should sensor test fail hard if no connection
+    //     DEBUG_PRINTW("VL53L1X I2C connection [FAIL].\n");
+    // }
+
+    yRanger2Init();
     if (yRanger2Test() == true) {
         isVl53l1xPresent = true;
         DEBUG_PRINTI("VL53L1X I2C connection [OK].\n");

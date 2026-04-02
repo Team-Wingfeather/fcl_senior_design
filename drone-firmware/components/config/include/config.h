@@ -106,6 +106,7 @@
 #define ZRANGER2_TASK_PRI       5
 #define XRANGER2_TASK_PRI       5
 #define YRANGER2_TASK_PRI       5
+#define TOPRANGER2_TASK_PRI     5
 #define ZRANGER_TASK_PRI        5
 #define SENSORS_TASK_PRI        6
 #define STABILIZER_TASK_PRI     7
@@ -143,6 +144,7 @@
 #define ZRANGER2_TASK_NAME      "ZRANGER2"
 #define XRANGER2_TASK_NAME      "XRANGER2"
 #define YRANGER2_TASK_NAME      "YRANGER2"
+#define TOPRANGER2_TASK_NAME    "TOPRANGER2"
 #define ZRANGER_TASK_NAME       "ZRANGER"
 
 //Task stack sizes
@@ -171,6 +173,7 @@
 #define ZRANGER2_TASK_STACKSIZE       (4 * configBASE_STACK_SIZE)
 #define XRANGER2_TASK_STACKSIZE       (4 * configBASE_STACK_SIZE)
 #define YRANGER2_TASK_STACKSIZE       (4 * configBASE_STACK_SIZE)
+#define TOPRANGER2_TASK_STACKSIZE     (4 * configBASE_STACK_SIZE)
 #define ZRANGER_TASK_STACKSIZE        (2 * configBASE_STACK_SIZE)
 
 //The radio channel. From 0 to 125
