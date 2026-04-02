@@ -15,7 +15,7 @@ COMMAND_RATE_HZ = 50  # Setpoint update rate
 LOG_RATE_MS = 50  # 20 ms = 50 Hz logging
 LOG_TYPE = 1  # 0=motors; 1=Pitch PIDs; 2=stateEstimator; 3=Roll PIDs
 JUST_LOG = 0
-FLIGHT_TYPE = 0  # 0=gimbal; 1=altitude
+FLIGHT_TYPE = 1  # 0=gimbal; 1=altitude
 
 
 def log_callback(timestamp, data, logconf):
@@ -189,7 +189,7 @@ def flight_test(cf):
                 if JUST_LOG:
                     cf.commander.send_setpoint(0, 0, 0, 0)
                 else:
-                    cf.commander.send_position_setpoint(0.0, 0.0, 0.3, 0.0)
+                    cf.commander.send_position_setpoint(0.0, 0.0, 0.5, 0.0)
                 time.sleep(dt)
 
         except KeyboardInterrupt:

@@ -33,13 +33,14 @@ void app_main()
     // Setup Telemetry
     // Setup WiFi
     // Setup storage
-    storage_init();
+    //storage_init();
     //uart_listener_start();
 
     buzzer_play(BUZZER_STARTUP);
 
     //wait for button
-    buzzer_play(BUZZER_START_BUTTON);
+  
+    //buzzer_play(BUZZER_START_BUTTON);
 
     esp_err_t ret = nvs_flash_init();
 
