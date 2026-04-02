@@ -24,6 +24,8 @@ typedef struct {
   bool (*estimatorEnqueuePose)(const poseMeasurement_t *pose);
   bool (*estimatorEnqueueDistance)(const distanceMeasurement_t *dist);
   bool (*estimatorEnqueueTOF)(const tofMeasurement_t *tof);
+  bool (*estimatorEnqueueXWall)(const xWallMeasurement_t *xWall);
+  bool (*estimatorEnqueueYWall)(const yWallMeasurement_t *yWall);
   bool (*estimatorEnqueueAbsoluteHeight)(const heightMeasurement_t *height);
   bool (*estimatorEnqueueFlow)(const flowMeasurement_t *flow);
   bool (*estimatorEnqueueYawError)(const yawErrorMeasurement_t *error);
@@ -44,6 +46,8 @@ static EstimatorFcns estimatorFunctions[] = {
         .estimatorEnqueuePose = NOT_IMPLEMENTED,
         .estimatorEnqueueDistance = NOT_IMPLEMENTED,
         .estimatorEnqueueTOF = NOT_IMPLEMENTED,
+        .estimatorEnqueueXWall = NOT_IMPLEMENTED,
+        .estimatorEnqueueYWall = NOT_IMPLEMENTED,
         .estimatorEnqueueAbsoluteHeight = NOT_IMPLEMENTED,
         .estimatorEnqueueFlow = NOT_IMPLEMENTED,
         .estimatorEnqueueYawError = NOT_IMPLEMENTED,
@@ -60,6 +64,8 @@ static EstimatorFcns estimatorFunctions[] = {
         .estimatorEnqueuePose = NOT_IMPLEMENTED,
         .estimatorEnqueueDistance = NOT_IMPLEMENTED,
         .estimatorEnqueueTOF = estimatorComplementaryEnqueueTOF,
+        .estimatorEnqueueXWall = NOT_IMPLEMENTED,
+        .estimatorEnqueueYWall = NOT_IMPLEMENTED,
         .estimatorEnqueueAbsoluteHeight = NOT_IMPLEMENTED,
         .estimatorEnqueueFlow = NOT_IMPLEMENTED,
         .estimatorEnqueueYawError = NOT_IMPLEMENTED,
@@ -76,6 +82,8 @@ static EstimatorFcns estimatorFunctions[] = {
         .estimatorEnqueuePose = estimatorKalmanEnqueuePose,
         .estimatorEnqueueDistance = estimatorKalmanEnqueueDistance,
         .estimatorEnqueueTOF = estimatorKalmanEnqueueTOF,
+        .estimatorEnqueueXWall = estimatorKalmanEnqueueXWall,
+        .estimatorEnqueueYWall = estimatorKalmanEnqueueYWall,
         .estimatorEnqueueAbsoluteHeight = estimatorKalmanEnqueueAbsoluteHeight,
         .estimatorEnqueueFlow = estimatorKalmanEnqueueFlow,
         .estimatorEnqueueYawError = estimatorKalmanEnqueueYawError,
@@ -208,6 +216,22 @@ bool estimatorEnqueueDistance(const distanceMeasurement_t *dist) {
 bool estimatorEnqueueTOF(const tofMeasurement_t *tof) {
   if (estimatorFunctions[currentEstimator].estimatorEnqueueTOF) {
     return estimatorFunctions[currentEstimator].estimatorEnqueueTOF(tof);
+  }
+
+  return false;
+}
+
+bool estimatorEnqueueXWall(const xWallMeasurement_t *xWall) {
+  if (estimatorFunctions[currentEstimator].estimatorEnqueueXWall) {
+    return estimatorFunctions[currentEstimator].estimatorEnqueueXWall(xWall);
+  }
+
+  return false;
+}
+
+bool estimatorEnqueueYWall(const yWallMeasurement_t *yWall) {
+  if (estimatorFunctions[currentEstimator].estimatorEnqueueYWall) {
+    return estimatorFunctions[currentEstimator].estimatorEnqueueYWall(yWall);
   }
 
   return false;

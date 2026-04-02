@@ -13,7 +13,7 @@ uri = uri_helper.uri_from_env(default="udp://192.168.43.42:2390")
 HOVER_THRUST = 25000  # Adjust as needed
 COMMAND_RATE_HZ = 50  # Setpoint update rate
 LOG_RATE_MS = 50  # 20 ms = 50 Hz logging
-LOG_TYPE = 1  # 0=motors; 1=attitude rates; 2=stateEstimator
+LOG_TYPE = 2  # 0=motors; 1=attitude rates; 2=stateEstimator
 JUST_LOG = 1
 FLIGHT_TYPE = 0  # 0=gimbal; 1=altitude
 

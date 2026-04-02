@@ -57,6 +57,24 @@ bool rangeEnqueueDownRangeInEstimator(float distance, float stdDev, uint32_t tim
   return estimatorEnqueueTOF(&tofData);
 }
 
+bool rangeEnqueueXWallDistanceInEstimator(float distance, float stdDev, uint32_t timeStamp) {
+  xWallMeasurement_t xWallData;
+  xWallData.timestamp = timeStamp;
+  xWallData.distance = distance;
+  xWallData.stdDev = stdDev;
+
+  return estimatorEnqueueXWall(&xWallData);
+}
+
+bool rangeEnqueueYWallDistanceInEstimator(float distance, float stdDev, uint32_t timeStamp) {
+  yWallMeasurement_t yWallData;
+  yWallData.timestamp = timeStamp;
+  yWallData.distance = distance;
+  yWallData.stdDev = stdDev;
+
+  return estimatorEnqueueYWall(&yWallData);
+}
+
 LOG_GROUP_START(range)
 LOG_ADD(LOG_UINT16, front, &ranges[rangeFront])
 LOG_ADD(LOG_UINT16, back, &ranges[rangeBack])

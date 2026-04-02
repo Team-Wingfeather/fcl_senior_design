@@ -146,6 +146,22 @@ static inline bool stateEstimatorHasTOFPacket(tofMeasurement_t *tof) {
   return (pdTRUE == xQueueReceive(tofDataQueue, tof, 0));
 }
 
+// Relative distance to the X wall
+static QueueHandle_t xWallDataQueue;
+STATIC_MEM_QUEUE_ALLOC(xWallDataQueue, 10, sizeof(xWallMeasurement_t));
+
+static inline bool stateEstimatorHasXWallPacket(xWallMeasurement_t *xWall) {
+  return (pdTRUE == xQueueReceive(xWallDataQueue, xWall, 0));
+}
+
+// Relative distance to the Y wall
+static QueueHandle_t yWallDataQueue;
+STATIC_MEM_QUEUE_ALLOC(yWallDataQueue, 10, sizeof(yWallMeasurement_t));
+
+static inline bool stateEstimatorHasYWallPacket(yWallMeasurement_t *yWall) {
+  return (pdTRUE == xQueueReceive(yWallDataQueue, yWall, 0));
+}
+
 // Absolute height measurement along the room Z
 static QueueHandle_t heightDataQueue;
 STATIC_MEM_QUEUE_ALLOC(heightDataQueue, 10, sizeof(heightMeasurement_t));
@@ -276,6 +292,8 @@ void estimatorKalmanTaskInit() {
   tdoaDataQueue = STATIC_MEM_QUEUE_CREATE(tdoaDataQueue);
   flowDataQueue = STATIC_MEM_QUEUE_CREATE(flowDataQueue);
   tofDataQueue = STATIC_MEM_QUEUE_CREATE(tofDataQueue);
+  xWallDataQueue = STATIC_MEM_QUEUE_CREATE(xWallDataQueue);
+  yWallDataQueue = STATIC_MEM_QUEUE_CREATE(yWallDataQueue);
   heightDataQueue = STATIC_MEM_QUEUE_CREATE(heightDataQueue);
   yawErrorDataQueue = STATIC_MEM_QUEUE_CREATE(yawErrorDataQueue);
   //sweepAnglesDataQueue = STATIC_MEM_QUEUE_CREATE(sweepAnglesDataQueue);
@@ -525,6 +543,20 @@ static bool updateQueuedMeasurments(const Axis3f *gyro, const uint32_t tick) {
     doneUpdate = true;
   }
 
+  xWallMeasurement_t xWall;
+  while (stateEstimatorHasXWallPacket(&xWall))
+  {
+    kalmanCoreUpdateWithXWall(&coreData, &xWall);
+    doneUpdate = true;
+  }
+
+  yWallMeasurement_t yWall;
+  while (stateEstimatorHasYWallPacket(&yWall))
+  {
+    kalmanCoreUpdateWithYWall(&coreData, &yWall);
+    doneUpdate = true;
+  }
+
   yawErrorMeasurement_t yawError;
   while (stateEstimatorHasYawErrorPacket(&yawError))
   {
@@ -592,6 +624,8 @@ void estimatorKalmanInit(void) {
   xQueueReset(tdoaDataQueue);
   xQueueReset(flowDataQueue);
   xQueueReset(tofDataQueue);
+  xQueueReset(xWallDataQueue);
+  xQueueReset(yWallDataQueue);
 
   xSemaphoreTake(dataMutex, portMAX_DELAY);
   accAccumulator = (Axis3f){.axis={0}};
@@ -669,6 +703,20 @@ bool estimatorKalmanEnqueueTOF(const tofMeasurement_t *tof)
   // A distance (distance) [m] to the ground along the z_B axis.
   ASSERT(isInit);
   return appendMeasurement(tofDataQueue, (void *)tof);
+}
+
+bool estimatorKalmanEnqueueXWall(const xWallMeasurement_t *xWall)
+{
+  // A distance [m] to a wall that defines X = 0 in the estimator frame.
+  ASSERT(isInit);
+  return appendMeasurement(xWallDataQueue, (void *)xWall);
+}
+
+bool estimatorKalmanEnqueueYWall(const yWallMeasurement_t *yWall)
+{
+  // A distance [m] to a wall that defines Y = 0 in the estimator frame.
+  ASSERT(isInit);
+  return appendMeasurement(yWallDataQueue, (void *)yWall);
 }
 
 bool estimatorKalmanEnqueueAbsoluteHeight(const heightMeasurement_t *height)

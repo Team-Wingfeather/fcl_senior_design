@@ -50,6 +50,8 @@ bool estimatorEnqueuePosition(const positionMeasurement_t *pos);
 bool estimatorEnqueuePose(const poseMeasurement_t *pose);
 bool estimatorEnqueueDistance(const distanceMeasurement_t *dist);
 bool estimatorEnqueueTOF(const tofMeasurement_t *tof);
+bool estimatorEnqueueXWall(const xWallMeasurement_t *xWall);
+bool estimatorEnqueueYWall(const yWallMeasurement_t *yWall);
 bool estimatorEnqueueAbsoluteHeight(const heightMeasurement_t *height);
 bool estimatorEnqueueFlow(const flowMeasurement_t *flow);
 bool estimatorEnqueueYawError(const yawErrorMeasurement_t *error);

@@ -36,10 +36,10 @@
 #include "range.h"
 #include "estimator.h"
 #include "i2cdev.h"
-#include "yranger2.h"
+#include "xranger2.h"
 #include "vl53l1x.h"
 #include "cf_math.h"
-#define DEBUG_MODULE "ZR2"
+#define DEBUG_MODULE "XR2"
 #include "debug_cf.h"
 
 // Measurement noise model
@@ -57,7 +57,7 @@ static bool isInit;
 
 static VL53L1_Dev_t dev;
 
-static uint16_t yRanger2GetMeasurementAndRestart(VL53L1_Dev_t *dev)
+static uint16_t xRanger2GetMeasurementAndRestart(VL53L1_Dev_t *dev)
 {
     VL53L1_Error status = VL53L1_ERROR_NONE;
     VL53L1_RangingMeasurementData_t rangingData;
@@ -80,22 +80,22 @@ static uint16_t yRanger2GetMeasurementAndRestart(VL53L1_Dev_t *dev)
     return range;
 }
 
-void yRanger2Init(void)
+void xRanger2Init(void)
 {
   if (isInit)
     return;
 
   if (vl53l1xInit(&dev, I2C1_DEV))
   {
-    DEBUG_PRINTI("Y sensor [OK]\n");
+    DEBUG_PRINTI("X sensor [OK]\n");
   }
   else
   {
-    DEBUG_PRINTW("Y sensor [FAIL]\n");
+    DEBUG_PRINTW("X sensor [FAIL]\n");
     return;
   }
 
-  xTaskCreate(yRanger2Task, YRANGER2_TASK_NAME, YRANGER2_TASK_STACKSIZE, NULL, YRANGER2_TASK_PRI, NULL);
+  xTaskCreate(xRanger2Task, XRANGER2_TASK_NAME, XRANGER2_TASK_STACKSIZE, NULL, XRANGER2_TASK_PRI, NULL);
 
   registerRequiredEstimator(kalmanEstimator);
 
@@ -105,7 +105,7 @@ void yRanger2Init(void)
   isInit = true;
 }
 
-bool yRanger2Test(void)
+bool xRanger2Test(void)
 {
   if (!isInit)
     return false;
@@ -113,7 +113,7 @@ bool yRanger2Test(void)
   return true;
 }
 
-void yRanger2Task(void* arg)
+void xRanger2Task(void* arg)
 {
   TickType_t lastWakeTime;
 
@@ -131,16 +131,13 @@ void yRanger2Task(void* arg)
   while (1) {
     vTaskDelayUntil(&lastWakeTime, M2T(25));
 
-    range_last = yRanger2GetMeasurementAndRestart(&dev);
-    rangeSet(rangeRight, range_last / 1000.0f);
+    range_last = xRanger2GetMeasurementAndRestart(&dev);
+    rangeSet(rangeBack, range_last / 1000.0f);
 
-    // check if range is feasible and push into the estimator
-    // the sensor should not be able to measure >5 [m], and outliers typically
-    // occur as >8 [m] measurements
     if (range_last < RANGE_OUTLIER_LIMIT) {
       float distance = (float)range_last * 0.001f; // Scale from [mm] to [m]
       float stdDev = expStdA * (1.0f  + expf( expCoeff * (distance - expPointA)));
-      rangeEnqueueYWallDistanceInEstimator(distance, stdDev, xTaskGetTickCount());
+      rangeEnqueueXWallDistanceInEstimator(distance, stdDev, xTaskGetTickCount());
     }
   }
 }
@@ -152,9 +149,9 @@ static uint8_t disable = 0;
   PARAM_ADD(TYPE | PARAM_CORE, NAME, ADDRESS)
 
 PARAM_GROUP_START(deck)
-PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcYRanger2, &isInit)
+PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcXRanger2, &isInit)
 
-PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcYRanger, &disable)
+PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcXRanger, &disable)
 PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, bcACS37800, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcActiveMarker, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcAI, &disable)
@@ -171,14 +168,7 @@ PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcDWM1000, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcLoco, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcMultiranger, &disable)
 PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, bcOA, &disable)
-PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcServo, &disable)
+PARAM_ADD(PARAM_UINT8 | PARAM_RONLY, bcServo, &disable)
 PARAM_ADD_CORE(PARAM_UINT8 | PARAM_RONLY, bcUSD, &disable)
 PARAM_GROUP_STOP(deck)
 
-
-static uint32_t effect = 0;
-static uint32_t neffect = 0;
-PARAM_GROUP_START(ring)
-PARAM_ADD_CORE(PARAM_UINT8 | PARAM_PERSISTENT, effect, &effect)
-PARAM_ADD_CORE(PARAM_UINT32 | PARAM_RONLY, neffect, &neffect)
-PARAM_GROUP_STOP(ring)

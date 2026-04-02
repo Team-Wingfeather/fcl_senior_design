@@ -125,6 +125,12 @@ void kalmanCoreUpdateWithFlow(kalmanCoreData_t* this, const flowMeasurement_t *f
 // Measurements of TOF from laser sensor
 void kalmanCoreUpdateWithTof(kalmanCoreData_t* this, tofMeasurement_t *tof);
 
+// Relative distance measurement to a wall at X = 0
+void kalmanCoreUpdateWithXWall(kalmanCoreData_t* this, xWallMeasurement_t *xWall);
+
+// Relative distance measurement to a wall at Y = 0
+void kalmanCoreUpdateWithYWall(kalmanCoreData_t* this, yWallMeasurement_t *yWall);
+
 // Measurement of yaw error (outside measurement Vs current estimation)
 void kalmanCoreUpdateWithYawError(kalmanCoreData_t *this, yawErrorMeasurement_t *error);
 

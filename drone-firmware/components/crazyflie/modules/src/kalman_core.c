@@ -555,6 +555,36 @@ void kalmanCoreUpdateWithTof(kalmanCoreData_t* this, tofMeasurement_t *tof)
   }
 }
 
+void kalmanCoreUpdateWithXWall(kalmanCoreData_t* this, xWallMeasurement_t *xWall)
+{
+  float h[KC_STATE_DIM] = {0};
+  xtensa_matrix_instance_f32 H = {1, KC_STATE_DIM, h};
+
+  // The X-facing sensor points along body -X.
+  float beamTowardWall = fabsf(this->R[0][0]);
+
+  if (beamTowardWall > 0.1f) {
+    float predictedDistance = this->S[KC_STATE_X] / beamTowardWall;
+    h[KC_STATE_X] = 1.0f / beamTowardWall;
+    scalarUpdate(this, &H, xWall->distance - predictedDistance, xWall->stdDev);
+  }
+}
+
+void kalmanCoreUpdateWithYWall(kalmanCoreData_t* this, yWallMeasurement_t *yWall)
+{
+  float h[KC_STATE_DIM] = {0};
+  xtensa_matrix_instance_f32 H = {1, KC_STATE_DIM, h};
+
+  // The Y-facing sensor points along body -Y.
+  float beamTowardWall = fabsf(this->R[1][1]);
+
+  if (beamTowardWall > 0.1f) {
+    float predictedDistance = this->S[KC_STATE_Y] / beamTowardWall;
+    h[KC_STATE_Y] = 1.0f / beamTowardWall;
+    scalarUpdate(this, &H, yWall->distance - predictedDistance, yWall->stdDev);
+  }
+}
+
 void kalmanCoreUpdateWithYawError(kalmanCoreData_t *this, yawErrorMeasurement_t *error)
 {
     float h[KC_STATE_DIM] = {0};

@@ -73,6 +73,8 @@ bool estimatorKalmanEnqueuePosition(const positionMeasurement_t *pos);
 bool estimatorKalmanEnqueuePose(const poseMeasurement_t *pose);
 bool estimatorKalmanEnqueueDistance(const distanceMeasurement_t *dist);
 bool estimatorKalmanEnqueueTOF(const tofMeasurement_t *tof);
+bool estimatorKalmanEnqueueXWall(const xWallMeasurement_t *xWall);
+bool estimatorKalmanEnqueueYWall(const yWallMeasurement_t *yWall);
 bool estimatorKalmanEnqueueAbsoluteHeight(const heightMeasurement_t *height);
 bool estimatorKalmanEnqueueFlow(const flowMeasurement_t *flow);
 bool estimatorKalmanEnqueueYawError(const yawErrorMeasurement_t* error);

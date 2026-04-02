@@ -62,3 +62,23 @@ float rangeGet(rangeDirection_t direction);
  * @return true if the sample was successfuly enqueued
  */
 bool rangeEnqueueDownRangeInEstimator(float distance, float stdDev, uint32_t timeStamp);
+
+/**
+ * Enqueue a range measurement for distance to the X wall in the current estimator.
+ *
+ * @param distance Distance to the wall (m)
+ * @param stdDev The standard deviation of the range sample
+ * @param timeStamp The time when the range was sampled (in sys ticks)
+ * @return true if the sample was successfuly enqueued
+ */
+bool rangeEnqueueXWallDistanceInEstimator(float distance, float stdDev, uint32_t timeStamp);
+
+/**
+ * Enqueue a range measurement for distance to the Y wall in the current estimator.
+ *
+ * @param distance Distance to the wall (m)
+ * @param stdDev The standard deviation of the range sample
+ * @param timeStamp The time when the range was sampled (in sys ticks)
+ * @return true if the sample was successfuly enqueued
+ */
+bool rangeEnqueueYWallDistanceInEstimator(float distance, float stdDev, uint32_t timeStamp);

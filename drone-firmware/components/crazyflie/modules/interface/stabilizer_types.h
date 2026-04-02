@@ -231,6 +231,20 @@ typedef struct tofMeasurement_s {
   float stdDev;
 } tofMeasurement_t;
 
+/** Relative distance to the Y wall */
+typedef struct yWallMeasurement_s {
+  uint32_t timestamp;
+  float distance;
+  float stdDev;
+} yWallMeasurement_t;
+
+/** Relative distance to the X wall */
+typedef struct xWallMeasurement_s {
+  uint32_t timestamp;
+  float distance;
+  float stdDev;
+} xWallMeasurement_t;
+
 /** Absolute height measurement */
 typedef struct heightMeasurement_s {
   uint32_t timestamp;
