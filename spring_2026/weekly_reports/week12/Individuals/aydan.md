@@ -1,1 +1,2 @@
-Hours Worked:
+Hours Worked: 10
+Worked on the frame over break. Ran into a problem with Fusion that forced me to redownload it eventually after several hours of troubleshooting, but that is done now. The frame will be done this week. 
