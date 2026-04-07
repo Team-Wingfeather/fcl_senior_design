@@ -1,0 +1,35 @@
+\documentclass[12pt, titlepage]{article}
+\usepackage{hyperref}
+
+\title{Feedback Controls Lab Weekly Report \\ \normalsize{Week 12}}
+\author{Aydan Vissing, Brady Schick, Gabriel Southwell, Simon Ross}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Aydan Vissing - CFO (10 hrs spent)}
+
+Worked on the frame over break. Ran into a problem with Fusion that forced me to redownload it eventually after several hours of troubleshooting, but that is done now. The frame will be done this week. 
+
+\section*{Brady Schick - CTO (14 hrs spent)}
+
+Made a little bit of progress on the tuning, but there is still a strong imbalance with the pitch. I'm pretty sure it's not a weight imbalance and I swapped the older motors for newer ones so it's likely not a motor imbalance either. I've also checked the pwm signals (according to crazyflie's output) and the duty cycles don't seem to be the problem.
+
+This is becoming a big problem because it requires a large integral component to account for this imbalance, making the integral term overpower the proportional term too much. There's a limit to how much I can increase the rate proportional term before it causes severe oscillations. I was hoping to get more done over Easter break, but I got pretty sick and wasn't able to do much.
+
+However, roll doesn't have to seem this problem, and it is tuning much easier, but still get's thrown off a little by the pitch imbalance. I'm planning to hook up the motors to the oscilloscope to see if the imbalance is due to a current level imbalance. I was planning to do that today, but I think I fried part of the board when I tried to do this. I'll be looking at the board more tomorrow when the others are here to see if it is repairable.
+
+\section*{Gabriel Southwell - CSO (14 hrs spent)}
+
+This week I worked on adding the rest of the tof sensors to the drone. Right now they are just dangling on wires as can be seen in the video I sent. I think this week we really should look into making the frame accommodate the new sensors.
+
+I only have 1 y sensor currently running since using that for yaw estimation is a moderately large task and requires more effort than just plugging it into the estimator. That said state estimations are all over the place. I hope that in the coming week I will be able to improve on the estimator.
+
+Over the weekend I started working on how the each student will be able to configure their drone. Specifically WiFi names and passwords. I think those might need to be set at compile time, but I am not sure. If it is dynamic, I will setup the drone to get it from Simon's config files. If not, I will have to come up with a config setup that flashes it with the name and password.
+
+\section*{Simon Ross - CEO (12 hrs spent)}
+
+We're making good progress. Over the break, I finished integrating my work into the app, and it flashes without error. Additionally, the app is packaged and can be run on different machines quite easily. I also got the drone to work with a simple script and have a more complicated scripting protocol that is untested. As soon as we get the drones fixed I will test it. Now I think I will move on to helping Gabe with the parameters he needs to pass and kinda compiling what we have learned and instructions on how to put everything together.
+
+\end{document}
