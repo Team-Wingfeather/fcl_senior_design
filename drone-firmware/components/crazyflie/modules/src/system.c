@@ -42,7 +42,7 @@
 #include "config.h"
 #include "system.h"
 #include "platform.h"
-//#include "storage.h"
+#include "storage.h"
 #include "configblock.h"
 #include "worker.h"
 #include "freeRTOSdebug.h"
@@ -175,6 +175,7 @@ void systemTask(void *arg)
   systemInit();
   commInit();
   commanderInit();
+  storage_init();
 
   StateEstimatorType estimator = anyEstimator;
   estimatorKalmanTaskInit();

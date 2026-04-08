@@ -11,12 +11,8 @@
 #include "string.h"
 #include "esp_log.h"
 
-#include "storage.h"
+#include "file_manager.h"
 #include "uart_listener.h"
-#include "esp_log_level.h"
-
-#define SCRIPT_FILE_NAME "script.txt"
-#define CONFIG_FILE_NAME "config.txt"
 
 static const unsigned int BUF_SIZE = 32; //starts to have odd uart problems with larger numbers
 static const unsigned int MAX_UART_RETRIES = 1000;
@@ -64,7 +60,7 @@ int read_until(uint8_t* search_term, size_t len) {
    return 0; //TODO no timeout whatsoever
 }
 
-int read_file(char* filename) {
+int read_file_to_location(char* filename) {
    uint8_t buf[BUF_SIZE];
    uint32_t file_size;
    read_bytes((uint8_t*)&file_size, 4);
@@ -94,40 +90,36 @@ void drain_rxbuf(void) {
    while (read(0, buf, sizeof(buf)) > 0);
 } */
 
-// receive multiple files - currently script and config files.
+// receive multiple files - currently script and config files. Repeats until drone start
 void listener_task(void *pvParameter)
 {
-   read_until((uint8_t*)"READY\n",6);
-   esp_log_level_set("*", ESP_LOG_NONE);
-   write(1, "READY\n", 6);
-   read_until((uint8_t*)"START\n",6);
+   while(1) { //TODO maybe make it so you don't have to to both files at once??
+      read_until((uint8_t*)"SCRIPT\n",6);
+      ESP_LOGI(TAG, "Ready for file transfer");
+      write(1, "READY\n", 6);
+      read_until((uint8_t*)"START\n",6);
 
-   if (read_file(SCRIPT_FILE_NAME)!=0) {
-      esp_log_level_set("*", ESP_LOG_INFO);
+      if (read_file_to_location(SCRIPT_FILE_LOC)!=0) {
          ESP_LOGE(TAG, "Error receiving file");
          abort();
-   }
+      }
 
-   read_until((uint8_t*)"READY\n",6); 
-   //esp_log_level_set("*", ESP_LOG_NONE); //TODO resume and stop again?
-   write(1, "READY\n", 6);
-   read_until((uint8_t*)"START\n",6);
+      read_until((uint8_t*)"PARAM\n",6); 
+      write(1, "READY\n", 6);
+      read_until((uint8_t*)"START\n",6);
 
-   if (read_file(CONFIG_FILE_NAME)!=0) {
-      esp_log_level_set("*", ESP_LOG_INFO);
+      if (read_file_to_location(CONFIG_FILE_LOC)!=0) {
          ESP_LOGE(TAG, "Error receiving file");
          abort();
-   }
-
-   while(1) { //TODO should delete task and return, but that currently causes crashing
+      }
       vTaskDelay(pdMS_TO_TICKS(10));
    }
 }
 
 void uart_listener_start(void)
 {
-   unlink("/littlefs/" SCRIPT_FILE_NAME);
-   unlink("/littlefs/" CONFIG_FILE_NAME);
+   //unlink(SCRIPT_FILE_LOC); //we want user to be able to use prev config so NO.
+   //unlink(CONFIG_FILE_LOC);
    xTaskCreate(&listener_task, "uart_listener", 12288, NULL, 5, &listener_handle); //TODO make sure to kill task, fix stack size
 }
 
@@ -138,9 +130,8 @@ void uart_listener_stop(void)
       vTaskDelete(listener_handle);
       listener_handle = NULL;
    }
-   
 
-   // FILE *f = fopen("/littlefs/config.txt", "rb"); //TODO remove this chunk after making sure file naming works
+   // FILE *f = fopen(CONFIG_FILE_LOC, "rb"); //TODO remove this chunk after making sure file naming works
    // if (f != NULL) {
    //    uint8_t buf[1024] = {0};   // zero-filled buffer
    //    // Read up to 1024 bytes
@@ -153,6 +144,5 @@ void uart_listener_stop(void)
    //    write(1, msg, strlen(msg));
    // }
 
-
-   esp_log_level_set("*", ESP_LOG_INFO);
+   set_PID_params();
 }
