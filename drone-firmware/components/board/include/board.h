@@ -60,7 +60,7 @@ Current Hardware Version: V1
 #define MOTOR_1_PIN GPIO_NUM_18
 #define MOTOR_2_PIN GPIO_NUM_19
 #define MOTOR_3_PIN GPIO_NUM_32
-#define MOTOR_4_PIN GPIO_NUM_23
+#define MOTOR_4_PIN GPIO_NUM_16
 // An indexable array can be gotten with board_get_motor_pins();
 
 // /* ----------------------
