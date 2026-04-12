@@ -1,1 +1,3 @@
-Hours Worked:
+Hours Worked: 13
+
+I figured out the issue with the current imbalance and implemented a solution in the software. However, I'm having issues with the sensor now, where the pitch has a tendancy to jump to large negative values and stay there, while the roll has a tendancy to jump to large positive values and stay there. I don't know the sensor integration well enough to know what's causing this, but I'm hoping to look at that in the coming week since I can't tune the drone if I don't have reliable data. I'm not sure if this was an issue before since the current imbalance thing was already throwing things off anyways. This coming week will be very busy early on for me, but hopefully I will be able to get a lot done after Thursday.
