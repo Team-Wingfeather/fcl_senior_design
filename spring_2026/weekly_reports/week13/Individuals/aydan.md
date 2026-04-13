@@ -1,1 +1,2 @@
-Hours Worked:
+Hours Worked: 12
+I finished and printed the frame, then we spent some time recording footage for the video. I also spent a lot of time familiarizing myself with the PID code so I can better help Simon with the implementation this week. 
