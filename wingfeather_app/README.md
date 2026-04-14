@@ -35,3 +35,7 @@ To simply run the python app using `uv`, try
 ``` bash
 uv run ./src/WingFlasher/main.py
 ```
+
+## Firmware
+
+As of now, the firmware flashed by the app is located in `wingfeather_app/firmware` and must be updated manually if the firmware is changed. This structure could be changed, but allows for customization of which firmware version the app flashes.

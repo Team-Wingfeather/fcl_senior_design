@@ -32,18 +32,18 @@ jobs:
         uses: astral-sh/setup-uv@v3
 
       - name: Sync dependencies
-        working-directory: desktop_app/wingfeather_app
+        working-directory: wingfeather_app
         run: uv sync --group dev
 
       - name: Build with PyInstaller
-        working-directory: desktop_app/wingfeather_app
+        working-directory: wingfeather_app
         run: uv run pyinstaller WingFlasher.spec --noconfirm
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
           name: wingflasher-${{ matrix.os }}
-          path: desktop_app/wingfeather_app/dist/
+          path: wingfeather_app/dist/
 
   release:
     name: Publish GitHub Release

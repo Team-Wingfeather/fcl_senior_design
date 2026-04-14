@@ -12,6 +12,6 @@
 **/.vscode/
 **/managed_components/
 **/littlefs_dump.bin
-desktop_app/flight_log.csv
+wireless_testing_scripts/flight_log.csv
 **/.cache/
-
+__pycache__/
