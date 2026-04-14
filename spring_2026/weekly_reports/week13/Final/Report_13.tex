@@ -1,0 +1,33 @@
+\documentclass[12pt, titlepage]{article}
+\usepackage{hyperref}
+
+\title{Feedback Controls Lab Weekly Report \\ \normalsize{Week 13}}
+\author{Aydan Vissing, Brady Schick, Gabriel Southwell, Simon Ross}
+\date{\today}
+
+\begin{document}
+\maketitle
+
+\section*{Aydan Vissing - CFO (12 hrs spent)}
+
+I finished and printed the frame, then we spent some time recording footage for the video. I also spent a lot of time familiarizing myself with the PID code so I can better help Simon with the implementation this week. 
+
+\section*{Brady Schick - CTO (13 hrs spent)}
+
+I figured out the issue with the current imbalance and implemented a solution in the software. However, I'm having issues with the sensor now, where the pitch has a tendancy to jump to large negative values and stay there, while the roll has a tendancy to jump to large positive values and stay there. I don't know the sensor integration well enough to know what's causing this, but I'm hoping to look at that in the coming week since I can't tune the drone if I don't have reliable data. I'm not sure if this was an issue before since the current imbalance thing was already throwing things off anyways. This coming week will be very busy early on for me, but hopefully I will be able to get a lot done after Thursday.
+
+\section*{Gabriel Southwell - CSO (14 hrs spent)}
+
+This week I helped film some b-roll for the video for Simon and was in several shots.
+
+I also worked on figuring out why the app did not build correctly for linux machines. The problem ended up being some python version mismatch. After that, I set up a GitHub action to automatically build and release new versions of the app. It will run the version automatically whenever a push is made that has a version tag on it.
+
+To try and help Brady, I have started to try and work out why the mpu seems to stop measuring sometimes.  
+
+\section*{Simon Ross - CEO (19 hrs spent)}
+
+Everyone has been super busy this week. Unfortunately, it appears that the sensor readings have an unknown problem in them---I talked with Brady and Gabe, and they have a couple things to check, but it doesn't look good. 
+
+On a brighter note, the video is almost complete and we have one more weekend to get things done before presentations. It seems like the current scaling to offset the different currents going to each motor has worked, so now it's just a matter of getting good readings (or getting a short flight to work). We will see.
+
+\end{document}
