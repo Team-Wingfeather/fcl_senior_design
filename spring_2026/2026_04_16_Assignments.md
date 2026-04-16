@@ -1,5 +1,3 @@
-#temp 
-
 # Final Assignments:
 ## Simon
 ### Presentation
@@ -11,6 +9,11 @@
         - Fried drone
     - Goals
     - Problems
+    - Focus on: 
+        - Context
+        - RESULTS
+        - Issues we ran into and how we overcame them
+        - Revisit proposal
 - Help Aydan out with lessons learned section
 - PRACTICE (please) and present on Apr 21
 ### Final Report
@@ -32,6 +35,10 @@
         - PCB Development
         - Using the App
         - Assembling the components
+    - How to use it as a user
+    - How it works/how to use in detail
+    - How to develop it
+    - Troubleshooting guides (REQUIRED to some extent)
 ### Hours Log and Weekly Reports
 - Submit final hours logs and weekly reports (preferably before Monday afternoon)
 ### Video
@@ -47,6 +54,11 @@
     - Lessons Learned
     - Future Plans?
 - PRACTICE (please) and present on Apr 21
+- Focus on: 
+    - Context
+    - RESULTS
+    - Issues we ran into and how we overcame them
+    - Revisit proposal
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
@@ -69,6 +81,10 @@
         - Frame Development
         - Using the App
             - Specifically the plotting function, although go ham
+    - How to use it as a user
+    - How it works/how to use in detail
+    - How to develop it
+    - Troubleshooting guides (REQUIRED to some extent)
 ### Hours Log and Weekly Reports
 - Submit final hours logs and weekly reports (preferably before Monday afternoon)
 
@@ -85,6 +101,11 @@
     - future plans
 - Help Aydan out with lessons learned section
 - PRACTICE (please) and present on Apr 21
+- Focus on: 
+    - Context
+    - RESULTS
+    - Issues we ran into and how we overcame them
+    - Revisit proposal
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
@@ -104,6 +125,10 @@
         - Basic Repository Structure
         - Using ESP IDF
         - Programming with the Drone
+    - How to use it as a user
+    - How it works/how to use in detail
+    - How to develop it
+    - Troubleshooting guides (REQUIRED to some extent)
 ### Hours Log and Weekly Reports
 - Submit final hours logs and weekly reports (preferably before Monday afternoon)
 
@@ -118,6 +143,11 @@
     - Simulation
 - Help Aydan out with lessons learned section
 - PRACTICE (please) and present on Apr 21
+- Focus on: 
+    - Context
+    - RESULTS
+    - Issues we ran into and how we overcame them
+    - Revisit proposal
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
@@ -133,5 +163,9 @@
         - Relevant sections of Quick Start Guide
         - PID Tuning
         - Basic Drone testing
+    - How to use it as a user
+    - How it works/how to use in detail
+    - How to develop it
+    - Troubleshooting guides (REQUIRED to some extent)
 ### Hours Log and Weekly Reports
 - Submit final hours logs and weekly reports (preferably before Monday afternoon)
