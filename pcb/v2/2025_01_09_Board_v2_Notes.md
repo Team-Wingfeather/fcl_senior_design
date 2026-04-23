@@ -1,8 +1,0 @@
-- lm11173.3 power regulator swap
-	- [HT7533-1](https://jlcpcb.com/partdetail/HoltekSemicon-HT75331/C14289)
-- Move bottom ToF for velcro?
-- Knock down the green pwr LED brightness
-- Swap R13 for a 50K for 1/3 voltage divider
-- Connect MPU to its own i2c line
-- tof interrupts??
-- Change IO23 to pin 27 (IO16)

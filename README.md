@@ -12,3 +12,7 @@ For information on how to use this project or for continued development, see the
 
 - [Latest Release](https://github.com/gh0stpr0t0c0l/fcl_senior_design/releases/latest)
 - [All Releases](https://github.com/gh0stpr0t0c0l/fcl_senior_design/releases)
+
+## Obsidian
+
+This repository has been formatted to opened as an [Obsidian](https://obsidian.md/) vault, if so desired.
