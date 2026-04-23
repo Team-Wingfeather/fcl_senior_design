@@ -11,4 +11,9 @@ Some other optional changes include:
 - Moving the MPU6050 IMU to its own I2C line.
 
 ## Board Files
+
 The `Gerber`, `CPL`, and `BOM` files can be used to order board version 1 from [JLCPCB](https://cart.jlcpcb.com/quote) (probably don't). To modify the design, use the files in the `EasyEDA` directory and set up an account with [EasyEDA](https://easyeda.com/). The current board revision is `PCB_FCL_Drone_v0.0.13_FAB`.
+
+## Resources
+
+Datasheets for many of the current components can be found in `resources/datasheets` and examples of drones that Wingfeather is based on are located in `resources/hardware_examples`.

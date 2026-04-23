@@ -1,3 +1,4 @@
+Current scripting work is located on branch `commander-control`. Below is an out of date summary of some of the work being done on that front.
 ### Drone Flight Script + Config Write-up
 
 Drone needs a way to read in flight scripts and config values without recompiling the firmware. This should be able to be done using the littlefs file system and esptool to load the script. 
