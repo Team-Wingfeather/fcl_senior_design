@@ -1,21 +1,5 @@
 # Final Assignments:
 ## Simon
-### Presentation
-- Make sure to get presentation sections listed below done BEFORE Monday the 20th. Please don't plan on doing it the night before presentations - we want to be polished by then
-    - Ambitious project
-    - Hardware
-        - Current distribution - Brady
-        - Brownout
-        - Fried drone
-    - Goals
-    - Problems
-    - Focus on: 
-        - Context
-        - RESULTS
-        - Issues we ran into and how we overcame them
-        - Revisit proposal
-- Help Aydan out with lessons learned section
-- PRACTICE (please) and present on Apr 21
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
@@ -43,20 +27,6 @@
 - Submit final hours logs and weekly reports (preferably before Monday afternoon)
 
 ## Aydan
-### Presentation
-- Make sure to get presentation sections listed below done BEFORE Monday the 20th. Please don't plan on doing it the night before presentations - we want to be polished by then
-    - App Design
-        - Qt
-        - App sections??
-    - Frame design
-    - Lessons Learned
-    - Future Plans?
-- PRACTICE (please) and present on Apr 21
-- Focus on: 
-    - Context
-    - RESULTS
-    - Issues we ran into and how we overcame them
-    - Revisit proposal
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
@@ -89,23 +59,6 @@
 - Update README.md for print files (if nothing else with a link to the user manual)
 
 ## Gabe
-### Presentation
-- Make sure to get presentation sections listed below done BEFORE Monday the 20th. Please don't plan on doing it the night before presentations - we want to be polished by then
-    - CrazyFlie adaptation
-        - optical flow sensor
-    - File transfer
-    - Flashing
-    - Drone Scripting
-    - software
-        - motor control
-    - future plans
-- Help Aydan out with lessons learned section
-- PRACTICE (please) and present on Apr 21
-- Focus on: 
-    - Context
-    - RESULTS
-    - Issues we ran into and how we overcame them
-    - Revisit proposal
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
@@ -133,21 +86,6 @@
 - Submit final hours logs and weekly reports (preferably before Monday afternoon)
 
 ## Brady
-### Presentation
-- Make sure to get presentation sections listed below done BEFORE Monday the 20th. Please don't plan on doing it the night before presentations - we want to be polished by then
-    - Basic controls
-    - Talk about PID tuning somewhere in here
-    - PID Control Model
-    - CrazyFlie introduction
-    - Things that slowed development??
-    - Simulation
-- Help Aydan out with lessons learned section
-- PRACTICE (please) and present on Apr 21
-- Focus on: 
-    - Context
-    - RESULTS
-    - Issues we ran into and how we overcame them
-    - Revisit proposal
 ### Final Report
 - Complete before Apr 26:
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
