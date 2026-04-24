@@ -14,11 +14,9 @@
 - Complete before Apr 26: 
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
     - Complete sections:
-        - Ordering PCB
         - Relevant sections of Quick start guide
-        - PCB Development
         - Using the App
-        - Assembling the components
+        - Assembling the components (add images)
     - How to use it as a user
     - How it works/how to use in detail
     - How to develop it
@@ -49,6 +47,7 @@
         - Frame Development
         - Using the App
             - Specifically the plotting function, although go ham
+        - App Development
     - How to use it as a user
     - How it works/how to use in detail
     - How to develop it
