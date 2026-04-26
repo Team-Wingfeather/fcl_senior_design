@@ -13,7 +13,7 @@ uri = uri_helper.uri_from_env(default="udp://192.168.43.42:2390")
 HOVER_THRUST = 25000  # Adjust as needed
 COMMAND_RATE_HZ = 50  # Setpoint update rate
 LOG_RATE_MS = 50  # 20 ms = 50 Hz logging
-LOG_TYPE = 3  # 0=motors; 1=Pitch PIDs; 2=stateEstimator; 3=Roll PIDs
+LOG_TYPE = 2  # 0=motors; 1=Pitch PIDs; 2=stateEstimator; 3=Roll PIDs
 JUST_LOG = 0
 FLIGHT_TYPE = 0  # 0=gimbal; 1=altitude
 
@@ -56,8 +56,8 @@ def log_callback(timestamp, data, logconf):
                 f"DPitch: {data['pid_attitude.pitch_outD']:.2f}, "
                 f"PPitch: {data['pid_rate.pitch_outP']:.2f}, "
                 f"IPitch: {data['pid_rate.pitch_outI']:.2f}, "
-                f"DPitch: {data['pid_rate.pitch_outD']:.2f}, "
-                #f"Pitch: {data['stabilizer.pitch']:.2f}, "
+                #f"DPitch: {data['pid_rate.pitch_outD']:.2f}, "
+                f"Pitch: {data['stabilizer.pitch']:.2f}, "
             )
             log.write(
                 f"{data['pid_attitude.pitch_outP']:.2f}, "
@@ -65,19 +65,20 @@ def log_callback(timestamp, data, logconf):
                 f"{data['pid_attitude.pitch_outD']:.2f}, "
                 f"{data['pid_rate.pitch_outP']:.2f},"
                 f"{data['pid_rate.pitch_outI']:.2f},"
-                f"{data['pid_rate.pitch_outD']:.2f}\n"
-                #f"{data['stabilizer.pitch']:.2f}\n"
+                #f"{data['pid_rate.pitch_outD']:.2f}\n"
+                f"{data['stabilizer.pitch']:.2f}\n"
             )
 
         elif LOG_TYPE == 3:
             print(
                 f"{timestamp} | ,"
-                f"PPitch: {data['pid_attitude.roll_outP']:.2f}, "
-                f"IPitch: {data['pid_attitude.roll_outI']:.2f}, "
-                f"DPitch: {data['pid_attitude.roll_outD']:.2f}, "
-                f"PPitch: {data['pid_rate.roll_outP']:.2f}, "
-                f"IPitch: {data['pid_rate.roll_outI']:.2f}, "
-                f"DPitch: {data['pid_rate.roll_outD']:.2f}, "
+                f"PRoll: {data['pid_attitude.roll_outP']:.2f}, "
+                f"IRoll: {data['pid_attitude.roll_outI']:.2f}, "
+                f"DRoll: {data['pid_attitude.roll_outD']:.2f}, "
+                f"PRollRate: {data['pid_rate.roll_outP']:.2f}, "
+                f"IRollRate: {data['pid_rate.roll_outI']:.2f}, "
+                #f"DRollRate: {data['pid_rate.roll_outD']:.2f}, "
+                f"Roll: {data['stabilizer.roll']:.2f}, "
             )
             log.write(
                 f"{data['pid_attitude.roll_outP']:.2f}, "
@@ -85,7 +86,8 @@ def log_callback(timestamp, data, logconf):
                 f"{data['pid_attitude.roll_outD']:.2f}, "
                 f"{data['pid_rate.roll_outP']:.2f},"
                 f"{data['pid_rate.roll_outI']:.2f},"
-                f"{data['pid_rate.roll_outD']:.2f}\n"
+                #f"{data['pid_rate.roll_outD']:.2f}\n"
+                f"{data['stabilizer.roll']:.2f}\n"
             )
 
         elif LOG_TYPE == 2:
@@ -94,12 +96,18 @@ def log_callback(timestamp, data, logconf):
                 f"State Estimate: "
                 f"X: {data['stateEstimate.x']:.2f}, "
                 f"Y: {data['stateEstimate.y']:.2f}, "
-                f"Z: {data['stateEstimate.z']:.2f}"
+                f"Z: {data['stateEstimate.z']:.2f}, "
+                f"Roll: {data['stabilizer.roll']:.2f}, "
+                f"Pitch: {data['stabilizer.pitch']:.2f}, "
+                f"Yaw: {data['stabilizer.yaw']:.2f}"
             )
             log.write(
                 f"{data['stateEstimate.x']:.2f},"
                 f"{data['stateEstimate.y']:.2f},"
-                f"{data['stateEstimate.z']:.2f}\n"
+                f"{data['stateEstimate.z']:.2f},"
+                f"{data['stabilizer.roll']:.2f},"
+                f"{data['stabilizer.pitch']:.2f},"
+                f"{data['stabilizer.yaw']:.2f}\n"
             )
 
 
@@ -176,8 +184,8 @@ if __name__ == "__main__":
                 log_config.add_variable("pid_attitude.pitch_outD", "float")
                 log_config.add_variable("pid_rate.pitch_outP", "float")
                 log_config.add_variable("pid_rate.pitch_outI", "float")
-                log_config.add_variable("pid_rate.pitch_outD", "float")
-                #log_config.add_variable("stabilizer.pitch", "float")
+                #log_config.add_variable("pid_rate.pitch_outD", "float")
+                log_config.add_variable("stabilizer.pitch", "float")
 
                 f.write(
                     "Pitch P,Pitch I,Pitch D,Pitch P rate,Pitch I rate,Pitch D rate\n"
@@ -189,10 +197,11 @@ if __name__ == "__main__":
                 log_config.add_variable("pid_attitude.roll_outD", "float")
                 log_config.add_variable("pid_rate.roll_outP", "float")
                 log_config.add_variable("pid_rate.roll_outI", "float")
-                log_config.add_variable("pid_rate.roll_outD", "float")
+                #log_config.add_variable("pid_rate.roll_outD", "float")
+                log_config.add_variable("stabilizer.roll", "float")
 
                 f.write(
-                    "Roll P,Roll I,Roll D,Roll P rate,Roll I rate,Roll D rate\n"
+                    "Roll P,Roll I,Roll D,Roll P rate,Roll I rate,Roll\n"
                 )
                 # log_config.add_variable("stabilizer.thrust", "float")
             elif LOG_TYPE == 0:
@@ -210,8 +219,11 @@ if __name__ == "__main__":
                 log_config.add_variable("stateEstimate.x", "float")
                 log_config.add_variable("stateEstimate.y", "float")
                 log_config.add_variable("stateEstimate.z", "float")
+                log_config.add_variable("stabilizer.roll", "float")
+                log_config.add_variable("stabilizer.pitch", "float")
+                log_config.add_variable("stabilizer.yaw", "float")
 
-                f.write("x estimate,y estimate,z estimate\n")
+                f.write("x estimate,y estimate,z estimate,roll estimate,pitch estimate,yaw estimate\n")
 
         cf.log.add_config(log_config)
 
