@@ -83,8 +83,62 @@ Once the necessary components have been obtained, assembling the drone is fairly
 Don't look at the commit history.
 
 \subsection{Basic Drone Testing}
+To test individual motors of the drone:
+\begin{enumerate}
+\item Gabe help me.
+\end{enumerate}
+To test the controller:
+\begin{enumerate}
+\item If using the test apparatus, fasten the drone to the apparatus.
+\item Place the drone upright and flat on the table (while still on the apparatus is applicable) and plug in the battery. If the drone is not perfectly level at initialization or during resets, the IMU will not start up properly. It is recommended to already have the plug near the appropriate place before laying
+\item Flash the PID parameters as instructed in "Using the App" and press start. NOTE: Keep the drone flat in case resetting at the end of the flash messes up the IMU.
+\item Connect to the drone's Wifi. (The password is "Password").
+\item Run test.py. Press ctrl+c in the terminal to stop the drone. If something goes wrong and ctrl+c doesn't stop the drone, press the reset button on the drone.
+\item To plot logged data, run plotcsv.py
+\end{enumerate}
+Setting up test.py:
+\begin{itemize}
+\item LOG\_TYPE: Selects which values you want to log.
+\begin{itemize}
+\item Additional sets of logged values can be made following the formatting of other sets.
+\item In log\_callback(), print() and log.write() must be specified. flight\_test must also be updated to add a new set.
+\item Values available to log can be found in LogableValues.txt.
+\item There is a limit to how much you can log (usually no more than 6 floats)
+\end{itemize}
+\item JUST\_LOG: Set to 1 if you just want to gather values without running the motors.
+\item FLIGHT\_TYPE: Set to 1 for normal flight. Setting to 0 will specify a target thrust, yaw, pitch, and roll (useful for PID tuning).
+\end{itemize}
 
 \subsection{PID Tuning}
+The controller has 12 PID controllers for 12 states. These states are the x/y/z positions, the yaw/pitch/roll orientations, the x/y/z velocities, and the yaw/pitch/roll rates. Each controller has 3 parameters to tune. Values are set as described in "Using the App" and testing the controls can be done as described in "Basic Drone Testing". Below is a recommended process for tuning the drone.
+\begin{enumerate}
+\item On-apparatus tuning:
+\begin{enumerate}
+\item Set all PID values to 0.
+\item Set FLIGHT\_TYPE to 0 in test.py.
+\item Test the controller to verify the drone and sensors work properly (all 4 motors should apply the same force). This can help catch other issues that may affect tuning.
+\item Tune pitch controller:
+\begin{enumerate}
+\item Set pitch's P to 4 (this seems to be a good value)
+\item Gradually increase and test pitch rate's P until just below the point where oscillations occur. When running, hold the apparatus to 
+\item Gradually increase and test pitch rate's I to correct steady-state error without causing slow oscillations.
+\item Set pitch rate's D as needed.
+\item Proceed to tune pitch's I and D.
+\end{enumerate}
+\item Tune roll and yaw controllers the same way pitch was tuned.
+\end{enumerate}
+\item Off-apparatus tuning.
+\begin{enumerate}
+\item Set FLIGHT\_TYPE to 1 in test.py.
+\item Tune the elevation controller using a process similar to the pitch tuning process (be ready to type ctrl+c if something goes wrong).
+\item Tune the x and y controllers similarly, doing so near a wall.
+\end{enumerate}
+\end{enumerate}
+Some things to keep in mind when tuning:
+\begin{itemize}
+\item The PID struct has limits on I and on the output.
+\item The sensor data will be noisy, which can make the D component too strong even with a filter.
+\end{itemize}
 
 \subsection{Frame Development}
 
