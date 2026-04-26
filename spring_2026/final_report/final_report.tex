@@ -269,6 +269,13 @@ The sections below outline major design decisions that have been made over the p
 			\item Allows for verification of quad-copter dynamics and controls
 			\item Provides functionality for an initial start to the tuning process 
 		\end{itemize}
+		\item Crazyflie Controller
+		\begin{itemize}
+			\item Specifies the control system in the drone software
+			\item Has reprogrammable values within the controller
+			\item Includes outLimit and iLimit to improve drone stability
+			\item Can log various types of data relating to the drone's operation
+		\end{itemize}
 \end{enumerate}
 
 \section{Project Summary}
@@ -281,6 +288,14 @@ The sections below outline major design decisions that have been made over the p
 As of now, we have a fully designed PCB, an almost fully designed drone frame, and the majority of the parts needed to assemble the quadcopter. A lot of the work has also been done in setting up the drone firmware and designing the flight controls. Moving forward, we plan to assemble the drone and finish up the firmware and controls. Then, we will be able to move on to controller tuning, lab design, and setting up the desktop application.
 
 \subsection{Future Potential}
+\begin{enumerate}
+\item Simulation
+\begin{itemize}
+\item Adding nested controls to simulation to match Crazyflie's controls
+\item Fully converting MATLAB simulation into python
+\item Implementing python simulation as a prediction model in the app
+\end{itemize}
+\end{enumerate}
 
 \subsection{Budget}
 The budget below describes how we intend to use funds in constructing a prototype. Under this paradigm, we will be far under our proposed budget of \$600. However, this budget does not account for mistakes in prototyping and drastic changes to the program. This budget is up to date with what we have spent on each component so far.
