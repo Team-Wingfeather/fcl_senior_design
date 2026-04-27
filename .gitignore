@@ -5,6 +5,8 @@
 *.lof
 *.lot
 *.toc
+*.fls
+*.fdb_latexmk
 .obsidian
 .lock*
 *.lock

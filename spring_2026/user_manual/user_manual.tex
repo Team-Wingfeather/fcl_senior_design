@@ -33,7 +33,7 @@
 \newpage
 \section{Quick Start Guide}
 
-This drone is designed to be used in-lab with just the Wingflasher application and the required hardware. Assembling the hardware can be challenging 
+This drone is designed to be used in-lab with just the Wingflasher application and the required hardware. Assembling the hardware can be challenging
 
 The user manual must include a Quick Start guide which should be a very simple one-page explanation of how to get the device set up for a first test using built-in default settings.
 
@@ -44,7 +44,7 @@ You must explain how to use all your instrument’s features. Assume that the re
 \subsection{Ordering Components}
 \subsubsection{PCB}
 
-Essential files for working with the Wingfeather circuit board are located in the \href{https://github.com/Team-Wingfeather/fcl_senior_design/tree/main/pcb}{\texttt{pcb} directory}. This includes both the editable EasyEDA files and Gerber files for ordering. 
+Essential files for working with the Wingfeather circuit board are located in the \href{https://github.com/Team-Wingfeather/fcl_senior_design/tree/main/pcb}{\texttt{pcb} directory}. This includes both the editable EasyEDA files and Gerber files for ordering.
 
 Ordering printed circuit boards is made simple by \href{https://jlcpcb.com/}{JLCPCB}, which is also directly accessible from an EasyEDA project. In general, the cheapest settings can be used for ordering.
 
@@ -54,11 +54,13 @@ The current motors used by the Wingfeather project are 720 coreless brushed DC m
 \subsubsection{Propellers}
 (key specs and a link)
 
+720 coreless brushed DC Motors
+
 \subsection{Printing the Frame}
 
 \subsection{Assembling the components}
 
-Once the necessary components have been obtained, assembling the drone is fairly straightforward. 
+Once the necessary components have been obtained, assembling the drone is fairly straightforward.
 \begin{enumerate}
 \item Solder the battery connector of choice to the bottom of the board. The plastic part of the connector can slide off of the metal part, so it can be helpful to super-glue the plastic to the PCB before soldering. Note that there are two connector options: JST-PH and JST-XH. To date, the team has been using JST-PH connectors for their minimal profile. Be careful to match the polarity of the batteries to the polarity of the board, marked with $+/-$ symbols near the connector.
 \item Using header pins, solder 2 time-of-flight sensor daughter boards onto the main board---one on top and the other on the bottom. These should use the 6-pin header slots, and be soldered onto the face with the printed labels.
@@ -76,8 +78,18 @@ Once the necessary components have been obtained, assembling the drone is fairly
 \subsection{Using the App}
 
 \subsection{Using ESP IDF}
+(Probably drop this section since there is not much needed knowledge of esp-idf and it all can be googled)
 
 \section{Drone Development}
+
+\subsection{Development Environment}
+The current framework for developing firmware for the Wing Feather is \href{https://docs.espressif.com/projects/esp-idf/en/v5.5.4/esp32/get-started/index.html}{ESP-IDF v5.5.4}. Espressif has recently released IDF v6 and the project could be upgraded to v6 if desired. An installation guide can be found by following that link.
+
+\subsection{IDE Setup}
+For ease of use, you can develop in VSCode with the \href{https://github.com/espressif/vscode-esp-idf-extension/blob/master/README.md}{ESP-IDF Extension}. 
+The extension adds buttons to the VSCode toolbar that allow for easy compilation and flashing of the firmware.
+
+If you have a preferred code editor though, the command line experience is very easy.
 
 \subsection{Basic Repository Structure}
 Don't look at the commit history.
@@ -116,7 +128,7 @@ The controller has 12 PID controllers for 12 states. These states are the x/y/z 
 \item Tune pitch controller:
 \begin{enumerate}
 \item Set pitch's P to 4 (this seems to be a good value)
-\item Gradually increase and test pitch rate's P until just below the point where oscillations occur. When running, hold the apparatus to 
+\item Gradually increase and test pitch rate's P until just below the point where oscillations occur. When running, hold the apparatus to
 \item Gradually increase and test pitch rate's I to correct steady-state error without causing slow oscillations.
 \item Set pitch rate's D as needed.
 \item Proceed to tune pitch's I and D.
@@ -142,7 +154,7 @@ Some things to keep in mind when tuning:
 Printed circuit board development can be accomplished easily using \href{https://easyeda.com/}{EasyEDA}. This software allows for design of a schematic and then layout of the circuit board. There is also a web interface that works quite well.
 
 The current board revision files can be found \href{https://github.com/Team-Wingfeather/fcl_senior_design/tree/main/pcb/v1/EasyEDA}{here}. The zipped project folder contains all of the past board revisions, but the most up-to-date is  \texttt{PCB\_FCL\_Drone\_v0.0.13\_FAB}.
-The current board revision is out of date in a few areas: 
+The current board revision is out of date in a few areas:
 \begin{itemize}
 \item The current power regulator (\href{https://github.com/Team-Wingfeather/fcl_senior_design/blob/main/resources/datasheets/C109322-TPS63070RNMR.pdf}{TPS63070}) is weak and burns out. This component will need to be replaced in the next version of the board, potentially by a \href{https://jlcpcb.com/partdetail/HoltekSemicon-HT75331/C14289}{HT7533-1} LDO. This is comparable to what is currently soldered onto the board. Note: there are multiple capacitors, resistors, and inductors that are used only by the previous component and will also need to be removed. See the \href{https://github.com/Team-Wingfeather/fcl_senior_design/blob/main/resources/datasheets/C109322-TPS63070RNMR.pdf}{datasheet} and \href{https://github.com/Team-Wingfeather/fcl_senior_design/tree/main/pcb/v1/EasyEDA}{EasyEDA} files for which components to replace.
 \item The bottom ToF sensor leaves little room for a velcro strap, so it could be moved, or the frame CAD file could be modified to accommodate.
