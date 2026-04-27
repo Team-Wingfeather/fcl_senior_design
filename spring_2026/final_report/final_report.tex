@@ -109,10 +109,40 @@ The following requirements define the end user experience as desired by the cust
 \subsection{Hardware}
 \subsubsection{Frame Design}
 \subsubsection{PCB Design}
-\subsection{Software}
-\subsubsection{Components}
-\subsection{Controls}
-The sections below outline major design decisions that have been made over the past semester in the areas of software, hardware, and controls. Also included are some future plans for development in these areas.
+\subsection{Drone Software}
+The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fustion, state estimation, and communication protocols. I created a great for our project that could be further extended anyware that we needed. 
+
+\subsubsection{Added Components}
+\begin{enumerate}
+  \item Board
+  \begin{itemize}
+    \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
+    \item Contains public functions for getting and iterable array for time of flight xshut pins and motor pwm pins.
+  \end{itemize}
+  \item Buzzer
+  \begin{itemize}
+    \item Esp-drone used a piezo buzzer for alerting the users of various thing. When selecting our hardware we chose to an electromagnetic buzzer. While it is limeted in the tones it can produce, it is much louder than a traditional piezo buzzer. 
+    \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
+    \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
+    \item A pattern definition includes Sound on and off times deined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
+  \end{itemize}
+  \item File Manager
+  \begin{itemize}
+    \item \huge{Simon help :)}
+  \end{itemize}
+  \item Storage
+  \begin{itemize}
+    \item \huge{Simon help :)}
+  \end{itemize}
+\item Uart Listener
+  \begin{itemize}
+    \item \huge{Simon help :)}
+  \end{itemize}
+\item Multi-TOF Sensors
+  \begin{itemize}
+    \item Finish
+  \end{itemize}
+\end{enumerate}
 
 \subsection{Hardware}
 \begin{enumerate}
