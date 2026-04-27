@@ -4,7 +4,10 @@
 
 The current framework for developing firmware for the Wing Feather is [ESP-IDF v5.5.4](https://docs.espressif.com/projects/esp-idf/en/v5.5.4/esp32/get-started/index.html). Espressif has recently released IDF v6 and the project could be upgraded to v6 if desired. An installation guide can be found by following that link.
 
-For ease of use, you can develop in VSCode with the [ESP-IDF Extension](https://github.com/espressif/vscode-esp-idf-extension/blob/master/README.md). If you have a preferred code editor though, the command line experience is very easy.
+For ease of use, you can develop in VSCode with the [ESP-IDF Extension](https://github.com/espressif/vscode-esp-idf-extension/blob/master/README.md).
+The extension adds buttons to the VSCode toolbar that allow for easy compilation and flashing of the firmware.
+
+If you have a preferred code editor though, the command line experience is very easy.
 
 ## Development Resources
 
