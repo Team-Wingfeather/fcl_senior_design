@@ -7,6 +7,7 @@
 *.toc
 *.fls
 *.fdb_latexmk
+spring_2026/user_manual/user_manual.pdf
 .obsidian
 .lock*
 *.lock
