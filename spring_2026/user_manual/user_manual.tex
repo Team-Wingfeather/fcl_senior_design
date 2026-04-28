@@ -63,21 +63,85 @@ The current motors used by the Wingfeather project are 720 coreless brushed DC m
 Once the necessary components have been obtained, assembling the drone is fairly straightforward.
 \begin{enumerate}
 \item Solder the battery connector of choice to the bottom of the board. The plastic part of the connector can slide off of the metal part, so it can be helpful to super-glue the plastic to the PCB before soldering. Note that there are two connector options: JST-PH and JST-XH. To date, the team has been using JST-PH connectors for their minimal profile. Be careful to match the polarity of the batteries to the polarity of the board, marked with $+/-$ symbols near the connector.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4404}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
 \item Using header pins, solder 2 time-of-flight sensor daughter boards onto the main board---one on top and the other on the bottom. These should use the 6-pin header slots, and be soldered onto the face with the printed labels.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4405}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4406}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
 \item Place the PCB on the frame and use 7 M2 screws to connect them. Note that the orientation of the PCB is determined by which corner does not have a hole for a screw. The front of the drone is the side with the USB connection.
+
 \item Connect the propellers onto the motors. Make sure to select where each motor will go and match the propeller direction with the direction indicated around the screw nearest to that motor. Pushing gently onto the table can help affix the propellers to the shafts. Finally, it  is conventional to use a different color of propellers to designate the front of the drone, depending on the model purchased.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4407}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
 \item Slide the 4 motors into the designated recesses. It may prove easier to solder the motor connections before gluing the motors in.
-\item Solder each motor to the nearest 2 through holes on the circuit board. Note that polarities of the annular rings alternate around the drone. This is so that the motors across from each other spin the same direction and adjacent motors spin opposite directions. In practical terms, the square annular ring should always be connected to the same motor terminal ``polarity'' (designated by the color of the wire). Which color may need to be determined by trial and error. For the current motors, the white motor lead should be soldered to the square annular ring. In the end, make sure the direction each motor spins matches the arrow located around the nearest PCB screw. Note that it may be helpful to twist the wires from each motor before soldering. After soldering, this twisted pair may be hot glued to the frame to save space. Use caution as the soldering iron can easily melt the 3D-printed frame.
-\item Slide each motor partially out and apply a moderate amount of hot glue under it. Slide the motor back down, and be ready to wipe away excess glue. Affixing the motors well is important so they do not fly off in flight. Be careful, as the glue gun can melt the plastic of the frame.
+\item Solder each motor to the nearest 2 through holes on the circuit board. Note that polarities of the annular rings alternate around the drone. This is so that the motors across from each other spin the same direction and adjacent motors spin opposite directions. In practical terms, the square annular ring should always be connected to the same motor terminal ``polarity'' (designated by the color of the wire). Which color may need to be determined by trial and error. For the current motors, the white motor lead should be soldered to the circular annular ring. In the end, make sure the direction each motor spins matches the arrow located around the nearest PCB screw. (This can be verified by flashing the drone using the app and connecting the battery---each motor should spin briefly). Note that it may be helpful to twist the wires from each motor before soldering. After soldering, this twisted pair may be hot glued to the frame to save space. Use caution when using the glue gun and soldering iron, as they can easily melt the 3D-printed frame.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4410}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
+\item Slide each motor partially out and apply a moderate amount of hot glue under it. Slide the motor back down, and be ready to wipe away excess glue. Affixing the motors well is important so they do not fly off in flight. 
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4408}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
 \item In the future, more time-of-flight sensors may be added to the 5-pin header slots. Additionally, a velcro strap can be used to affix the battery to the bottom of the board through the designated slot.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.5\textwidth]{img/IMG_4411}
+    \caption{Control Loop for Quad-copter Flight}
+    \label{fig:myimage}
+\end{figure}
 \end{enumerate}
 
 
 \subsection{Programming the Drone}
 
 \subsection{Using the App}
+As mentioned in the Quick Start section, the app can be downloaded from the project \href{https://github.com/Team-Wingfeather/fcl_senior_design}{GitHub page} under \href{https://github.com/Team-Wingfeather/fcl_senior_design/releases}{releases}. Details on the features of each tab are listed below.
+\subsubsection{Graphing Tab}
 
-\subsection{Using ESP IDF}
+
+\subsubsection{Planning Tab}
+The planning tab includes multiple stubs for lab options to be implemented in the future. Current progress on the project has been solely towards simple PID altitude control, but this tab will be more useful as the lab grows more complex.
+
+\subsubsection{Programming Tab}
+The programming tab is for setting the PID values to flash to the drone. Currently, the parameter-setting function of this tab is unimplemented. In the future, it should be able to set the altitude position P, I, and D values within a reasonable range that is determined experimentally. Additionally, the advanced mode (discussed in a later section) could be augmented to allow for full parameter access.
+
+The ``Flash Drone'' button is functional, and will auto-detect the drone and flash scripts and parameters. These parameters are currently located in a \texttt{config} directory that is created the first time the drone is flashed. Once this is completed, the developer may enter this directory to modify the parameters for flashing. The \texttt{commands.txt} file is currently unused, but an in-progress implementation of the scripting exists on the branch \href{https://github.com/Team-Wingfeather/fcl_senior_design/tree/commander-control}{\texttt{commander-control}}.
+
+Note that the drone hardware has been designed so that the user can plug the drone into the computer for flashing without disconnecting the battery. 
+
+There are a few known minor bugs with the flashing system, but disconnecting and reconnecting the drone should solve most of these. In general, do not press start while the drone is connected to the computer.
+
+Flashing the drone with modified firmware via the app can only be accomplished via advanced mode (see below). Each year the lab is performed should only need one version of the firmware, so this simplifies the setup. Changes for automation of the versioning system on this could be made in the future.
+
+
+
+\subsubsection{Advanced Mode}
+The app has an advanced mode that can be accessed via the file tab on the menu bar. The purpose of this mode is to allow users to use more features of the drone for debugging, development, and advanced use beyond lab experiments. Currently, this mode only adds an option to the programming tab to allow the user to force a full flash of the drone without regard to the current partition table. 
+
 (Probably drop this section since there is not much needed knowledge of esp-idf and it all can be googled)
 
 \section{Drone Development}
@@ -110,6 +174,8 @@ The entire esp-idf project for the drone firmware can be found in the drone-firm
   \item The rest of the files at the firmware root are autogenerated by the build system.
 \end{itemize}
 
+
+\subsection{Using ESP IDF}
 
 \subsection{Basic Drone Testing}
 To test the controller:

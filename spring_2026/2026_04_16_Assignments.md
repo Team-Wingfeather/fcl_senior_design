@@ -15,7 +15,6 @@
     - Add sections as relevant (do a brainstorm for anything missing that you've done)
     - Complete sections:
         - Relevant sections of Quick start guide
-        - Using the App
         - Assembling the components (add images)
     - How to use it as a user
     - How it works/how to use in detail
@@ -48,6 +47,7 @@
         - Using the App
             - Specifically the plotting function, although go ham
         - App Development
+            - where the firmware files are located and how to update them
     - How to use it as a user
     - How it works/how to use in detail
     - How to develop it
