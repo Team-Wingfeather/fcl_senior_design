@@ -115,34 +115,47 @@ The backbone of the project is the esp-drone project from espressif. Esp-drone p
 \subsubsection{Added Components}
 \begin{enumerate}
   \item Board
-  \begin{itemize}
-    \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
-    \item Contains public functions for getting and iterable array for time of flight xshut pins and motor pwm pins.
-  \end{itemize}
+    \begin{itemize}
+      \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
+      \item Contains public functions for getting and iterable array for time of flight xshut pins and motor pwm pins.
+    \end{itemize}
   \item Buzzer
-  \begin{itemize}
-    \item Esp-drone used a piezo buzzer for alerting the users of various thing. When selecting our hardware we chose to an electromagnetic buzzer. While it is limeted in the tones it can produce, it is much louder than a traditional piezo buzzer. 
-    \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
-    \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
-    \item A pattern definition includes Sound on and off times deined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
-  \end{itemize}
+    \begin{itemize}
+      \item Esp-drone used a piezo buzzer for alerting the users of various thing. When selecting our hardware we chose to an electromagnetic buzzer. While it is limeted in the tones it can produce, it is much louder than a traditional piezo buzzer. 
+      \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
+      \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
+      \item A pattern definition includes Sound on and off times deined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
+    \end{itemize}
   \item File Manager
-  \begin{itemize}
-    \item \huge{Simon help :)}
-  \end{itemize}
+    \begin{itemize}
+      \item \huge{Simon help :)}
+    \end{itemize}
   \item Storage
-  \begin{itemize}
-    \item \huge{Simon help :)}
-  \end{itemize}
-\item Uart Listener
-  \begin{itemize}
-    \item \huge{Simon help :)}
-  \end{itemize}
-\item Multi-TOF Sensors
-  \begin{itemize}
-    \item Finish
-  \end{itemize}
+    \begin{itemize}
+      \item \huge{Simon help :)}
+    \end{itemize}
+  \item Uart Listener
+    \begin{itemize}
+      \item \huge{Simon help :)}
+    \end{itemize}
+  \item Multi-TOF Sensors
+    \begin{itemize}
+      \item A big problem with our multi-TOF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
+      \item Every VL53L1 sensor has an Xshut pin with a weak pull up attatched to it. When xshut is low the device is not powered. Using this, only one tof can be active at a time for easy readdressing. 
+      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7 bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
+      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fress address.
+    \end{itemize}
+  \item State Estimation with TOF Sensors
+    \begin{itemize}
+      \item By default, esp-drone uses a downward facing tof sensor for z estimation. We decided to use more tof range sensors to also estimate x and y position. 
+      \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
+      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy but that might be fixable.
+    \end{itemize}
+
 \end{enumerate}
+
+\subsubsection{Interfacing with the Drone}
+Crazyflie has a system for interfacing with crazyflie drones
 
 \subsection{Hardware}
 \begin{enumerate}
