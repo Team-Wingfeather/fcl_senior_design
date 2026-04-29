@@ -3,7 +3,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 
-%\usepackage{hyperref}
+\usepackage{hyperref}
 
 \title{\Huge Feedback Controls Spring Final Design Report \\ \normalsize{EGEE 4810 - Senior Design}}
 \author{by \\ \Large TEAM WINGFEATHER \\ Aydan Vissing \\ Brady Schick \\ Gabriel Southwell \\ Simon Ross}
@@ -25,7 +25,7 @@
 
 %FIXME improve abstract
 \begin{abstract}
-This project report summarizes the current state of Project Wingfeather, intended to reimagine the Feedback Controls Laboratory experience at Cedarville University. The main goals of this project are to make the lab experience more engaging and relevant for students, simpler to work with, more reliable than previous solutions, and more cost-effective. To achieve these ends, progress has been made towards a cheap drone platform that is capable of communicating fundamental feedback controls concepts along with a simple software user interface. This drone has been built from the ground up to allow for full customization and also to make an interesting project. Up to this point, drone hardware and a frame have been developed, firmware has been written, and a working prototype has been assembled. Additionally, work on simulation has been completed. Various components need continued development, but the firmware and hardware contain most of the capabilities needed for the lab. This document details results and future development needed.
+This final project report summarizes the current state of Project Wingfeather, intended to reimagine the Feedback Controls Laboratory experience at Cedarville University. The main goals of this project are to make the lab experience more engaging and relevant for students, simpler to work with, more reliable than previous solutions, and more cost-effective. To achieve these ends, progress has been made towards a cheap drone platform that is capable of communicating fundamental feedback controls concepts along with a simple software user interface. This drone has been built from the ground up to allow for full customization and also to make an interesting project. Up to this point, drone hardware and a frame have been developed, firmware has been written, and a working prototype has been assembled. Additionally, work on simulation has been completed for student model verification and PID design. Various components need continued development, but the firmware and hardware contain most of the capabilities needed for the lab. This document details results and future development needed.
 
 \end{abstract}
 
@@ -86,67 +86,8 @@ Version 1 is able to provide PWM signals to each of the motors, with current sup
 
 The largest problem we have encountered is that when the motors run at high speed, the IMU is unable to produce good measurements. We believe this is related to the problem discussed above in that it is a current distribution problem. The IMU does not completely lose power, but produces corrupted data, suggesting that it is browned-out by the current draw from the motors. The solution to this problem is unclear, and it is likely the largest roadblock to the continued success of the project.
 
-
-\subsection{Drone Software}
-The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyway that we needed. 
-
-\subsubsection{Added Components}
+\subsubsection{Final Components}
 \begin{enumerate}
-  \item Board
-    \begin{itemize}
-      \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
-      \item Contains public functions for getting and iterable array for time of flight xShut pins and motor PWM pins.
-    \end{itemize}
-  \item Buzzer
-    \begin{itemize}
-      \item Esp-drone used a piezo buzzer for alerting the users of various things. When selecting our hardware we chose to use an electromagnetic buzzer. While it is limited in the tones it can produce, it is much louder than a traditional piezo buzzer. 
-      \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
-      \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
-      \item A pattern definition includes sound on and off times defined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
-    \end{itemize}
-  \item File Manager
-    \begin{itemize}
-      \item The file manager provides helper functions for the serial file transfer system and the scripting components of the drone. These functions include holding a file object open and allowing writing to the file.
-      \item Additionally, the file manager contains a function (that could be moved in the future) that sets the system PID parameters from the user-side config file.
-      \item The file manager is currently designed to manage specifically the config and script files provided by the user (or the flasher app), but could be expanded to manage more files in the future.
-    \end{itemize}
-  \item Storage
-    \begin{itemize}
-      \item The storage component sets up the littleFS file system on the drone. It mounts and formats the partition, allowing for storage of user files and data. 
-    \end{itemize}
-  \item UART Listener
-    \begin{itemize}
-      \item This component is designed to wait for the user-provided files to be transferred over the UART bus. When the files are sent from the host device, it uses functions from the file manager component to write them to littleFS. The drone alerts the host device that it is ready, and the host begins the transfer.
-      \item The UART listener uses a set baud rate and receives small chunks of each file, one after another, acknowledging in between.
-      \item The files are written chunk-by-chunk into their respective littleFS locations. 
-      \item If the user presses start before a file is received, the current flight files on the drone are used.
-    \end{itemize}
-  \item Multi-TOF Sensors
-    \begin{itemize}
-      \item A big problem with our multi-TOF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
-      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one TOF can be active at a time for easy readdressing. 
-      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7-bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
-      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fresh address.
-    \end{itemize}
-  \item State Estimation with TOF Sensors
-    \begin{itemize}
-      \item By default, esp-drone uses a downward facing TOF sensor for z estimation. We decided to use more TOF range sensors to also estimate x and y position. 
-      \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
-      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy, but that might be fixable.
-    \end{itemize}
-
-\end{enumerate}
-
-\subsubsection{Interfacing with the Drone}
-Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfils many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
-
-Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
-
-\subsubsection{Drone Application}
-The application, also known as WingFlasher, has three main portions of the app as well as an Advanced Mode for developer level changes. The Graphing tab allows for CSVs of any type to be loaded; however, it assumes Time is the first column and any subsequent columns are variables of the drone’s movement. It will display three graphs at once and you will be able to cycle through them using the Next and Previous Graphs sections. If there are a number of graphs that is not divisible by three, the application will only display the leftover graphs at the end and leave a blank white space without resizing the window. Additionally, using the buttons from Matplotlib, you can resize, move, or save photos of each graph or set of graphs. The Planning tab is meant to allow for several different lab options such as Hover and Wall Follow. It additionally has the options to change your flight parameters or save the flight path. As of now, these are not completely implemented and will not function in their entirety. The Programming tab allows for students to change the PID parameters that the drone receives for the thrust PID controller as well as it can flash the drone from the Flash Drone button. When you click this button, it will prompt you to choose a file and you will need to select the script you wish to use. The PID parameter insertions are not fully implemented. Advanced mode allows for the whole drone to be flashed at once rather than just the portion with the flight parameters. 
-\subsection{Hardware}
-\begin{enumerate}
-
 \item Custom PCB
 \begin{itemize}
 \item Successfully designed and ordered the first version of the PCB
@@ -229,8 +170,66 @@ The application, also known as WingFlasher, has three main portions of the app a
 \item Cheap, light, strong 3D printed frame created that successfully holds the motors, battery, and printed circuit board
 \item Adjustments being made to the print integrity and sensor placement on the frame
 \end{itemize}
+\end{enumerate}
+
+\subsection{Drone Software}
+The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyway that we needed. 
+
+\subsubsection{Added Components}
+\begin{enumerate}
+  \item Board
+    \begin{itemize}
+      \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
+      \item Contains public functions for getting and iterable array for time of flight xShut pins and motor PWM pins.
+    \end{itemize}
+  \item Buzzer
+    \begin{itemize}
+      \item Esp-drone used a piezo buzzer for alerting the users of various things. When selecting our hardware we chose to use an electromagnetic buzzer. While it is limited in the tones it can produce, it is much louder than a traditional piezo buzzer. 
+      \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
+      \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
+      \item A pattern definition includes sound on and off times defined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
+    \end{itemize}
+  \item File Manager
+    \begin{itemize}
+      \item The file manager provides helper functions for the serial file transfer system and the scripting components of the drone. These functions include holding a file object open and allowing writing to the file.
+      \item Additionally, the file manager contains a function (that could be moved in the future) that sets the system PID parameters from the user-side config file.
+      \item The file manager is currently designed to manage specifically the config and script files provided by the user (or the flasher app), but could be expanded to manage more files in the future.
+    \end{itemize}
+  \item Storage
+    \begin{itemize}
+      \item The storage component sets up the littleFS file system on the drone. It mounts and formats the partition, allowing for storage of user files and data. 
+    \end{itemize}
+  \item UART Listener
+    \begin{itemize}
+      \item This component is designed to wait for the user-provided files to be transferred over the UART bus. When the files are sent from the host device, it uses functions from the file manager component to write them to littleFS. The drone alerts the host device that it is ready, and the host begins the transfer.
+      \item The UART listener uses a set baud rate and receives small chunks of each file, one after another, acknowledging in between.
+      \item The files are written chunk-by-chunk into their respective littleFS locations. 
+      \item If the user presses start before a file is received, the current flight files on the drone are used.
+    \end{itemize}
+  \item Multi-TOF Sensors
+    \begin{itemize}
+      \item A big problem with our multi-TOF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
+      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one TOF can be active at a time for easy readdressing. 
+      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7-bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
+      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fresh address.
+    \end{itemize}
+  \item State Estimation with TOF Sensors
+    \begin{itemize}
+      \item By default, esp-drone uses a downward facing TOF sensor for z estimation. We decided to use more TOF range sensors to also estimate x and y position. 
+      \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
+      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy, but that might be fixable.
+    \end{itemize}
 
 \end{enumerate}
+
+\subsubsection{Interfacing with the Drone}
+Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfils many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
+
+Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
+
+\subsubsection{Drone Application}
+The application, also known as WingFlasher, has three main portions of the app as well as an Advanced Mode for developer level changes. The Graphing tab allows for CSVs of any type to be loaded; however, it assumes Time is the first column and any subsequent columns are variables of the drone’s movement. It will display three graphs at once and you will be able to cycle through them using the Next and Previous Graphs sections. If there are a number of graphs that is not divisible by three, the application will only display the leftover graphs at the end and leave a blank white space without resizing the window. Additionally, using the buttons from Matplotlib, you can resize, move, or save photos of each graph or set of graphs. The Planning tab is meant to allow for several different lab options such as Hover and Wall Follow. It additionally has the options to change your flight parameters or save the flight path. As of now, these are not completely implemented and will not function in their entirety. The Programming tab allows for students to change the PID parameters that the drone receives for the thrust PID controller as well as it can flash the drone from the Flash Drone button. When you click this button, it will prompt you to choose a file and you will need to select the script you wish to use. The PID parameter insertions are not fully implemented. Advanced mode allows for the whole drone to be flashed at once rather than just the portion with the flight parameters. 
+
 \subsection{Controls}
 \begin{enumerate}
 		\item Non-Linear Model
