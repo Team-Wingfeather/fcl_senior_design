@@ -33,10 +33,10 @@
 \newpage
 \section{Quick Start Guide}
 
-This drone is designed to be used in-lab with just the Wingflasher application and the required hardware. This guide is intended to move the user from having a completed drone to being ready to fly. More details on how to accomplish any of the steps listed below can be found later in the document.
+This drone is designed to be used in-lab with just the Wingflasher application and the required hardware. This short initial guide is intended to move the user from having a drone constructed to being ready to fly. More details on how to accomplish any of the steps listed below can be found later in the document.
 
 \begin{enumerate}
-\item Assembling the hardware can be challenging, and is not a ``quick'' process by any means. For this reason, this Quick Start Guide assumes that you have followed the Drone Construction section located below. 
+\item Assembling the hardware can be challenging, and thus does not belong in this guide. For this reason, the Quick Start Guide assumes that you have followed the Drone Construction section located below. 
 
 \item Once this is accomplished, download the app from the \href{https://github.com/Team-Wingfeather/fcl_senior_design/releases}{releases} section of the \href{https://github.com/Team-Wingfeather/fcl_senior_design}{project GitHub page}.
 
@@ -47,13 +47,13 @@ This drone is designed to be used in-lab with just the Wingflasher application a
 \item Disconnect the drone from the computer.
 \end{enumerate}
 
-The drone is now ready for flight testing. It has been flashed with a basic flight script and parameters that can now be found next to the flashing application under \texttt{config} The testing procedure is discussed in more detail below, but the basic steps are:
+The drone is now ready for flight testing. It has been flashed with a basic flight script and parameters that can now be found next to the flashing application under \texttt{config}. The testing procedure is discussed in more detail in a later section, but the basic steps are:
 
 \begin{enumerate}
 \item If using the test apparatus, fasten the drone to the apparatus.
-\item Place the drone upright and flat on the table (while still on the apparatus is applicable) and plug in the 7.4V LiPo battery.
+\item Place the drone upright and flat on the table (while still on the apparatus if applicable) and plug in the 7.4V LiPo battery.
 \item Connect to the drone's Wifi. (The password is "Password").
-\item Run test.py. Press ctrl+c in the terminal to stop the drone.
+\item Run \texttt{test.py}. Press \texttt{ctrl+C} in the terminal to stop the drone.
 \end{enumerate}
 
 
@@ -76,6 +76,8 @@ The current motors used by the Wingfeather project are 720 coreless brushed DC m
 
 \subsection{Printing the Frame}
 
+To print the current frame, you simply need to go through the process of setting up the school's Bambu Labs printers on your machine then print the frame with PLA or PETG upside down and using supports.
+
 \subsection{Assembling the components}
 
 Once the necessary components have been obtained, assembling the drone is fairly straightforward.
@@ -87,7 +89,7 @@ Once the necessary components have been obtained, assembling the drone is fairly
     \caption{Control Loop for Quad-copter Flight}
     \label{fig:myimage}
 \end{figure}
-\item Using header pins, solder 2 time-of-flight sensor daughter boards onto the main board---one on top and the other on the bottom. These should use the 6-pin header slots, and be soldered onto the face with the printed labels.
+\item Using header pins, solder 2 time-of-flight sensor breakout boards onto the main board---one on top and the other on the bottom. These should use the 6-pin header slots, and be soldered onto the face with the printed labels.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4405}
@@ -100,7 +102,7 @@ Once the necessary components have been obtained, assembling the drone is fairly
     \caption{Control Loop for Quad-copter Flight}
     \label{fig:myimage}
 \end{figure}
-\item Place the PCB on the frame and use 7 M2 screws to connect them. Note that the orientation of the PCB is determined by which corner does not have a hole for a screw. The front of the drone is the side with the USB connection.
+\item Place the PCB on the frame and use 7 M2 screws to connect them. Note that the orientation of the PCB is determined by which corner does not have a hole for a screw. The ``front'' of the drone is the side with the USB connection.
 
 \item Connect the propellers onto the motors. Make sure to select where each motor will go and match the propeller direction with the direction indicated around the screw nearest to that motor. Pushing gently onto the table can help affix the propellers to the shafts. Finally, it  is conventional to use a different color of propellers to designate the front of the drone, depending on the model purchased.
 \begin{figure}[H]
@@ -139,13 +141,13 @@ Once the necessary components have been obtained, assembling the drone is fairly
 \subsection{Using the App}
 As mentioned in the Quick Start section, the app can be downloaded from the project \href{https://github.com/Team-Wingfeather/fcl_senior_design}{GitHub page} under \href{https://github.com/Team-Wingfeather/fcl_senior_design/releases}{releases}. Details on the features of each tab are listed below.
 \subsubsection{Graphing Tab}
-The graphing tab includes the ability to load a CSV file from your system which you will be able to cycle through, as well as various options from Matplotlib to resize, save a photo of, or move graphs around. You obtain the CSVs you'll be using from the drone itself, which has protocols to create them from its own flight data.
+The graphing tab includes the ability to load a CSV file from your system which you will be able to cycle through, as well as various options from Matplotlib to resize, save a photo of, or move graphs around. CSVs are obtained from the drone itself, which has protocols to create them from its own flight data.
 
 \subsubsection{Planning Tab}
 The planning tab includes multiple stubs for lab options to be implemented in the future. Current progress on the project has been solely towards simple PID altitude control, but this tab will be more useful as the lab grows more complex.
 
 \subsubsection{Programming Tab}
-The programming tab is for setting the PID values to flash to the drone. Currently, the parameter-setting function of this tab is unimplemented. In the future, it should be able to set the altitude position P, I, and D values within a reasonable range that is determined experimentally. Additionally, the advanced mode (discussed in a later section) could be augmented to allow for full parameter access.
+The programming tab is for setting the PID values to flash to the drone. Currently, the parameter-setting function of this tab is unimplemented. In the future, it should be able to set the altitude position adn velocity P, I, and D values within a reasonable range that is determined experimentally. Additionally, the advanced mode (discussed in the next section) could be augmented to allow for full parameter access.
 
 The ``Flash Drone'' button is functional, and will auto-detect the drone and flash scripts and parameters. These parameters are currently located in a \texttt{config} directory that is created the first time the drone is flashed. Once this is completed, the developer may enter this directory to modify the parameters for flashing. The \texttt{commands.txt} file is currently unused, but an in-progress implementation of the scripting exists on the branch \href{https://github.com/Team-Wingfeather/fcl_senior_design/tree/commander-control}{\texttt{commander-control}}.
 
@@ -158,28 +160,26 @@ Flashing the drone with modified firmware via the app can only be accomplished v
 
 
 \subsubsection{Advanced Mode}
-The app has an advanced mode that can be accessed via the file tab on the menu bar. The purpose of this mode is to allow users to use more features of the drone for debugging, development, and advanced use beyond lab experiments. Currently, this mode only adds an option to the programming tab to allow the user to force a full flash of the drone without regard to the current partition table. 
+The app has an advanced mode that can be accessed via the file tab on the menu bar. The purpose of this mode is to allow users more features of the drone for debugging, development, and advanced use beyond lab experiments. Currently, this mode only adds an option to the programming tab to allow the user to force a full flash of the drone without regard to the current partition table. 
 
-\subsection{Developing the App}
-The largest portion of the application can be found in \texttt{wingfeather\_app\textbackslash src\textbackslash WingFlasher\textbackslash main.py}. This is where you will find each tab and its respective code that will need to be further developed if it is to work as intended. It is recommended that you have some experience with not just python but also PyQt before you continue the application's development. One complexity to look out for is that there is a "bundling" process to put the whole app into one executable rather than multiple python scripts. Our repo will do this for you so long as you tag the commit with the new version number, then it will rebuild the application with that number. 
 \section{Drone Development}
 
 \subsection{Development Environment}
-The current framework for developing firmware for the Wing Feather is \href{https://docs.espressif.com/projects/esp-idf/en/v5.5.4/esp32/get-started/index.html}{ESP-IDF v5.5.4}. Espressif has recently released IDF v6 and the project could be upgraded to v6 if desired. An installation guide can be found by following that link.
+The current framework for developing firmware for the Wingfeather is \href{https://docs.espressif.com/projects/esp-idf/en/v5.5.4/esp32/get-started/index.html}{ESP-IDF v5.5.4}. Espressif has recently released IDF v6 and the project could be upgraded to v6 if desired. An installation guide can be found by following the above link.
 
 \subsection{IDE Setup}
 For ease of use, you can develop in VSCode with the \href{https://github.com/espressif/vscode-esp-idf-extension/blob/master/README.md}{ESP-IDF Extension}. 
 The extension adds buttons to the VSCode toolbar that allow for easy compilation and flashing of the firmware.
 
-If you have a preferred code editor though, the command line experience is very easy.
+If you have a preferred code editor, however, the command line experience is also simple.
 
 \subsection{Basic Repository Structure}
 
 \subsubsection{The drone-firmware directory}
-The entire esp-idf project for the drone firmware can be found in the drone-firmware directory. The directory contains the following files:
+The entire \texttt{esp-idf} project for the drone firmware can be found in the \texttt{drone-firmware} directory. The directory contains the following files:
 
 \begin{itemize}
-  \item A CMakeLists.txt file that specifies the project's name and build options.
+  \item A \texttt{CMakeLists.txt} file that specifies the project's name and build options.
   \item A partition table that specifies the flash layout of the project.
   \item A main directory
   \begin{itemize}
@@ -193,17 +193,17 @@ The entire esp-idf project for the drone firmware can be found in the drone-firm
 \end{itemize}
   
 \subsubsection{Other Important Directories}
-The flashing application is located in \texttt{wingfeather\_app}, along with its dependencies and instructions. \texttt{frame} and \texttt{pcb} contain the products for these parts of the project, along with instructions on how to use them. \texttt{wireless\_testing\_scripts} contains scripts for running the drone on the testing apparatus (see Basic Drone Testing below). The remainder of the directories contain documentation and resources. This includes records of past work and information for future development. 
+The flashing application is located in \texttt{wingfeather\_app}, along with its dependencies and instructions. \texttt{frame} and \texttt{pcb} contain the components for these parts of the project, along with instructions on how to use them. \texttt{wireless\_testing\_scripts} contains scripts for running the drone on the testing apparatus (see Basic Drone Testing below). The remainder of the directories contain documentation and resources. This includes records of past work and information for future development. 
 
 \subsection{Basic Drone Testing}
 To test the controller:
 \begin{enumerate}
 \item If using the test apparatus, fasten the drone to the apparatus.
-\item Place the drone upright and flat on the table (while still on the apparatus is applicable) and plug in the battery. If the drone is not perfectly level at initialization or during resets, the IMU will not start up properly. It is recommended to already have the plug near the appropriate place before laying it down.
-\item Flash the PID parameters as instructed in "Using the App" and press start. NOTE: Keep the drone flat in case resetting at the end of the flash messes up the IMU.
-\item Connect to the drone's Wifi. (The password is "Password").
-\item Run test.py. Press ctrl+c in the terminal to stop the drone. If something goes wrong and ctrl+c doesn't stop the drone, press the reset button on the drone.
-\item To plot logged data, run plotcsv.py
+\item Place the drone upright and flat on the table (while still on the apparatus if applicable) and plug in the battery. If the drone is not perfectly level at initialization or during resets, the IMU will not start up properly. It is recommended to already have the plug near the appropriate place before laying it down. This is a safety feature from the firmware that is easier to work with without the apparatus.
+\item Flash the PID parameters as instructed in ``Using the App'' and press start. NOTE: Keep the drone flat in case resetting at the end of the flash messes up the IMU.
+\item Connect to the drone's Wifi (the password is ``Password'').
+\item Run test.py. Press ctrl+c in the terminal to stop the drone. If something goes wrong and ctrl+c does not stop the drone, press the reset button on the drone.
+\item To plot logged data, run plotcsv.py or use the app.
 \end{enumerate}
 Setting up test.py:
 \begin{itemize}
@@ -234,11 +234,11 @@ The controller has 12 PID controllers for 12 states. These states are the x/y/z 
 \item Test the controller to verify the drone and sensors work properly (all 4 motors should apply the same force). This can help catch other issues that may affect tuning.
 \item Tune pitch controller:
 \begin{enumerate}
-\item Set pitch's P to 4 (this seems to be a good value)
-\item Gradually increase and test pitch rate's P until just below the point where oscillations occur. When running, hold the apparatus to
-\item Gradually increase and test pitch rate's I to correct steady-state error without causing slow oscillations.
-\item Set pitch rate's D as needed.
-\item Proceed to tune pitch's I and D.
+\item Set pitch controller's P to 4 (this seems to be a good value)
+\item Gradually increase and test the pitch rate controller's P until just below the point where oscillations occur. When running, hold the apparatus to prevent movement in other axes of rotation.
+\item Gradually increase and test the pitch rate controller's I to correct steady-state error without causing slow oscillations.
+\item Set the pitch rate controller's D as needed.
+\item Proceed to tune the pitch controller's I and D.
 \end{enumerate}
 \item Tune roll and yaw controllers the same way pitch was tuned.
 \end{enumerate}
@@ -256,7 +256,7 @@ Some things to keep in mind when tuning:
 \end{itemize}
 
 \subsection{Frame Development}
-For the priting of the current frame, you simply need to go through the process of setting up the school's bambu labs printers on your machine then print the frame with PLA or PETG upside down and using supports.
+
 
 \subsection{PCB Development}
 Printed circuit board development can be accomplished easily using \href{https://easyeda.com/}{EasyEDA}. This software allows for design of a schematic and then layout of the circuit board. There is also a web interface that works quite well.
@@ -271,13 +271,13 @@ The current board revision is out of date in a few areas:
 Some other optional changes include:
 \begin{itemize}
 \item The green LED is painfully bright and could use a larger resistor to dim it.
-\item Connecting the ToF interrupt pins to the ESP32 for marginally faster sensor response.
-\item Moving the MPU6050 IMU to its own I2C line.
-\item Switching GPIO 23 to GPIO 16. The motor 4 PWM pin failed in testing and was swapped to pin 16. This should likely be made a permanent hardware change. See \href{https://github.com/Team-Wingfeather/fcl_senior_design/commit/29bd241f75058da32211addb992e50635beb5c23}{this commit} that patches the software.
+\item The ToF interrupt pins could be connected to the ESP32 for marginally faster sensor response.
+\item The MPU6050 IMU could be moved to its own I2C line.
+\item GPIO 23 could be switched to GPIO 16. The motor 4 PWM pin failed in testing and was swapped to pin 16. This should likely be made a permanent hardware change. See \href{https://github.com/Team-Wingfeather/fcl_senior_design/commit/29bd241f75058da32211addb992e50635beb5c23}{this commit} that patches the software.
 \end{itemize}
 
 \subsection{App Development}
-
+The largest portion of the application can be found in \texttt{wingfeather\_app\textbackslash src\textbackslash WingFlasher\textbackslash main.py}. This is where you will find each tab and its respective code that will need to be further developed if it is to work as intended. It is recommended that you have some experience with not just Python but also PyQt before you continue the application's development. One complexity to look out for is that there is a "bundling" process to put the whole app into one executable rather than multiple python scripts. Our repo will do this for you so long as you tag the commit with the new version number, then it will rebuild the application with that number. 
 
 
 \end{document}
