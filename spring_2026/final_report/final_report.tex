@@ -68,7 +68,7 @@ For the students to interact with the drones, we created cross-platform applicat
 \section{Engineering Design Revisited}
 \subsection{Hardware}
 \subsubsection{Frame Design}
-When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version is our best version since it accomplishes all the tasks that the previous frames couldn’t, such as keeping the motor mounts intact while it was being removed from the print bed and cleaned of support. The frame additionally has: a place to slot in the battery with Velcro, mounting places for the TOF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades, but also people around the drone. 
+When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version is our best version since it accomplishes all the tasks that the previous frames couldn’t, such as keeping the motor mounts intact while it was being removed from the print bed and cleaned of support. The frame additionally has: a place to slot in the battery with Velcro, mounting places for the ToF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades, but also people around the drone. 
 \subsubsection{PCB Design}
 
 The flexible nature of this project required creation of a custom printed circuit board to supply our needs for the project. Most of this procedure was completed in the first semester, but it is relevant to consider here again. This is particularly due to the successes and failures of the version 1 board and their bearing on improvements going forward.
@@ -121,16 +121,16 @@ The backbone of the project is the esp-drone project from Espressif. Esp-drone p
       \item The files are written chunk-by-chunk into their respective littleFS locations. 
       \item If the user presses start before a file is received, the current flight files on the drone are used.
     \end{itemize}
-  \item Multi-TOF Sensors
+  \item Multi-ToF Sensors
     \begin{itemize}
-      \item A big problem with our multi-TOF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
-      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one TOF can be active at a time for easy readdressing. 
+      \item A big problem with our multi-ToF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
+      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one ToF can be active at a time for easy readdressing. 
       \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7-bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
       \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fresh address.
     \end{itemize}
-  \item State Estimation with TOF Sensors
+  \item State Estimation with ToF Sensors
     \begin{itemize}
-      \item By default, esp-drone uses a downward facing TOF sensor for z estimation. We decided to use more TOF range sensors to also estimate x and y position. 
+      \item By default, esp-drone uses a downward facing ToF sensor for z estimation. We decided to use more ToF range sensors to also estimate x and y position. 
       \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
       \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy, but that might be fixable.
     \end{itemize}
@@ -265,8 +265,9 @@ The application, also known as WingFlasher, has three main portions of the app a
 \section{Project Summary}
 
 \subsection{Final Results}
-While the project goals were ambitions, the final design is a good start at a full solution. It was an excellent learning experience for our team. We have grown in our ability to  work as a team on a difficult project. 
+While the project goals were ambitions, our progress is a good start at a full solution that will hopefully be carried on by a future team (or at least learned from). At the same time, it has been an excellent learning experience for each of us. Working on a team in an environment that is closer to industry than school has been incredibly beneficial, and we have each been forced to get outside of our comfort zones and learn something new. Even though the project is not yet complete, it's fair to say that Senior Design is one of the classes in which we have developed most as engineers, and we are grateful for the experience.
 
+And besides these important outcomes, our working prototype has come a long way from day 1. We hope it will be a great help to the University in days to come.
 
 \subsection{Future Potential}
 \begin{enumerate}
@@ -280,7 +281,7 @@ While the project goals were ambitions, the final design is a good start at a fu
 
   The time-of-flight state estimation did work, but it could be greatly simplified with the use of optical flow sensor. An optical flow sensor uses a low resolution camera to track the movement of pixels in an image. This can be used to extrapolate movement and rotation. If one were pointed at the ground, the x, y, and yaw movement could be found. 
 
-  The use of an optical flow sensor would reduce the number of TOF sensors needed by three, simplifying the drone and allowing the drones to operate away from walls. Implementing one would be easy since Crazyflie already has the option to use one. Just some configurations would need to change and state estimation would start working as expected. 
+  The use of an optical flow sensor would reduce the number of ToF sensors needed by three, simplifying the drone and allowing the drones to operate away from walls. Implementing one would be easy since Crazyflie already has the option to use one. Just some configurations would need to change and state estimation would start working as expected. 
 \end{enumerate}
 
 \subsection{Final Budget}
