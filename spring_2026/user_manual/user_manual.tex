@@ -254,6 +254,7 @@ Some things to keep in mind when tuning:
 
 \subsection{Frame Development}
 
+Since it is free for students, Fusion360 was used for the frame design. Because of this, it is simplest to use Fusion for continued frame development. STL files have also been included in the \texttt{frame} repository for printing convenience or for editing in another modeling software.
 
 \subsection{PCB Development}
 Printed circuit board development can be accomplished easily using \href{https://easyeda.com/}{EasyEDA}. This software allows for design of a schematic and then layout of the circuit board. There is also a web interface that works quite well.
@@ -274,7 +275,11 @@ Some other optional changes include:
 \end{itemize}
 
 \subsection{App Development}
-The largest portion of the application can be found in \texttt{wingfeather\_app\textbackslash src\textbackslash WingFlasher\textbackslash main.py}. This is where you will find each tab and its respective code that will need to be further developed if it is to work as intended. It is recommended that you have some experience with not just Python but also PyQt before you continue the application's development. One complexity to look out for is that there is a "bundling" process to put the whole app into one executable rather than multiple python scripts. Our repo will do this for you so long as you tag the commit with the new version number, then it will rebuild the application with that number. 
 
+The companion app is built as a Python application in the Qt framework. It is located in the \texttt{wingfeather\_app} repository, with its entry point in \texttt{main.py}. 
+
+The main thing to keep in mind when developing the application is that since it is written in Python, dependencies and necessary files and directories must be bundled with the application, often creating complex file paths.
+
+Additionally, the app is currently configured to bundle binaries from the \texttt{config} subdirectory and not the main repository. This allows for selection of the desired firmware, but is a disconnect between the app and the main repository that could be changed in the future. Because of this, when the firmware is updated, the binaries in this directory must also be changed.
 
 \end{document}
