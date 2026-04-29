@@ -86,6 +86,7 @@ For the students to interact with the drones, we created cross-platoform applica
 \section{Engineering Design Revisited}
 \subsection{Hardware}
 \subsubsection{Frame Design}
+When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version is our best version since it accomplishes all the tasks that the previous frames couldn’t, such as keeping the motor mounts intact while it was being removed from the print bed and cleaned of support. The frame additionally has: a place to slot in the battery with Velcro, mounting places for the TOF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades, but also people around the drone. 
 \subsubsection{PCB Design}
 \subsection{Drone Software}
 The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fustion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyware that we needed. 
@@ -243,16 +244,20 @@ Once connected to the drone's WiFi, you can run a python script to send commands
 		\end{itemize}
 		\item Simulation
 		\begin{itemize}
-			\item Quad-copter dynamics and controls simulated using MATLAB
+			\item Quad-copter dynamics and controls simulated using both MATLAB and python
 			\item Allows for verification of quad-copter dynamics and controls
-			\item Provides functionality for an initial start to the tuning process 
+			\item Can act as a comparison of the real quad-copter to an ideal quad-copter
 		\end{itemize}
 		\item Crazyflie Controller
 		\begin{itemize}
 			\item Specifies the control system in the drone software
-			\item Has reprogrammable values within the controller
+			\item Has reprogrammable values within the controller for tuning
 			\item Includes outLimit and iLimit to improve drone stability
-			\item Can log various types of data relating to the drone's operation
+		\end{itemize}
+		\item PID Tuning
+		\begin{itemize}
+			\item Developed process for fully tuning drone
+			\item Has several parameters that can be logged and plotted for observability during the process
 		\end{itemize}
 \end{enumerate}
 
