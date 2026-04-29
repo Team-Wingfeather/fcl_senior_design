@@ -47,7 +47,7 @@ The current lab experience for EGME-4660 uses the Feedback Analogue Unit 33-110 
 \subsection{Engineering Requirements}
 \subsubsection{Hardware Requirements}
 % improve
-To fulfil the original vision of a simple to assemble, low cost, and safe to operate drone platform, we designed a drone platform from the ground up. 
+To fulfill the original vision of a simple to assemble, low cost, and safe to operate drone platform, we designed a drone platform from the ground up. 
 The drone features a PCB that comes mostly assembled from the factory with only a few components that need to be soldered. To save on the cost, the PCB screws directly into a 3d printed frame that holds the motors and battery. To make the hardware safer to operate, the drone frame features ducted propellers with recessed blades. This reduces the chance of the blades catching student's hair or hands. 
 
 \subsubsection{Software Requirements}
@@ -87,7 +87,7 @@ The largest problem we have encountered is that when the motors run at high spee
 
 
 \subsection{Drone Software}
-The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyway that we needed. 
+The backbone of the project is the esp-drone project from Espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyway that we needed. 
 
 \subsubsection{Added Components}
 \begin{enumerate}
@@ -138,7 +138,7 @@ The backbone of the project is the esp-drone project from espressif. Esp-drone p
 \end{enumerate}
 
 \subsubsection{Interfacing with the Drone}
-Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfils many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
+Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfills many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
 
 Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
 
@@ -213,7 +213,7 @@ The application, also known as WingFlasher, has three main portions of the app a
 \begin{itemize}
 \item Diode circuit added to allow powering of the circuit by a battery, connected computer, or even both (without damage)
 \item ESD and reverse current protection circuits included
-\item Auto reset logic circuit included so the microcontroller enters the bootloader properly when a computer is connected
+\item Auto reset logic circuit included so that the microcontroller enters the bootloader properly when a computer is connected
 \end{itemize}
 
 \item Battery
