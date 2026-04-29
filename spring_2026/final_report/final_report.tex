@@ -105,7 +105,7 @@ The following requirements define the end user experience as desired by the cust
   \item The final laboratory experience must not use MATLAB.
 \end{itemize}
 
-\section{Engineering Design revisited}
+\section{Engineering Design Revisited}
 \subsection{Hardware}
 \subsubsection{Frame Design}
 \subsubsection{PCB Design}
@@ -121,22 +121,27 @@ The backbone of the project is the esp-drone project from espressif. Esp-drone p
     \end{itemize}
   \item Buzzer
     \begin{itemize}
-      \item Esp-drone used a piezo buzzer for alerting the users of various thing. When selecting our hardware we chose to an electromagnetic buzzer. While it is limeted in the tones it can produce, it is much louder than a traditional piezo buzzer. 
+      \item Esp-drone used a piezo buzzer for alerting the users of various things. When selecting our hardware we chose to use an electromagnetic buzzer. While it is limited in the tones it can produce, it is much louder than a traditional piezo buzzer. 
       \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
       \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
-      \item A pattern definition includes Sound on and off times deined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
+      \item A pattern definition includes sound on and off times deined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
     \end{itemize}
   \item File Manager
     \begin{itemize}
-      \item \huge{Simon help :)}
+      \item The file manager provides helper functions for the serial file transfer system and the scripting components of the drone. These functions include holding a file object open and allowing writing to the file.
+      \item Additionally, the file manager contains a function (that could be moved in the future) that sets the system PID parameters from the user-side config file.
+      \item The file manager is currently designed to manage specifically the config and script files provided by the user (or the flasher app), but could be expanded to manage more files in the future.
     \end{itemize}
   \item Storage
     \begin{itemize}
-      \item \huge{Simon help :)}
+      \item The storage component sets up the littleFS file system on the drone. It mounts and formats the partition, allowing for storage of user files and data. 
     \end{itemize}
-  \item Uart Listener
+  \item UART Listener
     \begin{itemize}
-      \item \huge{Simon help :)}
+      \item This component is designed to wait for the user-provided files to be transferred over the UART bus. When the files are sent from the host device, it uses functions from the file manager component to write them to littleFS. The drone alerts the host device that it is ready, and the host begins the transfer.
+      \item The UART listener uses a set baud rate and receives small chunks of each file, one after another, acknowledging in between.
+      \item The files are written chunk-by-chunk into their respective littleFS locations. 
+      \item If the user presses start before a file is received, the current flight files on the drone are used.
     \end{itemize}
   \item Multi-TOF Sensors
     \begin{itemize}

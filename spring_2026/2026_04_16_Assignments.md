@@ -6,22 +6,15 @@
         - THIS IS EXTRA IMPORTANT FOR THIS DOCUMENT - THERE ARE SECTIONS THAT HAVE BEEN OVERLOOKED
     - Complete sections:
         - PCB Design (Engineering design)
-        - Challenges you have overcome
-        - Areas for future development in your work
         - App integration
         - Flashing/scripting/File transfer work
+        - Challenges you have overcome
+        - Areas for future development in your work
 ### User Manual
-- Complete before Apr 26: 
-    - Add sections as relevant (do a brainstorm for anything missing that you've done)
-    - Complete sections:
-        - Relevant sections of Quick start guide
-        - Assembling the components (add images)
     - How to use it as a user
     - How it works/how to use in detail
     - How to develop it
     - Troubleshooting guides (REQUIRED to some extent)
-### Hours Log and Weekly Reports
-- Submit final hours logs and weekly reports (preferably before Monday afternoon)
 
 ## Aydan
 ### Final Report
