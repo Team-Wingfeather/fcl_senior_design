@@ -45,41 +45,25 @@ This project seeks to redefine the Cedarville Feedback Controls Laboratory exper
 The current lab experience for EGME-4660 uses the Feedback Analogue Unit 33-110 and the Feedback Mechanical Unit 33-100. Although the labs using the equipment do cover the desired content, they are often tedious and perhaps confusing to new users, especially users unfamiliar with Feedback Controls concepts. The user interface to conduct the experiments is a circuit board with nodes and banana plug cords. The user can connect these nodes to create feedback circuits whose effect is then shown using the mechanical unit. As mentioned, understanding what is happening between the units (and even in the electrical circuits) can be challenging for students. This causes the applications of the class material to  seem boring and irrelevant, especially for mechanical engineering students who may not have extensive electronics background. In addition, the equipment is old and fragile - adjusting the power supply or wiring the power incorrectly can result in damage to the equipment, often requiring parts to be replaced. Since the equipment is out of production and thus quite expensive, the current repair method has been de-soldering and soldering components by hand. We plan to improve the lab experience by replacing the current equipment with cheap and robust drones that can be reprogrammed for the purposes of the lab with a user-friendly interface. In this way, the instructor can choose the complexity of the tasks given to students for the lab.
 
 \section{Objectives Revisited}
-\subsection{Marketing Requirements}
-
-The following requirements define the end user experience as desired by the customer:
-  \begin{itemize}
-    \item The final product must focus on autonomous actuation and control.
-    \item The laboratory experience must include the ability to implement a PID control design.
-    \item The final product must be able to physically and graphically display a step response.
-    \item The students must have the opportunity to measure a Bode plot in real life.
-    \item The laboratory experience must include the ability to see and correct the effects of physical and observable disturbances and noise.
-    \item The final product should showcase the results of controllers physically in real life and not just with numbers and data.
-    \item The final product must have the ability to log data to a neutral format independent of real time visualizations.
-    \item The software solution must include a widget to generate understandable plots of the data.
-    \item The final laboratory experience must include the capability to perform a tracking experiment.
-    \item The laboratory experience must take relevant safety precautions.
-    \item The final platform must be able to implement open loop control and log this response. 
-  \end{itemize}
 \subsection{Engineering Requirements}
 \subsubsection{Hardware Requirements}
 % improve
 To fulfil the original vision of a simple to assemble, low cost, and safe to operate drone platform, we designed a drone platform from the ground up. 
 
-The drone features a PCB that comes mostly assembled from the factory with only a few components that need to be soldered. To save on the cost, the pcb screws directly into a 3d printed frame that holds the motors and battery. To make the hardware safer to operate, the drone frame features ducted propellers with recessed blades. This reduces the chance of the blades catching student's hair or hands. 
+The drone features a PCB that comes mostly assembled from the factory with only a few components that need to be soldered. To save on the cost, the PCB screws directly into a 3d printed frame that holds the motors and battery. To make the hardware safer to operate, the drone frame features ducted propellers with recessed blades. This reduces the chance of the blades catching student's hair or hands. 
 
 \subsubsection{Software Requirements}
 
 To give our team a good starting point on the drone, we based the drone software on an existing project called Esp-drone from Espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. Building upon this basis, we were able to more easily reach our other software goals.
 
-For the students to interact with the drones, we created cross-platoform application that is able to flash drone firmware, upload configurations, and plot flight data. This app can be extended to include any new features. 
+For the students to interact with the drones, we created cross-platform application that is able to flash drone firmware, upload configurations, and plot flight data. This app can be extended to include any new features. 
 
 \subsection{Constraints}
 \begin{itemize}
   \item The laboratory experiments must be able to be conducted in ENS 145 at Cedarville University.
   \item The total cost of design, test, and evaluation must not exceed \$600.
   \item The final laboratory experience must not endanger the safety of the students.
-  \item The final laboratory solution must not not destroy Cedarville property.
+  \item The final laboratory solution must not destroy Cedarville property.
   \item The final laboratory experience must not use MATLAB.
 \end{itemize}
 
@@ -89,21 +73,21 @@ For the students to interact with the drones, we created cross-platoform applica
 When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version is our best version since it accomplishes all the tasks that the previous frames couldn’t, such as keeping the motor mounts intact while it was being removed from the print bed and cleaned of support. The frame additionally has: a place to slot in the battery with Velcro, mounting places for the TOF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades, but also people around the drone. 
 \subsubsection{PCB Design}
 \subsection{Drone Software}
-The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fustion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyware that we needed. 
+The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyway that we needed. 
 
 \subsubsection{Added Components}
 \begin{enumerate}
   \item Board
     \begin{itemize}
       \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
-      \item Contains public functions for getting and iterable array for time of flight xshut pins and motor pwm pins.
+      \item Contains public functions for getting and iterable array for time of flight xShut pins and motor PWM pins.
     \end{itemize}
   \item Buzzer
     \begin{itemize}
       \item Esp-drone used a piezo buzzer for alerting the users of various things. When selecting our hardware we chose to use an electromagnetic buzzer. While it is limited in the tones it can produce, it is much louder than a traditional piezo buzzer. 
       \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
       \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
-      \item A pattern definition includes sound on and off times deined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
+      \item A pattern definition includes sound on and off times defined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
     \end{itemize}
   \item File Manager
     \begin{itemize}
@@ -125,21 +109,21 @@ The backbone of the project is the esp-drone project from espressif. Esp-drone p
   \item Multi-TOF Sensors
     \begin{itemize}
       \item A big problem with our multi-TOF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
-      \item Every VL53L1 sensor has an Xshut pin with a weak pull up attatched to it. When xshut is low the device is not powered. Using this, only one tof can be active at a time for easy readdressing. 
-      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7 bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
-      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fress address.
+      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one TOF can be active at a time for easy readdressing. 
+      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7-bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
+      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fresh address.
     \end{itemize}
   \item State Estimation with TOF Sensors
     \begin{itemize}
-      \item By default, esp-drone uses a downward facing tof sensor for z estimation. We decided to use more tof range sensors to also estimate x and y position. 
+      \item By default, esp-drone uses a downward facing TOF sensor for z estimation. We decided to use more TOF range sensors to also estimate x and y position. 
       \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
-      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy but that might be fixable.
+      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy, but that might be fixable.
     \end{itemize}
 
 \end{enumerate}
 
 \subsubsection{Interfacing with the Drone}
-Crazyflie has a system for interfacing with crazyflie drones that carries over to our project. There is a python library called cflib which fulfils many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of cflib instead of the official one.
+Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfils many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
 
 Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
 
