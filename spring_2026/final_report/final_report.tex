@@ -165,6 +165,8 @@ Crazyflie has a system for interfacing with crazyflie drones that carries over t
 
 Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
 
+\subsubsection{Drone Application}
+The application, also known as WingFlasher, has three main portions of the app as well as an Advanced Mode for developer level changes. The Graphing tab allows for CSVs of any type to be loaded; however, it assumes Time is the first column and any subsequent columns are variables of the drone’s movement. It will display three graphs at once and you will be able to cycle through them using the Next and Previous Graphs sections. If there is a number of graphs that is not divisible by three, the application will only display the leftover graphs at the end and leave a blank white space without resizing the window. Additionally, using the buttons from Matplotlib, you can resize, move, or save photos of each graph or set of graphs. The Planning tab is meant to allow for several different lab options such as Hover and Wall Follow. It additionally has the options to change your flight parameters or save the flight path. As of now, these are not completely implemented and will not function in their entirety. The Programming tab allows for students to change the PID parameters that the drone receives for the thrust PID controller as well as it can flash the drone from the Flash Drone button. When you click this button, it will prompt you to choose a file and you will need to select the script you wish to use. The PID parameter insertions are not fully implemented. Advanced mode allows for the whole drone to be flashed at once rather than just the portion with the flight parameters. 
 \subsection{Hardware}
 \begin{enumerate}
 
@@ -282,7 +284,7 @@ Once connected to the drone's WiFi, you can run a python script to send commands
 \section{Project Summary}
 
 \subsection{Final Results}
-
+The frame meets the requirements in that it keeps all parts undamaged and maintains shape in flight. The drone application can plot the given CSVs from the drone, while also allowing for the drone to be flashed from the application itself. 
 \subsection{Challenges Overcome}
 
 
