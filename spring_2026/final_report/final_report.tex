@@ -108,6 +108,7 @@ The following requirements define the end user experience as desired by the cust
 \section{Engineering Design Revisited}
 \subsection{Hardware}
 \subsubsection{Frame Design}
+When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version is our best version since it accomplishes all the tasks that the previous frames couldn’t, such as keeping the motor mounts intact while it was being removed from the print bed and cleaned of support. The frame additionally has: a place to slot in the battery with Velcro, mounting places for the TOF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades, but also people around the drone. 
 \subsubsection{PCB Design}
 \subsection{Drone Software}
 The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fustion, state estimation, and communication protocols. I created a great for our project that could be further extended anyware that we needed. 
