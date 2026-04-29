@@ -63,39 +63,17 @@ The following requirements define the end user experience as desired by the cust
   \end{itemize}
 \subsection{Engineering Requirements}
 \subsubsection{Hardware Requirements}
-\begin{itemize}
-  \item Hard Requirements:
-  \begin{itemize}
-    \item Microcontroller
-    \item 4 motors
-    \item Battery power supply
-    \item PCB to interconnect components
-    \item Bladeguards for safety
-    \item Positional and tracking sensors
-  \end{itemize}
-  \item Soft Requirements:
-  \begin{itemize}
-    \item Sturdy frame
-    \item Conviently swappable and rechargable batteries
-  \end{itemize}
-\end{itemize}
+% improve
+To fulfil the original vision of a simple to assemble, low cost, and safe to operate drone platform, we designed a drone platform from the ground up. 
+
+The drone features a PCB that comes mostly assembled from the factory with only a few components that need to be soldered. To save on the cost, the pcb screws directly into a 3d printed frame that holds the motors and battery. To make the hardware safer to operate, the drone frame features ducted propellers with recessed blades. This reduces the chance of the blades catching student's hair or hands. 
+
 \subsubsection{Software Requirements}
-\begin{itemize}
-  \item Hard Requirements:
-  \begin{itemize}
-    \item PID controller logic so drone can fly
-    \item Controller logic for open loop capabilities
-    \item Memory for data collection
-    \item User-friendly interface for programming
-    \item Method to input step functions and sinusoidal functions
-  \end{itemize}
-  \item Soft Requirements:
-  \begin{itemize}
-    \item Wireless communication
-    \item Intuitive GUI
-    \item Software to plot collected data
-  \end{itemize}
-\end{itemize}
+
+To give our team a good starting point on the drone, we based the drone software on an existing project called Esp-drone from Espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. Building upon this basis, we were able to more easily reach our other software goals.
+
+For the students to interact with the drones, we created cross-platoform application that is able to flash drone firmware, upload configurations, and plot flight data. This app can be extended to include any new features. 
+
 \subsection{Constraints}
 \begin{itemize}
   \item The laboratory experiments must be able to be conducted in ENS 145 at Cedarville University.
@@ -110,7 +88,7 @@ The following requirements define the end user experience as desired by the cust
 \subsubsection{Frame Design}
 \subsubsection{PCB Design}
 \subsection{Drone Software}
-The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fustion, state estimation, and communication protocols. I created a great for our project that could be further extended anyware that we needed. 
+The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fustion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyware that we needed. 
 
 \subsubsection{Added Components}
 \begin{enumerate}
@@ -298,7 +276,7 @@ As of now, we have a fully designed PCB, an almost fully designed drone frame, a
 \end{enumerate}
 
 \subsection{Budget}
-The budget below describes how we intend to use funds in constructing a prototype. Under this paradigm, we will be far under our proposed budget of \$600. However, this budget does not account for mistakes in prototyping and drastic changes to the program. This budget is up to date with what we have spent on each component so far.
+The budget below describes exactly how we used the funds alotted to us and stayed under the \$600 maximum spending. 
 
 \begin{table}[H]
 \centering
@@ -307,23 +285,25 @@ The budget below describes how we intend to use funds in constructing a prototyp
 \begin{tabular}{||c|c|c|c||}
 \hline 
 \hline
-\textbf{Component/Expense} & \textbf{Price} & \textbf{Order Date} & \textbf{Comments} \\ 
+\textbf{Component/Expense} & \textbf{Price} & \textbf{Comments} \\ 
 \hline 
-Prototype Microcontroller & \$0 & N/A & Dr. Kohl gave us one to borrow \\
+Prototype Microcontroller & \$0 & Dr. Kohl gave us one to borrow \\
 \hline 
-Time of Flight Sensors & \$37 & 19-Sep & 2 Orginal + Additional 10 \\
+Time of Flight Sensors & \$45 & Original 2(\$15) + an additional 5* (\$30) \\
 \hline 
-Motors & \$10 & 19-Sep & 4 motors \\ 
+Motors & \$10 & 4 motors \\ 
 \hline 
-Body & \$0 & N/A & 3D printed \\ 
+Body & \$0 & 3D printed \\ 
 \hline 
-Props & \$7 & 19-Sep & As many props as we can get \\ 
+Props & \$17 & Two seperate orders, testing and application \\ 
 \hline 
-Battery & \$15 & 19-Sep & $\sim$500mAh Lithium \\ 
+Battery & \$0 & Used batteries on hand \\ 
 \hline 
-PCB(s) & \$67 & 15-Nov & 3 boards for redundancy \\ 
+Bolt and Wrench Sets & \$76 & Needed for the Gimble setup \\ 
 \hline 
-\textbf{Total Cost} & \textbf{\$134} &  &  \\ 
+PCB(s) & \$67 & 2 boards populated boards, 3 unpopulated \\ 
+\hline 
+\textbf{Total Cost} & \textbf{\$215} &  &  \\ 
 \hline 
 \hline
 \end{tabular} 
