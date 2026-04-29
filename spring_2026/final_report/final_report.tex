@@ -306,12 +306,13 @@ The application, also known as WingFlasher, has three main portions of the app a
 		\item Simulation
 		\begin{itemize}
 			\item Quad-copter dynamics and controls simulated using both MATLAB and python
+			\item Implements both the linear and the non-linear model
 			\item Allows for verification of quad-copter dynamics and controls
 			\item Can act as a comparison of the real quad-copter to an ideal quad-copter
 		\end{itemize}
 		\item Crazyflie Controller
 		\begin{itemize}
-			\item Specifies the control system in the drone software
+			\item Specifies the non-linear control system in the drone software
 			\item Has reprogrammable values within the controller for tuning
 			\item Includes outLimit and iLimit to improve drone stability
 		\end{itemize}
