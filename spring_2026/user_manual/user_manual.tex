@@ -88,21 +88,21 @@ Once the necessary components have been obtained, assembling the drone is fairly
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4404}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{Drone Charge Port}
+    \label{fig:ChargePort}
 \end{figure}
 \item Using header pins, solder 2 time-of-flight sensor breakout boards onto the main board---one on top and the other on the bottom. These should use the 6-pin header slots, and be soldered onto the face with the printed labels.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4405}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{Mounted Time-of-Flight Breakout Board}
+    \label{fig:tofBreakout}
 \end{figure}
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4406}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{PCB Screwed to Frame}
+    \label{fig:PCBMount}
 \end{figure}
 \item Place the PCB on the frame and use 7 M2 screws to connect them. Note that the orientation of the PCB is determined by which corner does not have a hole for a screw. The ``front'' of the drone is the side with the USB connection.
 
@@ -110,30 +110,30 @@ Once the necessary components have been obtained, assembling the drone is fairly
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4407}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{Match Propeller Direction to Indicator}
+    \label{fig:PropDir}
 \end{figure}
 \item Slide the 4 motors into the designated recesses. It may prove easier to solder the motor connections before gluing the motors in.
 \item Solder each motor to the nearest 2 through holes on the circuit board. Note that polarities of the annular rings alternate around the drone. This is so that the motors across from each other spin the same direction and adjacent motors spin opposite directions. In practical terms, the square annular ring should always be connected to the same motor terminal ``polarity'' (designated by the color of the wire). Which color may need to be determined by trial and error. For the current motors, the white motor lead should be soldered to the circular annular ring. In the end, make sure the direction each motor spins matches the arrow located around the nearest PCB screw. (This can be verified by flashing the drone using the app and connecting the battery---each motor should spin briefly). Note that it may be helpful to twist the wires from each motor before soldering. After soldering, this twisted pair may be hot glued to the frame to save space. Use caution when using the glue gun and soldering iron, as they can easily melt the 3D-printed frame.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4410}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{Motor Wires Glued Down}
+    \label{fig:MotorWires}
 \end{figure}
 \item Slide each motor partially out and apply a moderate amount of hot glue under it. Slide the motor back down, and be ready to wipe away excess glue. Affixing the motors well is important so they do not fly off in flight. 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4408}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{Hot Glue Applied to Motors}
+    \label{fig:HotGlue}
 \end{figure}
-\item In the future, more time-of-flight sensors may be added to the 5-pin header slots. Additionally, a velcro strap can be used to affix the battery to the bottom of the board through the designated slot.
+\item In the future, more time-of-flight sensors may be added to the 5-pin header slots. Additionally, a Velcro strap can be used to affix the battery to the bottom of the board through the designated slot.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.5\textwidth]{img/IMG_4411}
-    \caption{Control Loop for Quad-copter Flight}
-    \label{fig:myimage}
+    \caption{Battery Attached to Bottom of Drone}
+    \label{fig:BatteryMount}
 \end{figure}
 \end{enumerate}
 
@@ -158,8 +158,6 @@ Note that the drone hardware has been designed so that the user can plug the dro
 There are a few known minor bugs with the flashing system, but disconnecting and reconnecting the drone should solve most of these. In general, do not press start while the drone is connected to the computer.
 
 Flashing the drone with modified firmware via the app can only be accomplished via advanced mode (see below). Each year the lab is performed should only need one version of the firmware, so this simplifies the setup. Changes for automation of the versioning system on this could be made in the future.
-
-
 
 \subsubsection{Advanced Mode}
 The app has an advanced mode that can be accessed via the file tab on the menu bar. The purpose of this mode is to allow users more features of the drone for debugging, development, and advanced use beyond lab experiments. Currently, this mode only adds an option to the programming tab to allow the user to force a full flash of the drone without regard to the current partition table. 
@@ -226,7 +224,7 @@ The controller has 12 PID controllers for 12 states. These states are the x/y/z 
     \centering
     \includegraphics[width=1\textwidth]{img/IMG_3141}
     \caption{Quadcopter Control Model}
-    \label{fig:myimage}
+    \label{fig:ControlModel}
 \end{figure}
 \begin{enumerate}
 \item On-apparatus tuning:
