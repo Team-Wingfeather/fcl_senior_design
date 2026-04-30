@@ -3,7 +3,7 @@
 \usepackage{graphicx}
 \usepackage{float}
 
-%\usepackage{hyperref}
+\usepackage{hyperref}
 
 \title{\Huge Feedback Controls Spring Final Design Report \\ \normalsize{EGEE 4810 - Senior Design}}
 \author{by \\ \Large TEAM WINGFEATHER \\ Aydan Vissing \\ Brady Schick \\ Gabriel Southwell \\ Simon Ross}
@@ -25,7 +25,7 @@
 
 %FIXME improve abstract
 \begin{abstract}
-This project report summarizes the current state of Project Wingfeather, intended to reimagine the Feedback Controls Laboratory experience at Cedarville University. The main goals of this project are to make the lab experience more engaging and relevant for students, simpler to work with, more reliable than previous solutions, and more cost-effective. To achieve these ends, progress has been made towards a cheap drone platform that is capable of communicating fundamental feedback controls concepts along with a simple software user interface. This drone has been built from the ground up to allow for full customization and also to make an interesting project. Up to this point, drone hardware and a frame have been developed, firmware has been written, and a working prototype has been assembled. Additionally, work on simulation has been completed. Various components need continued development, but the firmware and hardware contain most of the capabilities needed for the lab. This document details results and future development needed.
+This project report summarizes the current state of Project Wingfeather, intended to reimagine the Feedback Controls Laboratory experience at Cedarville University. The main goals of this project are to make the lab experience more engaging and relevant for students, simpler to work with, more reliable than previous solutions, and more cost-effective. To achieve these ends, progress has been made towards a cheap drone platform that is capable of communicating fundamental feedback controls concepts along with a simple software user interface. This drone has been built from the ground up to allow for full customization and also to create an interesting project. Up to this point, drone hardware and a frame have been developed, firmware has been written, and a working prototype has been assembled. Additionally, work on simulation has been completed. Various components need continued development, but the firmware and hardware contain most of the capabilities needed for the desired outcomes. This document details results and future development needed.
 
 \end{abstract}
 
@@ -41,110 +41,53 @@ This project seeks to redefine the Cedarville Feedback Controls Laboratory exper
 
 \section{Introduction \& Background}
 
-The current lab experience for EGME-4660 uses the Feedback Analogue Unit 33-110 and the Feedback Mechanical Unit 33-100. Although the labs using the equipment do cover the desired content, they are often tedious and perhaps confusing to new users, especially users unfamiliar with Feedback Controls concepts. The user interface to conduct the experiments is a circuit board with nodes and banana plug cords. The user can connect these nodes to create feedback circuits whose effect is then shown using the mechanical unit. As mentioned, understanding what is happening between the units (and even in the electrical circuits) can be challenging for students. This causes the applications of the class material to  seem boring and irrelevant, especially for mechanical engineering students who may not have extensive electronics background. In addition, the equipment is old and fragile - adjusting the power supply or wiring the power incorrectly can result in damage to the equipment, often requiring parts to be replaced. Since the equipment is out of production and thus quite expensive, the current repair method has been de-soldering and soldering components by hand. We plan to improve the lab experience by replacing the current equipment with cheap and robust drones that can be reprogrammed for the purposes of the lab with a user-friendly interface. In this way, the instructor can choose the complexity of the tasks given to students for the lab. 
+The current lab experience for EGME-4660 uses the Feedback Analogue Unit 33-110 and the Feedback Mechanical Unit 33-100. Although the labs using the equipment do cover the desired content, they are often tedious and perhaps confusing to new users, especially users unfamiliar with Feedback Controls concepts. The user interface to conduct the experiments is a circuit board with nodes and banana plug cords. The user can connect these nodes to create feedback circuits whose effect is then shown using the mechanical unit. As mentioned, understanding what is happening between the units (and even in the electrical circuits) can be challenging for students. This causes the applications of the class material to  seem boring and irrelevant, especially for mechanical engineering students who may not have extensive electronics background. In addition, the equipment is old and fragile - adjusting the power supply or wiring the power incorrectly can result in damage to the equipment, often requiring parts to be replaced. Since the equipment is out of production and thus quite expensive, the current repair method has been de-soldering and soldering components by hand. Finally, the industry has moved away from analog controllers to digital. We plan to improve the lab experience by replacing the current equipment with cheap and robust drones that can be reprogrammed for the purposes of the lab with a user-friendly interface. In this way, the instructor can choose the complexity of the tasks given to students for the lab. 
 
 \section{Objectives Revisited}
 \subsection{Engineering Requirements}
 \subsubsection{Hardware Requirements}
 % improve
-To fulfil the original vision of a simple to assemble, low cost, and safe to operate drone platform, we designed a drone platform from the ground up. 
+To fulfill the original vision of a simple to assemble, low cost, and safe to operate drone platform, we started our design from the ground up. 
 The drone features a PCB that comes mostly assembled from the factory with only a few components that need to be soldered. To save on the cost, the PCB screws directly into a 3d printed frame that holds the motors and battery. To make the hardware safer to operate, the drone frame features ducted propellers with recessed blades. This reduces the chance of the blades catching student's hair or hands. 
 
 \subsubsection{Software Requirements}
 
 To give our team a good starting point on the drone, we based the drone software on an existing project called Esp-drone from Espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. Building upon this basis, we were able to more easily reach our other software goals.
 
-For the students to interact with the drones, we created cross-platform application that is able to flash drone firmware, upload configurations, and plot flight data. This app can be extended to include any new features. 
+For the students to interact with the drones, we created cross-platform application that is able to flash drone firmware, upload configurations, and plot flight data. This app can be extended to include new features. 
 
 \subsection{Constraints}
+
+This project meets the all of the proposed constraints. This means it:
 \begin{itemize}
-  \item The laboratory experiments must be able to be conducted in ENS 145 at Cedarville University.
-  \item The total cost of design, test, and evaluation must not exceed \$600.
-  \item The final laboratory experience must not endanger the safety of the students.
-  \item The final laboratory solution must not destroy Cedarville property.
-  \item The final laboratory experience must not use MATLAB.
+  \item is capable of being conducted in ENS 145, 
+  \item is under budget, 
+  \item keeps the safety of students in mind, 
+  \item does not endanger school property, 
+  \item and does not use MATLAB.
 \end{itemize}
 
 \section{Engineering Design Revisited}
 \subsection{Hardware}
 \subsubsection{Frame Design}
-When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version is our best version since it accomplishes all the tasks that the previous frames couldn’t, such as keeping the motor mounts intact while it was being removed from the print bed and cleaned of support. The frame additionally has: a place to slot in the battery with Velcro, mounting places for the TOF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades, but also people around the drone. 
+When designing the frame, we chose to use Fusion360 for our editor rather than SolidWorks. This is because Fusion360 has a free version that is available consistently and since SolidWorks is less available to students. The frame itself was designed with the idea of being extremely light while still protecting the drone. The frame is sturdy enough to fly while maintaining the integrity of all components fastened to it. The current version solves many past problems such as keeping the motor mounts intact during removal from the print bed and cleaning. The frame additionally has a place to slot in the battery with Velcro, mounting points for the ToF sensors, a mindful orientation pattern for the PCB to frame, and blade guards to protect not just the blades but also people around the drone. 
 \subsubsection{PCB Design}
 
-The flexible nature of this project required creation of a custom printed circuit board to supply our needs for the project. Most of this procedure was completed in the first semester, but it is relevant to consider here again. This is particularly due to the successes and failures of the version 1 board and their bearing on improvements going forward.
+The flexible nature of this project required creation of a custom printed circuit board to supply our needs. Most of this process was completed in the first semester, but it is relevant to consider here again. This is particularly due to the successes and failures of the version 1 board and their bearing on improvements going forward.
 
-Our PCB successfully integrates all sensor types via a single I2C bus. We have considered adding buses for individual sensors, but the current setup has worked so far.
+Our PCB successfully integrates all sensor types via a single I2C bus. We have considered adding a separate bus for the IMU, but the current setup has worked thus far.
 
 Additionally, the complicated auto-reset circuitry required for Arduino-style circuits has successfully been implemented on the board. This means that when the drone is connected to a computer, it is automatically put into programming mode. 
 
-We particularly like the choice of buzzer that is on the current version of the board. It is loud enough to hear over the motors but not incredibly annoying.
+We particularly like the choice of buzzer that is on the current version of the board. It is loud enough to hear over the motors but not annoying.
 
-By way of improvements, the power regulator that we decided on for version 1 of the board (the TPS63070) is weak and has burned out twice. The current board has a replacement power regulator soldered on in place of it. For this reason, the next version of the board will need a different component, perhaps the HT7533-1 LDO.
+By way of improvements, the power regulator that we decided on for version 1 of the board (the TPS63070) is weak and has burned out twice. Because of this, the current board has a replacement power regulator soldered on in place of it. For this reason, the next version of the board will need a different component, perhaps the HT7533-1 LDO.
 
-Version 1 is able to provide PWM signals to each of the motors, with current supply from the battery sufficiently strong enough to lift the drone into the air. A challenge in this area has been that the power traces to each of the batteries are different lengths, allowing more current to the motors closer to the battery. This has  been fixed through a software patch, but a second revision to the board should address this issue.
+Version 1 is able to provide PWM signals to each of the motors, with current supply from the battery sufficiently strong enough to lift the drone into the air. A challenge in this area has been that the power traces to each of the motors are different lengths, allowing more current to the motors closer to the battery. This has  been fixed through a software patch, but a second revision to the board should address this issue.
 
 The largest problem we have encountered is that when the motors run at high speed, the IMU is unable to produce good measurements. We believe this is related to the problem discussed above in that it is a current distribution problem. The IMU does not completely lose power, but produces corrupted data, suggesting that it is browned-out by the current draw from the motors. The solution to this problem is unclear, and it is likely the largest roadblock to the continued success of the project.
 
-
-\subsection{Drone Software}
-The backbone of the project is the esp-drone project from espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It created a great basis for our project that could be further extended anyway that we needed. 
-
-\subsubsection{Added Components}
-\begin{enumerate}
-  \item Board
-    \begin{itemize}
-      \item Defines the pins the esp32 uses for interacting with the motors, sensors, and other peripherals.
-      \item Contains public functions for getting and iterable array for time of flight xShut pins and motor PWM pins.
-    \end{itemize}
-  \item Buzzer
-    \begin{itemize}
-      \item Esp-drone used a piezo buzzer for alerting the users of various things. When selecting our hardware we chose to use an electromagnetic buzzer. While it is limited in the tones it can produce, it is much louder than a traditional piezo buzzer. 
-      \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
-      \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
-      \item A pattern definition includes sound on and off times defined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
-    \end{itemize}
-  \item File Manager
-    \begin{itemize}
-      \item The file manager provides helper functions for the serial file transfer system and the scripting components of the drone. These functions include holding a file object open and allowing writing to the file.
-      \item Additionally, the file manager contains a function (that could be moved in the future) that sets the system PID parameters from the user-side config file.
-      \item The file manager is currently designed to manage specifically the config and script files provided by the user (or the flasher app), but could be expanded to manage more files in the future.
-    \end{itemize}
-  \item Storage
-    \begin{itemize}
-      \item The storage component sets up the littleFS file system on the drone. It mounts and formats the partition, allowing for storage of user files and data. 
-      \item To avoid excessive writes to flash, this component uses a ram buffer. When the buffer is close to fill it calls a flush function where the buffer is written to flash.
-    \end{itemize}
-  \item UART Listener
-    \begin{itemize}
-      \item This component is designed to wait for the user-provided files to be transferred over the UART bus. When the files are sent from the host device, it uses functions from the file manager component to write them to littleFS. The drone alerts the host device that it is ready, and the host begins the transfer.
-      \item The UART listener uses a set baud rate and receives small chunks of each file, one after another, acknowledging in between.
-      \item The files are written chunk-by-chunk into their respective littleFS locations. 
-      \item If the user presses start before a file is received, the current flight files on the drone are used.
-    \end{itemize}
-  \item Multi-TOF Sensors
-    \begin{itemize}
-      \item A big problem with our multi-TOF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
-      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one TOF can be active at a time for easy readdressing. 
-      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7-bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
-      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fresh address.
-    \end{itemize}
-  \item State Estimation with TOF Sensors
-    \begin{itemize}
-      \item By default, esp-drone uses a downward facing TOF sensor for z estimation. We decided to use more TOF range sensors to also estimate x and y position. 
-      \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
-      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy, but that might be fixable.
-    \end{itemize}
-
-\end{enumerate}
-
-\subsubsection{Interfacing with the Drone}
-Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfils many of the wireless requirements. For it work with our drones however you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
-
-Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
-
-\subsubsection{Drone Application}
-The application, also known as WingFlasher, has three main portions of the app as well as an Advanced Mode for developer level changes. The Graphing tab allows for CSVs of any type to be loaded; however, it assumes Time is the first column and any subsequent columns are variables of the drone’s movement. It will display three graphs at once and you will be able to cycle through them using the Next and Previous Graphs sections. If there are a number of graphs that is not divisible by three, the application will only display the leftover graphs at the end and leave a blank white space without resizing the window. Additionally, using the buttons from Matplotlib, you can resize, move, or save photos of each graph or set of graphs. The Planning tab is meant to allow for several different lab options such as Hover and Wall Follow. It additionally has the options to change your flight parameters or save the flight path. As of now, these are not completely implemented and will not function in their entirety. The Programming tab allows for students to change the PID parameters that the drone receives for the thrust PID controller as well as it can flash the drone from the Flash Drone button. When you click this button, it will prompt you to choose a file and you will need to select the script you wish to use. The PID parameter insertions are not fully implemented. Advanced mode allows for the whole drone to be flashed at once rather than just the portion with the flight parameters. 
-\subsection{Hardware}
+\subsubsection{Components}
 \begin{enumerate}
 
 \item Custom PCB
@@ -188,9 +131,8 @@ The application, also known as WingFlasher, has three main portions of the app a
 
 \item Power Regulator
 \begin{itemize}
-\item Model selected: TPS63070RNMR
-\item Decided to use buck/boost converter instead of a standard power regulator
-\item Input range of 2-16V
+\item Final model selected: HT7533-1 LDO
+\item Our battery exceeds the recommended input range, but this regulator works more consistently than the previous selection
 \item Output voltage is 3.3V
 \end{itemize}
 
@@ -213,7 +155,7 @@ The application, also known as WingFlasher, has three main portions of the app a
 \begin{itemize}
 \item Diode circuit added to allow powering of the circuit by a battery, connected computer, or even both (without damage)
 \item ESD and reverse current protection circuits included
-\item Auto reset logic circuit included so the microcontroller enters the bootloader properly when a computer is connected
+\item Auto reset logic circuit included so that the microcontroller enters the bootloader properly when a computer is connected
 \end{itemize}
 
 \item Battery
@@ -231,17 +173,78 @@ The application, also known as WingFlasher, has three main portions of the app a
 \end{itemize}
 
 \end{enumerate}
+
+\subsection{Drone Software}
+The backbone of the project is the esp-drone project from Espressif. Esp-drone provides proven flight logic, sensor fusion, state estimation, and communication protocols. It creates a great basis for our project that could be further extended as necessary. 
+
+\subsubsection{Added Components}
+\begin{enumerate}
+  \item Board
+    \begin{itemize}
+      \item Defines the pins the ESP32 uses for interacting with the motors, sensors, and other peripherals.
+      \item Contains public functions for getting an iterable array for time of flight xShut pins and motor PWM pins.
+    \end{itemize}
+  \item Buzzer
+    \begin{itemize}
+      \item Esp-drone used a piezo buzzer for alerting the users of various states. When selecting our hardware we chose to use an electromagnetic buzzer. While it is limited in the tones it can produce, it is much louder than a traditional piezo buzzer. 
+      \item The new buzzer driver has one public function for starting a beep pattern. It takes in a enum and plays the corresponding pattern. There is also a public function for stopping the current pattern.
+      \item It uses a low priority FreeRTOS task that sleeps until it gets a new play command. Once the pattern is complete it sleeps again. 
+      \item A pattern definition includes sound on and off times defined in milliseconds. Some tones like low battery can be set to repeat indefinitely. 
+    \end{itemize}
+  \item File Manager
+    \begin{itemize}
+      \item The file manager provides helper functions for the serial file transfer system and the scripting components of the drone. These functions include holding a file object open and allowing writing to the file.
+      \item Additionally, the file manager contains a function (that could be moved in the future) that sets the system PID parameters from the user-side config file.
+      \item The file manager is currently designed to manage specifically the config and script files provided by the user (or the flasher app), but could be expanded to manage more files in the future.
+    \end{itemize}
+  \item Storage
+    \begin{itemize}
+      \item The storage component sets up the littleFS file system on the drone. It mounts and formats the partition, allowing for storage of user files and data. 
+      \item To avoid excessive writes to flash, this component uses a ram buffer. When the buffer is close to full it calls a flush function where the buffer is written to flash.
+    \end{itemize}
+  \item UART Listener
+    \begin{itemize}
+      \item This component is designed to wait for the user-provided files to be transferred over the UART bus. When the files are sent from the host device, it uses functions from the file manager component to write them to littleFS. The drone alerts the host device that it is ready, and the host begins the transfer.
+      \item The UART listener uses a set baud rate and receives small chunks of each file, one after another, acknowledging in between. The files are written chunk-by-chunk into their respective littleFS locations. 
+      \item If the user presses start before a file is received, the current flight files on the drone are used.
+    \end{itemize}
+  \item Multi-ToF Sensors
+    \begin{itemize}
+      \item A big problem with our multi-ToF sensor setup is that they all have the same i2c address. So to be able to use more than one at all, we need to readdress the sensors. 
+      \item Every VL53L1 sensor has an xShut pin with a weak pull-up attached to it. When xShut is low the device is not powered. Using this, only one ToF can be active at a time for easy readdressing. 
+      \item The driver library that came with esp-drone had a simple bug in the readdressing code where the software was sending a 7-bit address but was overwriting the lowest bit. This was fixed with a simple bit shift. 
+      \item The initialization code was also changed to automatically readdress with an incrementing counter. That way every new sensor that gets initialized will get a fresh address.
+    \end{itemize}
+  \item State Estimation with ToF Sensors
+    \begin{itemize}
+      \item By default, esp-drone uses a downward facing ToF sensor for z estimation. We decided to use more ToF range sensors to also estimate x and y position. 
+      \item There are two sensors on the front and one on the side. The front sensors are spaced out with the idea being that the difference in ranges could be used for estimating yaw. That feature was not implemented in the end. 
+      \item When adding one of the front sensors and the side sensor into the state estimation, we were able to get reasonably good state estimates. Occasionally the data gets noisy, which is an opportunity for future improvement.
+    \end{itemize}
+
+\end{enumerate}
+
+\subsubsection{Interfacing with the Drone}
+Crazyflie has a system for interfacing with Crazyflie drones that carries over to our project. There is a python library called CFlib which fulfills many of the wireless requirements. For it work with our drone, however, you \textbf{must} use the esp-drone fork of CFlib instead of the official one.
+
+Once connected to the drone's WiFi, you can run a python script to send commands and receive telemetry. This very useful for getting live data while testing.
+
+\subsubsection{Drone Application}
+The application, also known as WingFlasher, has three main tabs as an Advanced Mode for developer level changes. The Graphing tab allows for CSVs of any type to be loaded; however, it assumes time is the first column and any subsequent columns are variables of the drone’s movement. It will display three graphs at a time with the ability to cycle through them using the Next and Previous Graphs buttons. Additionally, using the buttons from Matplotlib, you can resize, move, or save photos of each graph or set of graphs. The Planning tab is meant to allow for several different lab options such as Hover and Wall Follow. It additionally has options to change your flight parameters or save the flight path. As of now, these are not completely implemented. The Programming tab allows for students to change the PID parameters that the drone receives for the thrust PID controller. Additionally, it can flash the drone from the Flash Drone button. When you click this button, it will prompt you to choose a file and you will need to select the script you wish to use. The PID parameter insertions are not fully implemented. Advanced mode allows for the whole drone to be flashed forcefully rather than checking the current flash status.
+
 \subsection{Controls}
 \begin{enumerate}
 		\item Non-Linear Model
 		\begin{itemize}
 			\item Fully defines how the drone will be controlled in software using PID controllers.
-			\item PID controllers were used for their simplicity and their widespread use in controls fields
+			\item PID controllers were used for their simplicity and their widespread use in controls fields.
+			\item This model is implemented in the Simulation below.
 		\end{itemize}
 		\item Linear Model
 		\begin{itemize}
 			\item Allows for mapping of poles of the control system
 			\item This helps the tuning process to avoid producing an unstable system
+			\item This model is implemented in the Simulation below.
 		\end{itemize}
 		\item Simulation
 		\begin{itemize}
@@ -265,8 +268,9 @@ The application, also known as WingFlasher, has three main portions of the app a
 \section{Project Summary}
 
 \subsection{Final Results}
-While the project goals were ambitions, the final design is a good start at a full solution. It was an excellent learning experience for our team. We have grown in our ability to  work as a team on a difficult project. 
+While the project goals were ambitions, our progress is a good start at a full solution that will hopefully be carried on by a future team (or at least learned from). At the same time, it has been an excellent learning experience for each of us. Working on a team in an environment that is closer to industry than school has been incredibly beneficial, and we have each been forced to get outside of our comfort zones and learn something new. Even though the project is not yet complete, it's fair to say that Senior Design is one of the classes in which we have developed most as engineers, and we are grateful for the experience.
 
+And besides these important outcomes, our working prototype has come a long way from day 1. We hope it will be a great help to the University in days to come.
 
 \subsection{Future Potential}
 \begin{enumerate}
@@ -280,7 +284,7 @@ While the project goals were ambitions, the final design is a good start at a fu
 
   The time-of-flight state estimation did work, but it could be greatly simplified with the use of optical flow sensor. An optical flow sensor uses a low resolution camera to track the movement of pixels in an image. This can be used to extrapolate movement and rotation. If one were pointed at the ground, the x, y, and yaw movement could be found. 
 
-  The use of an optical flow sensor would reduce the number of TOF sensors needed by three, simplifying the drone and allowing the drones to operate away from walls. Implementing one would be easy since Crazyflie already has the option to use one. Just some configurations would need to change and state estimation would start working as expected. 
+  The use of an optical flow sensor would reduce the number of ToF sensors needed by three, simplifying the drone and allowing the drones to operate away from walls. Implementing one would be easy since Crazyflie already has the option to use one. Just some configurations would need to change and state estimation would start working as expected. 
 \end{enumerate}
 
 \subsection{Final Budget}
